@@ -51,6 +51,12 @@ variable "description" {
   description = "A description for the Github repository"
 }
 
+variable "gitignore_template" {
+  type        = string
+  default     = null
+  description = "The name of the template without the extension"
+}
+
 variable "has_downloads" {
   type        = bool
   default     = false

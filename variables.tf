@@ -39,7 +39,7 @@ variable "branch_protection" {
     branch         = string
     enforce_admins = bool
 
-    required_pull_request_reviews = object({
+    required_reviews = object({
       dismiss_stale_reviews           = bool
       dismissal_teams                 = list(string)
       dismissal_users                 = list(string)
@@ -47,14 +47,14 @@ variable "branch_protection" {
       require_code_owner_reviews      = bool
     })
 
-    required_status_checks = object({
+    required_checks = object({
       strict   = bool
       contexts = list(string)
     })
 
     restrictions = object({
-      users = string
-      teams = string
+      users = list(string)
+      teams = list(string)
     })
   }))
   default     = []

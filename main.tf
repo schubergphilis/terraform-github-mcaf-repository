@@ -1,5 +1,5 @@
 resource "github_repository" "default" {
-  count              = var.name != null ? 1 : 0
+  count              = var.create_repository ? 1 : 0
   name               = var.name
   description        = var.description
   private            = var.private
@@ -41,28 +41,13 @@ resource "github_team_repository" "readers" {
 }
 
 resource "github_branch_protection" "default" {
-  count          = length(var.branch_protection)
-  repository     = var.name
-  branch         = var.branch_protection[count.index].branch_pattern
-  enforce_admins = var.branch_protection[count.index].enforce_admins
-
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = var.branch_protection[count.index].review_dismiss_stale
-    dismissal_teams                 = var.branch_protection[count.index].review_dismissal_teams
-    dismissal_users                 = var.branch_protection[count.index].review_dismissal_users
-    required_approving_review_count = var.branch_protection[count.index].review_required_approving_count
-    require_code_owner_reviews      = var.branch_protection[count.index].review_require_code_owner
-  }
-
-  required_status_checks {
-    strict   = var.branch_protection[count.index].status_checks_strict
-    contexts = var.branch_protection[count.index].status_checks_context
-  }
-
-  restrictions {
-    users = var.branch_protection[count.index].restriction_users
-    teams = var.branch_protection[count.index].restriction_teams
-  }
+  count                         = length(var.branch_protection)
+  repository                    = var.name
+  branch                        = var.branch_protection[count.index].branch
+  enforce_admins                = var.branch_protection[count.index].enforce_admins
+  required_pull_request_reviews = var.branch_protection[count.index].required_pull_request_reviews
+  required_status_checks        = var.branch_protection[count.index].required_status_checks
+  restrictions                  = var.branch_protection[count.index].restrictions
 
   depends_on = [github_repository.default]
 }

@@ -1,5 +1,12 @@
+variable "create_repository" {
+  type        = bool
+  default     = true
+  description = "Whether or not to create a new repository"
+}
+
 variable "name" {
   type        = string
+  default     = null
   description = "The name of the repository"
 }
 
@@ -29,17 +36,26 @@ variable "auto_init" {
 
 variable "branch_protection" {
   type = list(object({
-    branch_pattern                  = string
-    enforce_admins                  = bool
-    restriction_teams               = list(string)
-    restriction_users               = list(string)
-    review_dismiss_stale            = bool
-    review_dismissal_teams          = list(string)
-    review_dismissal_users          = list(string)
-    review_required_approving_count = number
-    review_require_code_owner       = bool
-    status_checks_context           = list(string)
-    status_checks_strict            = bool
+    branch         = string
+    enforce_admins = bool
+
+    required_pull_request_reviews = object({
+      dismiss_stale_reviews           = bool
+      dismissal_teams                 = list(string)
+      dismissal_users                 = list(string)
+      required_approving_review_count = number
+      require_code_owner_reviews      = bool
+    })
+
+    required_status_checks = object({
+      strict   = bool
+      contexts = list(string)
+    })
+
+    restrictions = object({
+      users = string
+      teams = string
+    })
   }))
   default     = []
   description = "The Github branches to protect from forced pushes and deletion"

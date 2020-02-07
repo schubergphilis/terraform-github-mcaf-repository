@@ -11,7 +11,6 @@ resource "github_repository" "default" {
   has_projects       = var.has_projects
   has_wiki           = var.has_wiki
   private            = var.private
-
 }
 
 resource "github_team_repository" "admins" {

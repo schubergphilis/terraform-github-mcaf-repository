@@ -1,3 +1,17 @@
+locals {
+  protection = flatten([
+    for config in var.branch_protection : [
+      for branch in config.branches : {
+        branch           = branch
+        enforce_admins   = config.enforce_admins
+        required_reviews = config.required_reviews
+        required_checks  = config.required_checks
+        restrictions     = config.restrictions
+      }
+    ]
+  ])
+}
+
 resource "github_repository" "default" {
   count              = var.create_repository ? 1 : 0
   name               = var.name
@@ -41,38 +55,38 @@ resource "github_team_repository" "readers" {
 }
 
 resource "github_branch_protection" "default" {
-  count          = length(var.branch_protection)
+  count          = length(local.protection)
   repository     = var.name
-  branch         = var.branch_protection[count.index].branch
-  enforce_admins = var.branch_protection[count.index].enforce_admins
+  branch         = local.protection[count.index].branch
+  enforce_admins = local.protection[count.index].enforce_admins
 
   dynamic required_pull_request_reviews {
-    for_each = var.branch_protection[count.index].required_reviews != null ? { create : true } : {}
+    for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}
 
     content {
-      dismiss_stale_reviews           = var.branch_protection[count.index].required_reviews.dismiss_stale_reviews
-      dismissal_teams                 = var.branch_protection[count.index].required_reviews.dismissal_teams
-      dismissal_users                 = var.branch_protection[count.index].required_reviews.dismissal_users
-      required_approving_review_count = var.branch_protection[count.index].required_reviews.required_approving_review_count
-      require_code_owner_reviews      = var.branch_protection[count.index].required_reviews.require_code_owner_reviews
+      dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
+      dismissal_teams                 = local.protection[count.index].required_reviews.dismissal_teams
+      dismissal_users                 = local.protection[count.index].required_reviews.dismissal_users
+      required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
+      require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
     }
   }
 
   dynamic required_status_checks {
-    for_each = var.branch_protection[count.index].required_checks != null ? { create : true } : {}
+    for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
 
     content {
-      strict   = var.branch_protection[count.index].required_checks.strict
-      contexts = var.branch_protection[count.index].required_checks.contexts
+      strict   = local.protection[count.index].required_checks.strict
+      contexts = local.protection[count.index].required_checks.contexts
     }
   }
 
   dynamic restrictions {
-    for_each = var.branch_protection[count.index].restrictions != null ? { create : true } : {}
+    for_each = local.protection[count.index].restrictions != null ? { create : true } : {}
 
     content {
-      users = var.branch_protection[count.index].restrictions.users
-      teams = var.branch_protection[count.index].restrictions.teams
+      users = local.protection[count.index].restrictions.users
+      teams = local.protection[count.index].restrictions.teams
     }
   }
 

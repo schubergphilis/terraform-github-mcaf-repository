@@ -61,6 +61,12 @@ variable "branch_protection" {
   description = "The Github branches to protect from forced pushes and deletion"
 }
 
+variable "delete_branch_on_merge" {
+  type        = bool
+  default     = false
+  description = "Automatically delete head branch after a pull request is merged"
+}
+
 variable "description" {
   type        = string
   default     = null
@@ -95,6 +101,12 @@ variable "has_wiki" {
   type        = bool
   default     = false
   description = "To enable GitHub Wiki features on the repository"
+}
+
+variable "is_template" {
+  type        = bool
+  default     = false
+  description = "To mark this repository as a template repository."
 }
 
 variable "private" {

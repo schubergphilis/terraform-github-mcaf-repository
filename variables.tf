@@ -28,12 +28,6 @@ variable "allow_squash_merge" {
   description = "To enable squash merges on the repository"
 }
 
-variable "auto_delete_head_branch" {
-  type        = bool
-  default     = false
-  description = "Whether to automatically delete head branch after a pull request is merged"
-}
-
 variable "auto_init" {
   type        = bool
   default     = true
@@ -65,6 +59,12 @@ variable "branch_protection" {
   }))
   default     = []
   description = "The Github branches to protect from forced pushes and deletion"
+}
+
+variable "delete_branch_on_merge" {
+  type        = bool
+  default     = false
+  description = "Automatically delete head branch after a pull request is merged"
 }
 
 variable "description" {
@@ -101,6 +101,12 @@ variable "has_wiki" {
   type        = bool
   default     = false
   description = "To enable GitHub Wiki features on the repository"
+}
+
+variable "is_template" {
+  type        = bool
+  default     = false
+  description = "To mark this repository as a template repository."
 }
 
 variable "private" {

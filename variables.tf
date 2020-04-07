@@ -28,6 +28,12 @@ variable "allow_squash_merge" {
   description = "To enable squash merges on the repository"
 }
 
+variable "auto_delete_head_branch" {
+  type        = bool
+  default     = false
+  description = "Whether to automatically delete head branch after a pull request is merged"
+}
+
 variable "auto_init" {
   type        = bool
   default     = true

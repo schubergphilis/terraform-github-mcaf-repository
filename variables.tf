@@ -103,6 +103,12 @@ variable "has_wiki" {
   description = "To enable GitHub Wiki features on the repository"
 }
 
+variable "is_template" {
+  type        = bool
+  default     = false
+  description = "To mark this repository as a template repository."
+}
+
 variable "private" {
   type        = bool
   default     = true

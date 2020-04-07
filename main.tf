@@ -25,6 +25,7 @@ resource "github_repository" "default" {
   has_issues              = var.has_issues
   has_projects            = var.has_projects
   has_wiki                = var.has_wiki
+  is_template             = var.is_template
   private                 = var.private
 }
 

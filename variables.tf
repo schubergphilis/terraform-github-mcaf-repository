@@ -109,16 +109,16 @@ variable "is_template" {
   description = "To mark this repository as a template repository."
 }
 
-variable "private" {
-  type        = bool
-  default     = true
-  description = "Make the Github repository private"
-}
-
 variable "readers" {
   type        = list(string)
   default     = []
   description = "A list of Github teams that should have read access"
+}
+
+variable "visibility" {
+  type        = bool
+  default     = "private"
+  description = "The visiblity (internal, private or public) of the Github repository"
 }
 
 variable "writers" {

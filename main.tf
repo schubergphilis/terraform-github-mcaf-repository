@@ -10,6 +10,12 @@ locals {
       }
     ]
   ])
+
+  branches = tolist(setsubtract(flatten([
+    for config in var.branch_protection : [
+      config.branches
+    ]
+  ]), ["master"]))
 }
 
 resource "github_repository" "default" {
@@ -56,6 +62,14 @@ resource "github_team_repository" "readers" {
   depends_on = [github_repository.default]
 }
 
+resource "github_branch" "branches" {
+  count      = length(local.branches)
+  repository = var.name
+  branch     = local.branches[count.index]
+
+  depends_on = [github_repository.default]
+}
+
 resource "github_branch_protection" "default" {
   count          = length(local.protection)
   repository     = var.name
@@ -92,5 +106,8 @@ resource "github_branch_protection" "default" {
     }
   }
 
-  depends_on = [github_repository.default]
+  depends_on = [
+    github_branch.branches,
+    github_repository.default
+  ]
 }

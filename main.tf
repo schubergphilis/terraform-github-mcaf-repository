@@ -18,6 +18,7 @@ resource "github_repository" "default" {
   description            = var.description
   allow_rebase_merge     = var.allow_rebase_merge
   allow_squash_merge     = var.allow_squash_merge
+  archived               = var.archived
   auto_init              = var.auto_init
   delete_branch_on_merge = var.delete_branch_on_merge
   gitignore_template     = var.gitignore_template

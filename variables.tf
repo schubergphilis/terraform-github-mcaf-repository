@@ -31,7 +31,7 @@ variable "allow_squash_merge" {
 variable "archived" {
   type        = bool
   default     = false
-  description = "Specifies if the repository should be archived. Defaults to false. NOTE Currently, the API does not support unarchiving."
+  description = "Specifies if the repository should be archived"
 }
 
 variable "auto_init" {

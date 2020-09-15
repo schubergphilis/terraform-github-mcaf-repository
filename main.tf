@@ -27,7 +27,7 @@ resource "github_repository" "default" {
   has_projects           = var.has_projects
   has_wiki               = var.has_wiki
   is_template            = var.is_template
-  private                = var.private
+  visibility             = var.visibility
 }
 
 resource "github_team_repository" "admins" {

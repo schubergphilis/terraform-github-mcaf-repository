@@ -12,6 +12,10 @@ locals {
   ])
 }
 
+data "github_repository" "default" {
+  name = var.create_repository ? github_repository.default.0.name : var.name
+}
+
 resource "github_repository" "default" {
   count                  = var.create_repository ? 1 : 0
   name                   = var.name
@@ -58,18 +62,18 @@ resource "github_team_repository" "readers" {
 }
 
 resource "github_branch_protection" "default" {
-  count          = length(local.protection)
-  repository     = var.name
-  branch         = local.protection[count.index].branch
-  enforce_admins = local.protection[count.index].enforce_admins
+  count             = length(local.protection)
+  enforce_admins    = local.protection[count.index].enforce_admins
+  pattern           = local.protection[count.index].branch
+  push_restrictions = local.protection[count.index].push_restrictions
+  repository_id     = data.github_repository.default.id
 
   dynamic required_pull_request_reviews {
     for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}
 
     content {
       dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
-      dismissal_teams                 = local.protection[count.index].required_reviews.dismissal_teams
-      dismissal_users                 = local.protection[count.index].required_reviews.dismissal_users
+      dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_actors
       required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
       require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
     }
@@ -81,15 +85,6 @@ resource "github_branch_protection" "default" {
     content {
       strict   = local.protection[count.index].required_checks.strict
       contexts = local.protection[count.index].required_checks.contexts
-    }
-  }
-
-  dynamic restrictions {
-    for_each = local.protection[count.index].restrictions != null ? { create : true } : {}
-
-    content {
-      users = local.protection[count.index].restrictions.users
-      teams = local.protection[count.index].restrictions.teams
     }
   }
 

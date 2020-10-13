@@ -2,11 +2,11 @@ locals {
   protection = flatten([
     for config in var.branch_protection : [
       for branch in config.branches : {
-        branch           = branch
-        enforce_admins   = config.enforce_admins
-        required_reviews = config.required_reviews
-        required_checks  = config.required_checks
-        restrictions     = config.restrictions
+        branch            = branch
+        enforce_admins    = config.enforce_admins
+        push_restrictions = config.push_restrictions
+        required_reviews  = config.required_reviews
+        required_checks   = config.required_checks
       }
     ]
   ])
@@ -73,7 +73,7 @@ resource "github_branch_protection" "default" {
 
     content {
       dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
-      dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_actors
+      dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_restrictions
       required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
       require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
     }

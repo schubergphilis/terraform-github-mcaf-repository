@@ -19,7 +19,9 @@ locals {
 }
 
 data "github_repository" "default" {
-  name = var.create_repository ? github_repository.default.0.name : var.name
+  name = try(github_repository.default.0.name, var.name)
+
+  depends_on = [github_repository.default]
 }
 
 resource "github_repository" "default" {

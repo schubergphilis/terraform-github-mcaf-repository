@@ -1,11 +1,11 @@
 locals {
-  branches = toset(setsubtract(flatten([
+  branches = setsubtract(flatten([
     for config in var.branch_protection : [
       config.branches
     ]
-  ]), ["master"]))
+  ]), ["master"])
 
-  protection = toset(flatten([
+  protection = flatten([
     for config in var.branch_protection : [
       for branch in config.branches : {
         branch            = branch
@@ -15,7 +15,7 @@ locals {
         required_checks   = config.required_checks
       }
     ]
-  ]))
+  ])
 }
 
 data "github_repository" "default" {
@@ -42,8 +42,7 @@ resource "github_repository" "default" {
 }
 
 resource "github_branch" "default" {
-  for_each = local.branches
-
+  for_each   = local.branches
   repository = var.name
   branch     = each.value
 
@@ -51,8 +50,7 @@ resource "github_branch" "default" {
 }
 
 resource "github_team_repository" "admins" {
-  for_each = toset(var.admins)
-
+  for_each   = toset(var.admins)
   team_id    = each.value
   repository = var.name
   permission = "admin"
@@ -61,8 +59,7 @@ resource "github_team_repository" "admins" {
 }
 
 resource "github_team_repository" "writers" {
-  for_each = toset(var.writers)
-
+  for_each   = toset(var.writers)
   team_id    = each.value
   repository = var.name
   permission = "push"
@@ -71,8 +68,7 @@ resource "github_team_repository" "writers" {
 }
 
 resource "github_team_repository" "readers" {
-  for_each = toset(var.readers)
-
+  for_each   = toset(var.readers)
   team_id    = each.value
   repository = var.name
   permission = "pull"
@@ -81,30 +77,29 @@ resource "github_team_repository" "readers" {
 }
 
 resource "github_branch_protection" "default" {
-  for_each = local.protection
-
-  enforce_admins    = each.value.enforce_admins
-  pattern           = each.value.branch
-  push_restrictions = each.value.push_restrictions
+  count             = length(local.protection)
+  enforce_admins    = local.protection[count.index].enforce_admins
+  pattern           = local.protection[count.index].branch
+  push_restrictions = local.protection[count.index].push_restrictions
   repository_id     = data.github_repository.default.node_id
 
   dynamic required_pull_request_reviews {
-    for_each = each.value.required_reviews != null ? { create : true } : {}
+    for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}
 
     content {
-      dismiss_stale_reviews           = each.value.required_reviews.dismiss_stale_reviews
-      dismissal_restrictions          = each.value.required_reviews.dismissal_restrictions
-      required_approving_review_count = each.value.required_reviews.required_approving_review_count
-      require_code_owner_reviews      = each.value.required_reviews.require_code_owner_reviews
+      dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
+      dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_restrictions
+      required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
+      require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
     }
   }
 
   dynamic required_status_checks {
-    for_each = each.value.required_checks != null ? { create : true } : {}
+    for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
 
     content {
-      strict   = each.value.required_checks.strict
-      contexts = each.value.required_checks.contexts
+      strict   = local.protection[count.index].required_checks.strict
+      contexts = local.protection[count.index].required_checks.contexts
     }
   }
 

@@ -63,7 +63,7 @@ variable "branch_protection" {
 }
 
 variable "default_branch" {
-  type        = bool
+  type        = string
   default     = "master"
   description = "The name of the default branch of the repository"
 }

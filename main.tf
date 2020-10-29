@@ -32,7 +32,6 @@ resource "github_repository" "default" {
   allow_squash_merge     = var.allow_squash_merge
   archived               = var.archived
   auto_init              = var.auto_init
-  default_branch         = var.default_branch
   delete_branch_on_merge = var.delete_branch_on_merge
   gitignore_template     = var.gitignore_template
   has_downloads          = var.has_downloads

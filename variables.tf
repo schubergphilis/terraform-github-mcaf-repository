@@ -62,12 +62,6 @@ variable "branch_protection" {
   description = "The Github branches to protect from forced pushes and deletion"
 }
 
-variable "default_branch" {
-  type        = string
-  default     = "master"
-  description = "The name of the default branch of the repository"
-}
-
 variable "delete_branch_on_merge" {
   type        = bool
   default     = false

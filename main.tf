@@ -25,7 +25,6 @@ data "github_repository" "default" {
 }
 
 resource "github_repository" "default" {
-  count                  = var.create_repository ? 1 : 0
   name                   = var.name
   description            = var.description
   allow_rebase_merge     = var.allow_rebase_merge

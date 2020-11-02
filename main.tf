@@ -18,14 +18,7 @@ locals {
   ])
 }
 
-data "github_repository" "default" {
-  name = try(github_repository.default.0.name, var.name)
-
-  depends_on = [github_repository.default]
-}
-
 resource "github_repository" "default" {
-  count                  = var.create_repository ? 1 : 0
   name                   = var.name
   description            = var.description
   allow_rebase_merge     = var.allow_rebase_merge
@@ -82,7 +75,7 @@ resource "github_branch_protection" "default" {
   enforce_admins    = local.protection[count.index].enforce_admins
   pattern           = local.protection[count.index].branch
   push_restrictions = local.protection[count.index].push_restrictions
-  repository_id     = data.github_repository.default.node_id
+  repository_id     = github_repository.default.node_id
 
   dynamic required_pull_request_reviews {
     for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}

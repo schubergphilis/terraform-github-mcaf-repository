@@ -1,12 +1,5 @@
-variable "create_repository" {
-  type        = bool
-  default     = true
-  description = "Whether or not to create a new repository"
-}
-
 variable "name" {
   type        = string
-  default     = null
   description = "The name of the repository"
 }
 

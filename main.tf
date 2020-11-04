@@ -18,6 +18,10 @@ locals {
   ])
 }
 
+data "http" "gitignore" {
+  url = "https://www.toptal.com/developers/gitignore/api/${join(",", var.gitignore_io_templates)}"
+}
+
 resource "github_repository" "default" {
   name                   = var.name
   description            = var.description
@@ -41,6 +45,17 @@ resource "github_branch" "default" {
   branch     = each.value
 
   depends_on = [github_repository.default]
+}
+
+resource "github_repository_file" "gitignore" {
+  for_each            = var.create_gitignore ? setunion(local.branches, ["master"]) : []
+  repository          = var.name
+  file                = ".gitignore"
+  branch              = each.value
+  content             = data.http.gitignore.body
+  overwrite_on_create = true
+
+  depends_on = [github_branch.default]
 }
 
 resource "github_team_repository" "admins" {

@@ -37,37 +37,29 @@ resource "github_repository" "default" {
 
 resource "github_branch" "default" {
   for_each   = local.branches
-  repository = var.name
   branch     = each.value
-
-  depends_on = [github_repository.default]
+  repository = github_repository.default.name
 }
 
 resource "github_team_repository" "admins" {
   for_each   = toset(var.admins)
   team_id    = each.value
-  repository = var.name
   permission = "admin"
-
-  depends_on = [github_repository.default]
+  repository = github_repository.default.name
 }
 
 resource "github_team_repository" "writers" {
   for_each   = toset(var.writers)
   team_id    = each.value
-  repository = var.name
   permission = "push"
-
-  depends_on = [github_repository.default]
+  repository = github_repository.default.name
 }
 
 resource "github_team_repository" "readers" {
   for_each   = toset(var.readers)
   team_id    = each.value
-  repository = var.name
   permission = "pull"
-
-  depends_on = [github_repository.default]
+  repository = github_repository.default.name
 }
 
 resource "github_branch_protection" "default" {

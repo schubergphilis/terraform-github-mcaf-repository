@@ -80,7 +80,7 @@ resource "github_branch_protection" "default" {
     }
   }
 
-  dynamic required_status_checks {
+  dynamic "required_status_checks" {
     for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
 
     content {

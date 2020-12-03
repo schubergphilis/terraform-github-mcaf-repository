@@ -94,3 +94,10 @@ resource "github_branch_protection" "default" {
     github_repository.default
   ]
 }
+
+resource "github_actions_secret" "secrets" {
+  for_each        = var.actions_secrets
+  repository      = github_repository.default.name
+  secret_name     = each.key
+  plaintext_value = each.value
+}

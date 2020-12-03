@@ -69,7 +69,7 @@ resource "github_branch_protection" "default" {
   push_restrictions = local.protection[count.index].push_restrictions
   repository_id     = github_repository.default.node_id
 
-  dynamic required_pull_request_reviews {
+  dynamic "required_pull_request_reviews" {
     for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}
 
     content {
@@ -80,7 +80,7 @@ resource "github_branch_protection" "default" {
     }
   }
 
-  dynamic required_status_checks {
+  dynamic "required_status_checks" {
     for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
 
     content {
@@ -93,4 +93,11 @@ resource "github_branch_protection" "default" {
     github_branch.default,
     github_repository.default
   ]
+}
+
+resource "github_actions_secret" "secrets" {
+  for_each        = var.actions_secrets
+  repository      = github_repository.default.name
+  secret_name     = each.key
+  plaintext_value = each.value
 }

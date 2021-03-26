@@ -36,9 +36,10 @@ resource "github_repository" "default" {
 }
 
 resource "github_branch" "default" {
-  for_each   = local.branches
-  branch     = each.value
-  repository = github_repository.default.name
+  for_each      = local.branches
+  branch        = each.value
+  repository    = github_repository.default.name
+  source_branch = "master"
 }
 
 resource "github_team_repository" "admins" {

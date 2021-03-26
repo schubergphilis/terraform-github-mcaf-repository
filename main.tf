@@ -39,7 +39,7 @@ resource "github_branch" "default" {
   for_each      = local.branches
   branch        = each.value
   repository    = github_repository.default.name
-  source_branch = var.default_branch
+  source_branch = try(var.branch_sources[each.value], var.default_branch)
 }
 
 resource "github_team_repository" "admins" {

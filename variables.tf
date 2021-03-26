@@ -61,6 +61,18 @@ variable "branch_protection" {
   description = "The Github branches to protect from forced pushes and deletion"
 }
 
+variable "branch_sources" {
+  type        = map(string)
+  default     = null
+  description = "Branches with a source different than the default branch"
+}
+
+variable "default_branch" {
+  type        = string
+  default     = "master"
+  description = "The default branch for the Github repository"
+}
+
 variable "delete_branch_on_merge" {
   type        = bool
   default     = false
@@ -71,12 +83,6 @@ variable "description" {
   type        = string
   default     = null
   description = "A description for the Github repository"
-}
-
-variable "default_branch" {
-  type        = string
-  default     = "master"
-  description = "The default branch for the Github repository"
 }
 
 variable "gitignore_template" {

@@ -3,7 +3,7 @@ locals {
     for config in var.branch_protection : [
       config.branches
     ]
-  ]), ["master"])
+  ]), [var.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -39,7 +39,7 @@ resource "github_branch" "default" {
   for_each      = local.branches
   branch        = each.value
   repository    = github_repository.default.name
-  source_branch = "master"
+  source_branch = var.default_branch
 }
 
 resource "github_team_repository" "admins" {

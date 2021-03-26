@@ -73,6 +73,12 @@ variable "description" {
   description = "A description for the Github repository"
 }
 
+variable "default_branch" {
+  type        = string
+  default     = "master"
+  description = "The default branch for the Github repository"
+}
+
 variable "gitignore_template" {
   type        = string
   default     = null

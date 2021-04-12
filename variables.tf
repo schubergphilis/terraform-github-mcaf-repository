@@ -61,6 +61,12 @@ variable "branch_protection" {
   description = "The Github branches to protect from forced pushes and deletion"
 }
 
+variable "create_gitignore" {
+  type        = bool
+  default     = false
+  description = "Set to true to create a .gitignore from templates at gitignore.io"
+}
+
 variable "delete_branch_on_merge" {
   type        = bool
   default     = false
@@ -71,6 +77,12 @@ variable "description" {
   type        = string
   default     = null
   description = "A description for the Github repository"
+}
+
+variable "gitignore_io_templates" {
+  type        = list(string)
+  default     = ["terraform"]
+  description = "List of gitignore.io template names"
 }
 
 variable "gitignore_template" {

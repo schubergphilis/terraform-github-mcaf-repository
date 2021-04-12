@@ -42,22 +42,22 @@ resource "github_branch" "default" {
 }
 
 resource "github_team_repository" "admins" {
-  for_each   = toset(var.admins)
-  team_id    = each.value
+  count      = length(var.admins)
+  team_id    = var.admins[count.index]
   permission = "admin"
   repository = github_repository.default.name
 }
 
 resource "github_team_repository" "writers" {
-  for_each   = toset(var.writers)
-  team_id    = each.value
+  count      = length(var.writers)
+  team_id    = var.writers[count.index]
   permission = "push"
   repository = github_repository.default.name
 }
 
 resource "github_team_repository" "readers" {
-  for_each   = toset(var.readers)
-  team_id    = each.value
+  count      = length(var.readers)
+  team_id    = var.readers[count.index]
   permission = "pull"
   repository = github_repository.default.name
 }

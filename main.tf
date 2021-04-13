@@ -3,7 +3,7 @@ locals {
     for config in var.branch_protection : [
       config.branches
     ]
-  ]), ["master"])
+  ]), [var.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [

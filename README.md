@@ -7,7 +7,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12 |
+| terraform | >= 0.13 |
 | github | >= 3.1.0 |
 
 ## Providers

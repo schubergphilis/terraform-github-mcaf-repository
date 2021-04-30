@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.13"
 
   required_providers {
     github = {
-      source  = "hashicorp/github"
+      source  = "integrations/github"
       version = ">= 3.1.0"
     }
   }

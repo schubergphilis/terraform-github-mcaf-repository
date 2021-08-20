@@ -33,6 +33,10 @@ resource "github_repository" "default" {
   has_wiki               = var.has_wiki
   is_template            = var.is_template
   visibility             = var.visibility
+
+  lifecycle {
+    ignore_changes = [etag]
+  }
 }
 
 resource "github_branch" "default" {
@@ -46,6 +50,10 @@ resource "github_team_repository" "admins" {
   team_id    = var.admins[count.index]
   permission = "admin"
   repository = github_repository.default.name
+
+  lifecycle {
+    ignore_changes = [etag]
+  }
 }
 
 resource "github_team_repository" "writers" {
@@ -53,6 +61,10 @@ resource "github_team_repository" "writers" {
   team_id    = var.writers[count.index]
   permission = "push"
   repository = github_repository.default.name
+
+  lifecycle {
+    ignore_changes = [etag]
+  }
 }
 
 resource "github_team_repository" "readers" {
@@ -60,6 +72,10 @@ resource "github_team_repository" "readers" {
   team_id    = var.readers[count.index]
   permission = "pull"
   repository = github_repository.default.name
+
+  lifecycle {
+    ignore_changes = [etag]
+  }
 }
 
 resource "github_branch_protection" "default" {

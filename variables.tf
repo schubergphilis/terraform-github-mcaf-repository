@@ -121,6 +121,16 @@ variable "readers" {
   description = "A list of Github teams that should have read access"
 }
 
+variable "tfe_backend_config" {
+  type = object({
+    organization      = string
+    workspace         = string
+    working_directory = string
+  })
+  default     = null
+  description = "Set this to create the file backend.tf containing the remote backend config for Terraform Cloud"
+}
+
 variable "visibility" {
   type        = string
   default     = "private"

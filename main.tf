@@ -101,3 +101,16 @@ resource "github_actions_secret" "secrets" {
   secret_name     = each.key
   plaintext_value = each.value
 }
+
+resource "github_repository_file" "tfe_backend_config" {
+  count               = var.tfe_backend_config == null ? 0 : 1
+  overwrite_on_create = true
+  repository          = github_repository.default.name
+  file                = "${var.tfe_backend_config.working_directory}/backend.tf"
+  branch              = var.default_branch
+
+  content = templatefile("${path.module}/backend.tf.tpl", {
+    organization = var.tfe_backend_config.organization
+    workspace    = var.tfe_backend_config.workspace
+  })
+}

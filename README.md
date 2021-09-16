@@ -38,7 +38,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 | has\_wiki | To enable GitHub Wiki features on the repository | `bool` | `false` | no |
 | is\_template | To mark this repository as a template repository. | `bool` | `false` | no |
 | readers | A list of GitHub teams that should have read access | `list(string)` | `[]` | no |
-| repository\_files | A list of GitHub repository files that should be created | <pre>list(object({<br>    path    = string<br>    content = string<br>  }))</pre> | `[]` | no |
+| repository\_files | A list of GitHub repository files that should be created | <pre>map(object({<br>    path    = string<br>    content = string<br>  }))</pre> | `{}` | no |
 | visibility | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
 | writers | A list of GitHub teams that should have write access | `list(string)` | `[]` | no |
 

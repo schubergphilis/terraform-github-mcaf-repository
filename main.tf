@@ -103,7 +103,7 @@ resource "github_actions_secret" "secrets" {
 }
 
 resource "github_repository_file" "default" {
-  for_each            = toset(var.repository_files)
+  for_each            = var.repository_files
   branch              = var.default_branch
   content             = each.value.content
   file                = each.value.path

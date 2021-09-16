@@ -21,25 +21,26 @@ MCAF Terraform module to create and manage a GitHub repository.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | The name of the repository | `string` | n/a | yes |
-| actions\_secrets | An optional map with Github action secrets | `map(string)` | `{}` | no |
-| admins | A list of Github teams that should have admins access | `list(string)` | `[]` | no |
+| actions\_secrets | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
+| admins | A list of GitHub teams that should have admins access | `list(string)` | `[]` | no |
 | allow\_rebase\_merge | To enable rebase merges on the repository | `bool` | `false` | no |
 | allow\_squash\_merge | To enable squash merges on the repository | `bool` | `false` | no |
 | archived | Specifies if the repository should be archived | `bool` | `false` | no |
 | auto\_init | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
-| branch\_protection | The Github branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches          = list(string)<br>    enforce_admins    = bool<br>    push_restrictions = list(string)<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br><br>    required_checks = object({<br>      strict   = bool<br>      contexts = list(string)<br>    })<br>  }))</pre> | `[]` | no |
+| branch\_protection | The GitHub branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches          = list(string)<br>    enforce_admins    = bool<br>    push_restrictions = list(string)<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br><br>    required_checks = object({<br>      strict   = bool<br>      contexts = list(string)<br>    })<br>  }))</pre> | `[]` | no |
 | default\_branch | Name of the default branch for the GitHub repository | `string` | `"master"` | no |
 | delete\_branch\_on\_merge | Automatically delete head branch after a pull request is merged | `bool` | `false` | no |
-| description | A description for the Github repository | `string` | `null` | no |
+| description | A description for the GitHub repository | `string` | `null` | no |
 | gitignore\_template | The name of the template without the extension | `string` | `null` | no |
 | has\_downloads | To enable downloads features on the repository | `bool` | `false` | no |
 | has\_issues | To enable GitHub Issues features on the repository | `bool` | `false` | no |
 | has\_projects | To enable GitHub Projects features on the repository | `bool` | `false` | no |
 | has\_wiki | To enable GitHub Wiki features on the repository | `bool` | `false` | no |
 | is\_template | To mark this repository as a template repository. | `bool` | `false` | no |
-| readers | A list of Github teams that should have read access | `list(string)` | `[]` | no |
-| visibility | Set the Github repository as public, private or internal | `string` | `"private"` | no |
-| writers | A list of Github teams that should have write access | `list(string)` | `[]` | no |
+| readers | A list of GitHub teams that should have read access | `list(string)` | `[]` | no |
+| repository\_files | A list of GitHub repository files that should be created | <pre>list(object({<br>    path    = string<br>    content = string<br>  }))</pre> | `[]` | no |
+| visibility | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
+| writers | A list of GitHub teams that should have write access | `list(string)` | `[]` | no |
 
 ## Outputs
 

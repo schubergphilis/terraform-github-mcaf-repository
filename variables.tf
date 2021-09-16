@@ -6,13 +6,13 @@ variable "name" {
 variable "actions_secrets" {
   type        = map(string)
   default     = {}
-  description = "An optional map with Github action secrets"
+  description = "An optional map with GitHub action secrets"
 }
 
 variable "admins" {
   type        = list(string)
   default     = []
-  description = "A list of Github teams that should have admins access"
+  description = "A list of GitHub teams that should have admins access"
 }
 
 variable "allow_rebase_merge" {
@@ -58,7 +58,7 @@ variable "branch_protection" {
     })
   }))
   default     = []
-  description = "The Github branches to protect from forced pushes and deletion"
+  description = "The GitHub branches to protect from forced pushes and deletion"
 }
 
 variable "default_branch" {
@@ -76,7 +76,7 @@ variable "delete_branch_on_merge" {
 variable "description" {
   type        = string
   default     = null
-  description = "A description for the Github repository"
+  description = "A description for the GitHub repository"
 }
 
 variable "gitignore_template" {
@@ -118,17 +118,26 @@ variable "is_template" {
 variable "readers" {
   type        = list(string)
   default     = []
-  description = "A list of Github teams that should have read access"
+  description = "A list of GitHub teams that should have read access"
+}
+
+variable "repository_files" {
+  type = list(object({
+    path    = string
+    content = string
+  }))
+  default     = []
+  description = "A list of GitHub repository files that should be created"
 }
 
 variable "visibility" {
   type        = string
   default     = "private"
-  description = "Set the Github repository as public, private or internal"
+  description = "Set the GitHub repository as public, private or internal"
 }
 
 variable "writers" {
   type        = list(string)
   default     = []
-  description = "A list of Github teams that should have write access"
+  description = "A list of GitHub teams that should have write access"
 }

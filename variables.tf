@@ -122,11 +122,11 @@ variable "readers" {
 }
 
 variable "repository_files" {
-  type = list(object({
+  type = map(object({
     path    = string
     content = string
   }))
-  default     = []
+  default     = {}
   description = "A list of GitHub repository files that should be created"
 }
 

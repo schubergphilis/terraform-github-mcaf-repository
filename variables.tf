@@ -141,3 +141,12 @@ variable "writers" {
   default     = []
   description = "A list of GitHub teams that should have write access"
 }
+
+variable "template_repository" {
+  type = list(object({
+    owner          = string
+    repository    = string
+  }))
+  default     = []
+  description = "The settings of the template repostitory to use on creation"
+}

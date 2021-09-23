@@ -36,6 +36,7 @@ resource "github_repository" "default" {
 
   dynamic "template" {
     for_each = var.template_repository
+    
     content {
       owner      = template.value["owner"]
       repository = template.value["repository"]

@@ -148,5 +148,5 @@ variable "template_repository" {
     repository = string
   }))
   default     = []
-  description = "The settings for the template repository"
+  description = "The settings of the template repository to use for creating this repository"
 }

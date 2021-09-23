@@ -144,7 +144,7 @@ variable "writers" {
 
 variable "template_repository" {
   type = list(object({
-    owner          = string
+    owner         = string
     repository    = string
   }))
   default     = []

@@ -144,8 +144,8 @@ variable "writers" {
 
 variable "template_repository" {
   type = list(object({
-    owner          = string
-    repository    = string
+    owner      = string
+    repository = string
   }))
   default     = []
   description = "The settings for the template repository"

@@ -33,11 +33,11 @@ resource "github_repository" "default" {
   has_wiki               = var.has_wiki
   is_template            = var.is_template
   visibility             = var.visibility
-  
+
   dynamic "template" {
     for_each = var.template_repository
     content {
-      owner = template.value["owner"]
+      owner      = template.value["owner"]
       repository = template.value["repository"]
     }
   }

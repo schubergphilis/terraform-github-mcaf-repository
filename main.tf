@@ -78,7 +78,7 @@ resource "github_branch_protection" "default" {
   enforce_admins    = local.protection[count.index].enforce_admins
   pattern           = local.protection[count.index].branch
   push_restrictions = local.protection[count.index].push_restrictions
-  repository_id     = github_repository.default.node_id
+  repository_id     = github_repository.default.name
 
   dynamic "required_pull_request_reviews" {
     for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}

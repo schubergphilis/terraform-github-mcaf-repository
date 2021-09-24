@@ -130,6 +130,15 @@ variable "repository_files" {
   description = "A list of GitHub repository files that should be created"
 }
 
+variable "template_repository" {
+  type = object({
+    owner      = string
+    repository = string
+  })
+  default     = []
+  description = "The settings of the template repostitory to use on creation"
+}
+
 variable "visibility" {
   type        = string
   default     = "private"
@@ -142,11 +151,3 @@ variable "writers" {
   description = "A list of GitHub teams that should have write access"
 }
 
-variable "template_repository" {
-  type = list(object({
-    owner      = string
-    repository = string
-  }))
-  default     = []
-  description = "The settings of the template repostitory to use on creation"
-}

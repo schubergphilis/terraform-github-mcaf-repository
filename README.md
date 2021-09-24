@@ -21,7 +21,6 @@ MCAF Terraform module to create and manage a GitHub repository.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | The name of the repository | `string` | n/a | yes |
-| template\_repository | The settings of the template repostitory to use on creation | <pre>object({<br>    owner      = string<br>    repository = string<br>  })</pre> | n/a | yes |
 | actions\_secrets | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
 | admins | A list of GitHub teams that should have admins access | `list(string)` | `[]` | no |
 | allow\_rebase\_merge | To enable rebase merges on the repository | `bool` | `false` | no |
@@ -40,6 +39,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 | is\_template | To mark this repository as a template repository. | `bool` | `false` | no |
 | readers | A list of GitHub teams that should have read access | `list(string)` | `[]` | no |
 | repository\_files | A list of GitHub repository files that should be created | <pre>map(object({<br>    path    = string<br>    content = string<br>  }))</pre> | `{}` | no |
+| template\_repository | The settings of the template repostitory to use on creation | <pre>object({<br>    owner      = string<br>    repository = string<br>  })</pre> | `null` | no |
 | visibility | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
 | writers | A list of GitHub teams that should have write access | `list(string)` | `[]` | no |
 

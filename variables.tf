@@ -135,6 +135,7 @@ variable "template_repository" {
     owner      = string
     repository = string
   })
+  default = null
   description = "The settings of the template repostitory to use on creation"
 }
 

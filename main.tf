@@ -16,6 +16,9 @@ locals {
       }
     ]
   ])
+
+  template_repository = var.template_repository != null ? { create = true } : {}
+  
 }
 
 resource "github_repository" "default" {
@@ -35,11 +38,11 @@ resource "github_repository" "default" {
   visibility             = var.visibility
 
   dynamic "template" {
-    for_each = var.template_repository
+    for_each = local.template_repository
 
     content {
-      owner      = template.value["owner"]
-      repository = template.value["repository"]
+      owner      = var.template_repository.owner
+      repository = var.template_repository.repository
     }
   }
 }

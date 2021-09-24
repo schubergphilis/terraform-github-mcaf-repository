@@ -18,7 +18,6 @@ locals {
   ])
 
   template_repository = var.template_repository != null ? { create = true } : {}
-  
 }
 
 resource "github_repository" "default" {

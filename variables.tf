@@ -112,7 +112,7 @@ variable "has_wiki" {
 variable "is_template" {
   type        = bool
   default     = false
-  description = "To mark this repository as a template repository."
+  description = "To mark this repository as a template repository"
 }
 
 variable "readers" {

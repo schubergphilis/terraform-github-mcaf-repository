@@ -44,6 +44,10 @@ resource "github_repository" "default" {
       repository = var.template_repository.repository
     }
   }
+
+  lifecycle {
+    ignore_changes = [pages]
+  }
 }
 
 resource "github_branch" "default" {

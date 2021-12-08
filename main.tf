@@ -20,6 +20,7 @@ locals {
   template_repository = var.template_repository != null ? { create = true } : {}
 }
 
+#tfsec:ignore:github-repositories-vulnerability-alerts
 resource "github_repository" "default" {
   name                   = var.name
   description            = var.description

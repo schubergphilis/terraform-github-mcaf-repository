@@ -28,8 +28,8 @@ MCAF Terraform module to create and manage a GitHub repository.
 | archived | Specifies if the repository should be archived | `bool` | `false` | no |
 | auto\_init | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
 | branch\_protection | The GitHub branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches          = list(string)<br>    enforce_admins    = bool<br>    push_restrictions = list(string)<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br><br>    required_checks = object({<br>      strict   = bool<br>      contexts = list(string)<br>    })<br>  }))</pre> | `[]` | no |
-| default\_branch | Name of the default branch for the GitHub repository | `string` | `"master"` | no |
-| delete\_branch\_on\_merge | Automatically delete head branch after a pull request is merged | `bool` | `false` | no |
+| default\_branch | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
+| delete\_branch\_on\_merge | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |
 | description | A description for the GitHub repository | `string` | `null` | no |
 | gitignore\_template | The name of the template without the extension | `string` | `null` | no |
 | has\_downloads | To enable downloads features on the repository | `bool` | `false` | no |

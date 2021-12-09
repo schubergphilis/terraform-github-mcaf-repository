@@ -63,13 +63,13 @@ variable "branch_protection" {
 
 variable "default_branch" {
   type        = string
-  default     = "master"
+  default     = "main"
   description = "Name of the default branch for the GitHub repository"
 }
 
 variable "delete_branch_on_merge" {
   type        = bool
-  default     = false
+  default     = true
   description = "Automatically delete head branch after a pull request is merged"
 }
 
@@ -150,4 +150,3 @@ variable "writers" {
   default     = []
   description = "A list of GitHub teams that should have write access"
 }
-

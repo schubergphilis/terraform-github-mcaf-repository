@@ -1,9 +1,11 @@
 locals {
-  branches = setsubtract(flatten([
+  default_branch = "main"
+
+  branches = setsubtract(flatten([[
     for config in var.branch_protection : [
       config.branches
     ]
-  ]), [var.default_branch])
+  ], [var.default_branch]]), [local.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -55,6 +57,13 @@ resource "github_branch" "default" {
   for_each   = local.branches
   branch     = each.value
   repository = github_repository.default.name
+}
+
+resource "github_branch_default" "default" {
+  count      = var.default_branch != local.default_branch ? 1 : 0
+  branch     = var.default_branch
+  repository = github_repository.default.name
+  depends_on = [github_branch.default]
 }
 
 resource "github_team_repository" "admins" {

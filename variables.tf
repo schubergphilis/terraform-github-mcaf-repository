@@ -41,9 +41,10 @@ variable "auto_init" {
 
 variable "branch_protection" {
   type = list(object({
-    branches          = list(string)
-    enforce_admins    = bool
-    push_restrictions = list(string)
+    branches               = list(string)
+    enforce_admins         = bool
+    push_restrictions      = list(string)
+    require_signed_commits = bool
 
     required_reviews = object({
       dismiss_stale_reviews           = bool

@@ -98,8 +98,7 @@ resource "github_repository_file" "default" {
 
   depends_on = [
     github_branch.default,
-    github_branch_default.default,
-    github_repository.default
+    github_branch_default.default
   ]
 }
 

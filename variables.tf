@@ -46,16 +46,16 @@ variable "branch_protection" {
     push_restrictions      = list(string)
     require_signed_commits = bool
 
+    required_checks = object({
+      strict   = bool
+      contexts = list(string)
+    })
+
     required_reviews = object({
       dismiss_stale_reviews           = bool
       dismissal_restrictions          = list(string)
       required_approving_review_count = number
       require_code_owner_reviews      = bool
-    })
-
-    required_checks = object({
-      strict   = bool
-      contexts = list(string)
     })
   }))
   default     = []

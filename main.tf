@@ -88,6 +88,21 @@ resource "github_team_repository" "readers" {
   repository = github_repository.default.name
 }
 
+resource "github_repository_file" "default" {
+  for_each            = var.repository_files
+  branch              = var.default_branch
+  content             = each.value.content
+  file                = each.value.path
+  overwrite_on_create = true
+  repository          = github_repository.default.name
+
+  depends_on = [
+    github_branch.default,
+    github_branch_default.default,
+    github_repository.default
+  ]
+}
+
 resource "github_branch_protection" "default" {
   count                  = length(local.protection)
   enforce_admins         = local.protection[count.index].enforce_admins
@@ -118,7 +133,9 @@ resource "github_branch_protection" "default" {
 
   depends_on = [
     github_branch.default,
-    github_repository.default
+    github_branch_default.default,
+    github_repository.default,
+    github_repository_file.default
   ]
 }
 
@@ -127,13 +144,4 @@ resource "github_actions_secret" "secrets" {
   repository      = github_repository.default.name
   secret_name     = each.key
   plaintext_value = each.value
-}
-
-resource "github_repository_file" "default" {
-  for_each            = var.repository_files
-  branch              = var.default_branch
-  content             = each.value.content
-  file                = each.value.path
-  overwrite_on_create = true
-  repository          = github_repository.default.name
 }

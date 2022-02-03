@@ -39,6 +39,7 @@ resource "github_repository" "default" {
   has_wiki               = var.has_wiki
   is_template            = var.is_template
   visibility             = var.visibility
+  vulnerability_alerts   = var.vulnerability_alerts
 
   dynamic "template" {
     for_each = local.template_repository

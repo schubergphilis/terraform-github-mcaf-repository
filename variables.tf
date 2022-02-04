@@ -149,7 +149,7 @@ variable "visibility" {
 variable "vulnerability_alerts" {
   type        = bool
   default     = false
-  description = "Enable or disable vulnerability alerts"
+  description = "To enable security alerts for vulnerable dependencies"
 }
 
 variable "writers" {

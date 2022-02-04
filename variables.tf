@@ -146,6 +146,12 @@ variable "visibility" {
   description = "Set the GitHub repository as public, private or internal"
 }
 
+variable "vulnerability_alerts" {
+  type        = bool
+  default     = false
+  description = "To enable security alerts for vulnerable dependencies"
+}
+
 variable "writers" {
   type        = list(string)
   default     = []

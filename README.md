@@ -41,6 +41,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 | repository\_files | A list of GitHub repository files that should be created | <pre>map(object({<br>    path    = string<br>    content = string<br>  }))</pre> | `{}` | no |
 | template\_repository | The settings of the template repostitory to use on creation | <pre>object({<br>    owner      = string<br>    repository = string<br>  })</pre> | `null` | no |
 | visibility | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
+| vulnerability\_alerts | To enable security alerts for vulnerable dependencies | `bool` | `false` | no |
 | writers | A list of GitHub teams that should have write access | `list(string)` | `[]` | no |
 
 ## Outputs

@@ -80,6 +80,22 @@ variable "description" {
   description = "A description for the GitHub repository"
 }
 
+variable "environments" {
+  type = map(object({
+    reviewers = object({
+      users = list(string)
+      teams = list(string)
+    })
+
+    deployment_branch_policy = object({
+      protected_branches     = bool
+      custom_branch_policies = bool
+    })
+  }))
+  default     = {}
+  description = "The Github environments that should be configured for reviewers and deployment branch policies"
+}
+
 variable "gitignore_template" {
   type        = string
   default     = null

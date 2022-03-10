@@ -139,6 +139,23 @@ resource "github_branch_protection" "default" {
   ]
 }
 
+resource "github_repository_environment" "default" {
+  for_each = var.environments
+
+  environment = each.key
+  repository  = github_repository.default.name
+
+  reviewers {
+    teams = each.value.reviewers.teams
+    users = each.value.reviewers.users
+  }
+
+  deployment_branch_policy {
+    protected_branches     = each.value.deployment_branch_policy.protected_branches
+    custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
+  }
+}
+
 resource "github_actions_secret" "secrets" {
   for_each        = var.actions_secrets
   repository      = github_repository.default.name

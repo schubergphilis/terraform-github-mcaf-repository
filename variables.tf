@@ -92,10 +92,12 @@ variable "environments" {
       users = list(string)
     })
 
+    secrets = map(string)
+
     wait_timer = number
   }))
   default     = {}
-  description = "The Github environments that should be configured for reviewers and deployment branch policies"
+  description = "An optional map with GitHub environments that should be configured for reviewers and deployment branch policies"
 }
 
 variable "gitignore_template" {

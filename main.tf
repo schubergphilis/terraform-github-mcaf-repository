@@ -21,10 +21,10 @@ locals {
   ])
 
   github_usernames = toset(flatten([
-    for env, spec in var.environments : spec.reviewers.users
+    for spec in values(var.environments) : spec.reviewers.users
   ]))
   github_team_slugs = toset(flatten([
-    for env, spec in var.environments : spec.reviewers.teams
+    for spec in values(var.environments) : spec.reviewers.teams
   ]))
 
   template_repository = var.template_repository != null ? { create = true } : {}

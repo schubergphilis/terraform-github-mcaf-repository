@@ -7,6 +7,14 @@ locals {
     ]
   ], [var.default_branch]]), [local.default_branch])
 
+  github_team_slugs = toset(flatten([
+    for spec in values(var.environments) : spec.reviewers.teams
+  ]))
+
+  github_usernames = toset(flatten([
+    for spec in values(var.environments) : spec.reviewers.users
+  ]))
+
   protection = flatten([
     for config in var.branch_protection : [
       for branch in config.branches : {
@@ -19,13 +27,6 @@ locals {
       }
     ]
   ])
-
-  github_usernames = toset(flatten([
-    for spec in values(var.environments) : spec.reviewers.users
-  ]))
-  github_team_slugs = toset(flatten([
-    for spec in values(var.environments) : spec.reviewers.teams
-  ]))
 
   template_repository = var.template_repository != null ? { create = true } : {}
 }
@@ -164,8 +165,8 @@ resource "github_repository_environment" "default" {
   wait_timer  = each.value.wait_timer
 
   deployment_branch_policy {
-    protected_branches     = each.value.deployment_branch_policy.protected_branches
     custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
+    protected_branches     = each.value.deployment_branch_policy.protected_branches
   }
 
   reviewers {

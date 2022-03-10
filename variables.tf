@@ -83,13 +83,13 @@ variable "description" {
 variable "environments" {
   type = map(object({
     deployment_branch_policy = object({
-      protected_branches     = bool
       custom_branch_policies = bool
+      protected_branches     = bool
     })
 
     reviewers = object({
-      users = list(string)
       teams = list(string)
+      users = list(string)
     })
 
     wait_timer = number

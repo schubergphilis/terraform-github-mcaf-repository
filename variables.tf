@@ -82,15 +82,17 @@ variable "description" {
 
 variable "environments" {
   type = map(object({
+    deployment_branch_policy = object({
+      protected_branches     = bool
+      custom_branch_policies = bool
+    })
+
     reviewers = object({
       users = list(string)
       teams = list(string)
     })
 
-    deployment_branch_policy = object({
-      protected_branches     = bool
-      custom_branch_policies = bool
-    })
+    wait_timer = number
   }))
   default     = {}
   description = "The Github environments that should be configured for reviewers and deployment branch policies"

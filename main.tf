@@ -55,6 +55,13 @@ resource "github_repository" "default" {
   }
 }
 
+resource "github_actions_secret" "secrets" {
+  for_each        = var.actions_secrets
+  repository      = github_repository.default.name
+  secret_name     = each.key
+  plaintext_value = each.value
+}
+
 resource "github_branch" "default" {
   for_each   = local.branches
   branch     = each.value
@@ -66,41 +73,6 @@ resource "github_branch_default" "default" {
   branch     = var.default_branch
   repository = github_repository.default.name
   depends_on = [github_branch.default]
-}
-
-resource "github_team_repository" "admins" {
-  count      = length(var.admins)
-  team_id    = var.admins[count.index]
-  permission = "admin"
-  repository = github_repository.default.name
-}
-
-resource "github_team_repository" "writers" {
-  count      = length(var.writers)
-  team_id    = var.writers[count.index]
-  permission = "push"
-  repository = github_repository.default.name
-}
-
-resource "github_team_repository" "readers" {
-  count      = length(var.readers)
-  team_id    = var.readers[count.index]
-  permission = "pull"
-  repository = github_repository.default.name
-}
-
-resource "github_repository_file" "default" {
-  for_each            = var.repository_files
-  branch              = var.default_branch
-  content             = each.value.content
-  file                = each.value.path
-  overwrite_on_create = true
-  repository          = github_repository.default.name
-
-  depends_on = [
-    github_branch.default,
-    github_branch_default.default
-  ]
 }
 
 resource "github_branch_protection" "default" {
@@ -139,9 +111,37 @@ resource "github_branch_protection" "default" {
   ]
 }
 
-resource "github_actions_secret" "secrets" {
-  for_each        = var.actions_secrets
-  repository      = github_repository.default.name
-  secret_name     = each.key
-  plaintext_value = each.value
+resource "github_team_repository" "admins" {
+  count      = length(var.admins)
+  team_id    = var.admins[count.index]
+  permission = "admin"
+  repository = github_repository.default.name
+}
+
+resource "github_team_repository" "writers" {
+  count      = length(var.writers)
+  team_id    = var.writers[count.index]
+  permission = "push"
+  repository = github_repository.default.name
+}
+
+resource "github_team_repository" "readers" {
+  count      = length(var.readers)
+  team_id    = var.readers[count.index]
+  permission = "pull"
+  repository = github_repository.default.name
+}
+
+resource "github_repository_file" "default" {
+  for_each            = var.repository_files
+  branch              = var.default_branch
+  content             = each.value.content
+  file                = each.value.path
+  overwrite_on_create = true
+  repository          = github_repository.default.name
+
+  depends_on = [
+    github_branch.default,
+    github_branch_default.default
+  ]
 }

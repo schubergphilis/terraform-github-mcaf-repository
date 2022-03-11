@@ -8,13 +8,13 @@ MCAF Terraform module to create and manage a GitHub repository.
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13 |
-| github | >= 3.1.0 |
+| github | >= 4.12.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| github | >= 3.1.0 |
+| github | >= 4.12.0 |
 
 ## Inputs
 
@@ -31,6 +31,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 | default\_branch | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
 | delete\_branch\_on\_merge | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |
 | description | A description for the GitHub repository | `string` | `null` | no |
+| environments | An optional map with GitHub environments to configure | <pre>map(object({<br>    secrets    = map(string)<br>    wait_timer = number<br><br>    deployment_branch_policy = object({<br>      custom_branch_policies = bool<br>      protected_branches     = bool<br>    })<br><br>    reviewers = object({<br>      teams = list(string)<br>      users = list(string)<br>    })<br>  }))</pre> | `{}` | no |
 | gitignore\_template | The name of the template without the extension | `string` | `null` | no |
 | has\_downloads | To enable downloads features on the repository | `bool` | `false` | no |
 | has\_issues | To enable GitHub Issues features on the repository | `bool` | `false` | no |

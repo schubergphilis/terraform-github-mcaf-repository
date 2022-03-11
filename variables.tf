@@ -82,6 +82,9 @@ variable "description" {
 
 variable "environments" {
   type = map(object({
+    secrets    = map(string)
+    wait_timer = number
+
     deployment_branch_policy = object({
       custom_branch_policies = bool
       protected_branches     = bool
@@ -91,13 +94,9 @@ variable "environments" {
       teams = list(string)
       users = list(string)
     })
-
-    secrets = map(string)
-
-    wait_timer = number
   }))
   default     = {}
-  description = "An optional map with GitHub environments that should be configured for reviewers and deployment branch policies"
+  description = "An optional map with GitHub environments to configure"
 }
 
 variable "gitignore_template" {

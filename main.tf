@@ -7,24 +7,6 @@ locals {
     ]
   ], [var.default_branch]]), [local.default_branch])
 
-  environment_secrets = flatten([
-    for env, spec in var.environments : [
-      for secret_name, secret_value in spec.secrets : {
-        environment = env
-        name        = secret_name
-        value       = secret_value
-      }
-    ]
-  ])
-
-  github_team_slugs = toset(flatten([
-    for spec in values(var.environments) : spec.reviewers.teams
-  ]))
-
-  github_usernames = toset(flatten([
-    for spec in values(var.environments) : spec.reviewers.users
-  ]))
-
   protection = flatten([
     for config in var.branch_protection : [
       for branch in config.branches : {
@@ -73,6 +55,13 @@ resource "github_repository" "default" {
   }
 }
 
+resource "github_actions_secret" "secrets" {
+  for_each        = var.actions_secrets
+  repository      = github_repository.default.name
+  secret_name     = each.key
+  plaintext_value = each.value
+}
+
 resource "github_branch" "default" {
   for_each   = local.branches
   branch     = each.value
@@ -84,41 +73,6 @@ resource "github_branch_default" "default" {
   branch     = var.default_branch
   repository = github_repository.default.name
   depends_on = [github_branch.default]
-}
-
-resource "github_team_repository" "admins" {
-  count      = length(var.admins)
-  team_id    = var.admins[count.index]
-  permission = "admin"
-  repository = github_repository.default.name
-}
-
-resource "github_team_repository" "writers" {
-  count      = length(var.writers)
-  team_id    = var.writers[count.index]
-  permission = "push"
-  repository = github_repository.default.name
-}
-
-resource "github_team_repository" "readers" {
-  count      = length(var.readers)
-  team_id    = var.readers[count.index]
-  permission = "pull"
-  repository = github_repository.default.name
-}
-
-resource "github_repository_file" "default" {
-  for_each            = var.repository_files
-  branch              = var.default_branch
-  content             = each.value.content
-  file                = each.value.path
-  overwrite_on_create = true
-  repository          = github_repository.default.name
-
-  depends_on = [
-    github_branch.default,
-    github_branch_default.default
-  ]
 }
 
 resource "github_branch_protection" "default" {
@@ -157,46 +111,37 @@ resource "github_branch_protection" "default" {
   ]
 }
 
-data "github_user" "default" {
-  for_each = local.github_usernames
-  username = each.key
+resource "github_team_repository" "admins" {
+  count      = length(var.admins)
+  team_id    = var.admins[count.index]
+  permission = "admin"
+  repository = github_repository.default.name
 }
 
-data "github_team" "default" {
-  for_each = local.github_team_slugs
-  slug     = each.key
+resource "github_team_repository" "writers" {
+  count      = length(var.writers)
+  team_id    = var.writers[count.index]
+  permission = "push"
+  repository = github_repository.default.name
 }
 
-resource "github_repository_environment" "default" {
-  for_each = var.environments
-
-  environment = each.key
-  repository  = github_repository.default.name
-  wait_timer  = each.value.wait_timer
-
-  deployment_branch_policy {
-    custom_branch_policies = each.value.deployment_branch_policy.custom_branch_policies
-    protected_branches     = each.value.deployment_branch_policy.protected_branches
-  }
-
-  reviewers {
-    teams = [for team_slug in each.value.reviewers.teams : data.github_team.default[team_slug].id]
-    users = [for username in each.value.reviewers.users : data.github_user.default[username].id]
-  }
+resource "github_team_repository" "readers" {
+  count      = length(var.readers)
+  team_id    = var.readers[count.index]
+  permission = "pull"
+  repository = github_repository.default.name
 }
 
-resource "github_actions_environment_secret" "secrets" {
-  for_each = { for secret in local.environment_secrets : "${secret.environment}:${secret.name}" => secret }
+resource "github_repository_file" "default" {
+  for_each            = var.repository_files
+  branch              = var.default_branch
+  content             = each.value.content
+  file                = each.value.path
+  overwrite_on_create = true
+  repository          = github_repository.default.name
 
-  repository      = github_repository.default.name
-  environment     = github_repository_environment.default[each.value.environment].environment
-  secret_name     = each.value.name
-  plaintext_value = each.value.value
-}
-
-resource "github_actions_secret" "secrets" {
-  for_each        = var.actions_secrets
-  repository      = github_repository.default.name
-  secret_name     = each.key
-  plaintext_value = each.value
+  depends_on = [
+    github_branch.default,
+    github_branch_default.default
+  ]
 }

@@ -63,9 +63,10 @@ resource "github_actions_secret" "secrets" {
 }
 
 resource "github_branch" "default" {
-  for_each   = local.branches
-  branch     = each.value
-  repository = github_repository.default.name
+  for_each      = local.branches
+  branch        = each.value
+  source_branch = var.default_branch
+  repository    = github_repository.default.name
 }
 
 resource "github_branch_default" "default" {

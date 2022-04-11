@@ -1,11 +1,11 @@
 locals {
   default_branch = "main"
 
-  branches = setsubtract(flatten([[
+  branches = setsubtract(flatten([
     for config in var.branch_protection : [
       config.branches
     ]
-  ], [var.default_branch]]), [local.default_branch])
+  ]), [local.default_branch, var.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [

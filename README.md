@@ -21,6 +21,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | The name of the repository | `string` | n/a | yes |
+| actions\_access\_level | Control how this repository is used by GitHub Actions workflows in other repositories | `string` | `null` | no |
 | actions\_secrets | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
 | admins | A list of GitHub teams that should have admins access | `list(string)` | `[]` | no |
 | allow\_rebase\_merge | To enable rebase merges on the repository | `bool` | `false` | no |

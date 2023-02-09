@@ -176,3 +176,14 @@ variable "writers" {
   default     = []
   description = "A list of GitHub teams that should have write access"
 }
+
+variable "actions_access_level" {
+  type        = string
+  default     = null
+  description = "Control how this repository is used by GitHub Actions workflows in other repositories"
+
+  validation {
+    condition     = var.actions_access_level == null || can(regex("^(none|user|organization|enterprise)$", var.actions_access_level))
+    error_message = "The value of the variable 'actions_access_level' must be one of 'none', 'user', 'organization' or 'enterprise'"
+  }
+}

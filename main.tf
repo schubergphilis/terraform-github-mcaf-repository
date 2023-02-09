@@ -62,6 +62,12 @@ resource "github_actions_secret" "secrets" {
   plaintext_value = each.value
 }
 
+resource "github_actions_repository_access_level" "actions_access_level" {
+  count        = var.actions_access_level != null ? 1 : 0
+  access_level = var.actions_access_level
+  repository   = github_repository.default.name
+}
+
 resource "github_branch" "default" {
   for_each   = local.branches
   branch     = each.value

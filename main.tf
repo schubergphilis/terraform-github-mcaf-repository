@@ -150,4 +150,11 @@ resource "github_repository_file" "default" {
     github_branch.default,
     github_branch_default.default
   ]
+
+  lifecycle {
+    ignore_changes = [
+      "commit_author",
+      "commit_email"
+    ]
+  }
 }

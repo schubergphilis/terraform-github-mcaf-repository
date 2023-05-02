@@ -1,11 +1,11 @@
 locals {
-  default_branch = "main"
+  default_branch = var.default_branch != "main" ? var.default_branch : "main"
 
-  branches = setsubtract(flatten([[
+  branches = setsubtract(flatten([
     for config in var.branch_protection : [
       config.branches
     ]
-  ], [var.default_branch]]), [local.default_branch])
+  ]), [local.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -75,8 +75,8 @@ resource "github_branch" "default" {
 }
 
 resource "github_branch_default" "default" {
-  count      = var.default_branch != local.default_branch ? 1 : 0
-  branch     = var.default_branch
+  count      = local.default_branch != "main" ? 1 : 0
+  branch     = local.default_branch
   repository = github_repository.default.name
   depends_on = [github_branch.default]
 }
@@ -140,7 +140,7 @@ resource "github_team_repository" "readers" {
 
 resource "github_repository_file" "default" {
   for_each            = var.repository_files
-  branch              = var.default_branch
+  branch              = local.default_branch
   content             = each.value.content
   file                = each.value.path
   overwrite_on_create = true
@@ -150,4 +150,11 @@ resource "github_repository_file" "default" {
     github_branch.default,
     github_branch_default.default
   ]
+
+  lifecycle {
+    ignore_changes = [
+      commit_author,
+      commit_email
+    ]
+  }
 }

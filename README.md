@@ -52,6 +52,7 @@ MCAF Terraform module to create and manage a GitHub repository.
 |------|-------------|
 | full\_name | The full 'organization/repository' name of the repository |
 | name | The name of the repository |
+| repo\_id | The id of the repository |
 
 <!--- END_TF_DOCS --->
 

@@ -9,6 +9,12 @@ variable "actions_secrets" {
   description = "An optional map with GitHub action secrets"
 }
 
+variable "actions_variables" {
+  type        = map(string)
+  default     = {}
+  description = " An optional map with GitHub Actions variables"
+}
+
 variable "admins" {
   type        = list(string)
   default     = []

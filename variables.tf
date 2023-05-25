@@ -12,7 +12,7 @@ variable "actions_secrets" {
 variable "actions_variables" {
   type        = map(string)
   default     = {}
-  description = "A map with GitHub Actions variables"
+  description = " An optional map with GitHub Actions variables"
 }
 
 variable "admins" {

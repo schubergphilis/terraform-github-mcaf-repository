@@ -158,3 +158,10 @@ resource "github_repository_file" "default" {
     ]
   }
 }
+
+resource "github_actions_variable" "action_variables" {
+  for_each      = var.actions_variables
+  repository    = github_repository.default.name
+  variable_name = each.key
+  value         = each.value
+}

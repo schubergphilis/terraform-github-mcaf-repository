@@ -27,6 +27,7 @@ locals {
 resource "github_repository" "default" {
   name                   = var.name
   description            = var.description
+  allow_auto_merge       = var.allow_auto_merge
   allow_rebase_merge     = var.allow_rebase_merge
   allow_squash_merge     = var.allow_squash_merge
   archived               = var.archived

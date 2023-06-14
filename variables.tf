@@ -21,6 +21,12 @@ variable "admins" {
   description = "A list of GitHub teams that should have admins access"
 }
 
+variable "allow_auto_merge" {
+  type        = bool
+  default     = false
+  description = "To enable auto merges on the repository"
+}
+
 variable "allow_rebase_merge" {
   type        = bool
   default     = false

@@ -23,6 +23,10 @@ locals {
   template_repository = var.template_repository != null ? { create = true } : {}
 }
 
+################################################################################
+# Repository
+################################################################################
+
 #tfsec:ignore:github-repositories-vulnerability-alerts
 resource "github_repository" "default" {
   name                   = var.name
@@ -56,18 +60,9 @@ resource "github_repository" "default" {
   }
 }
 
-resource "github_actions_secret" "secrets" {
-  for_each        = var.actions_secrets
-  repository      = github_repository.default.name
-  secret_name     = each.key
-  plaintext_value = each.value
-}
-
-resource "github_actions_repository_access_level" "actions_access_level" {
-  count        = var.actions_access_level != null ? 1 : 0
-  access_level = var.actions_access_level
-  repository   = github_repository.default.name
-}
+################################################################################
+# Branch and Branch protection
+################################################################################
 
 resource "github_branch" "default" {
   for_each   = local.branches
@@ -82,6 +77,7 @@ resource "github_branch_default" "default" {
   depends_on = [github_branch.default]
 }
 
+#checkov:skip=CKV_GIT_5:Pull requests should require at least 2 approvals - consumer of the module should decide
 resource "github_branch_protection" "default" {
   count                  = length(local.protection)
   enforce_admins         = local.protection[count.index].enforce_admins
@@ -118,6 +114,10 @@ resource "github_branch_protection" "default" {
   ]
 }
 
+################################################################################
+# Access
+################################################################################
+
 resource "github_team_repository" "admins" {
   count      = length(var.admins)
   team_id    = var.admins[count.index]
@@ -139,6 +139,35 @@ resource "github_team_repository" "readers" {
   repository = github_repository.default.name
 }
 
+################################################################################
+# Actions
+################################################################################
+
+resource "github_actions_repository_access_level" "actions_access_level" {
+  count        = var.actions_access_level != null ? 1 : 0
+  access_level = var.actions_access_level
+  repository   = github_repository.default.name
+}
+
+#checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - consumer of the module should decide
+resource "github_actions_secret" "secrets" {
+  for_each        = var.actions_secrets
+  repository      = github_repository.default.name
+  secret_name     = each.key
+  plaintext_value = each.value
+}
+
+resource "github_actions_variable" "action_variables" {
+  for_each      = var.actions_variables
+  repository    = github_repository.default.name
+  variable_name = each.key
+  value         = each.value
+}
+
+################################################################################
+# Files
+################################################################################
+
 resource "github_repository_file" "default" {
   for_each            = var.repository_files
   branch              = local.default_branch
@@ -158,11 +187,4 @@ resource "github_repository_file" "default" {
       commit_email
     ]
   }
-}
-
-resource "github_actions_variable" "action_variables" {
-  for_each      = var.actions_variables
-  repository    = github_repository.default.name
-  variable_name = each.key
-  value         = each.value
 }

@@ -1,4 +1,5 @@
 module "master_protected" {
+  #checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - n/a for the example
   source = "../../"
 
   name                   = "test"
@@ -19,7 +20,7 @@ module "master_protected" {
       required_reviews = {
         dismiss_stale_reviews           = true
         dismissal_restrictions          = []
-        required_approving_review_count = 1
+        required_approving_review_count = 2
         require_code_owner_reviews      = true
       }
     }

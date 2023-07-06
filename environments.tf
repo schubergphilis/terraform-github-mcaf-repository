@@ -8,24 +8,6 @@ locals {
       }
     ]
   ])
-
-  github_team_slugs = toset(flatten([
-    for config in values(var.environments) : config.reviewers.teams
-  ]))
-
-  github_usernames = toset(flatten([
-    for config in values(var.environments) : config.reviewers.users
-  ]))
-}
-
-data "github_user" "default" {
-  for_each = local.github_usernames
-  username = each.key
-}
-
-data "github_team" "default" {
-  for_each = local.github_team_slugs
-  slug     = each.key
 }
 
 resource "github_actions_environment_secret" "secrets" {
@@ -40,7 +22,8 @@ resource "github_actions_environment_secret" "secrets" {
 }
 
 resource "github_repository_environment" "default" {
-  for_each    = var.environments
+  for_each = var.environments
+
   environment = each.key
   repository  = github_repository.default.name
   wait_timer  = each.value.wait_timer
@@ -50,8 +33,12 @@ resource "github_repository_environment" "default" {
     protected_branches     = each.value.deployment_branch_policy.protected_branches
   }
 
-  reviewers {
-    teams = [for team_slug in each.value.reviewers.teams : data.github_team.default[team_slug].id]
-    users = [for username in each.value.reviewers.users : data.github_user.default[username].id]
+  dynamic "reviewers" {
+    for_each = each.value.reviewers != null ? { create = true } : {}
+
+    content {
+      teams = try(each.value.reviewers.teams, null)
+      users = try(each.value.reviewers.users, null)
+    }
   }
 }

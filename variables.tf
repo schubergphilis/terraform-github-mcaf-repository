@@ -94,18 +94,25 @@ variable "description" {
 
 variable "environments" {
   type = map(object({
-    secrets    = map(string)
-    wait_timer = number
+    secrets    = optional(map(string), {})
+    wait_timer = optional(number, null)
 
-    deployment_branch_policy = object({
-      custom_branch_policies = bool
-      protected_branches     = bool
-    })
+    deployment_branch_policy = optional(object(
+      {
+        custom_branch_policies = optional(bool, false)
+        protected_branches     = optional(bool, true)
+      }),
+      {
+        custom_branch_policies = false
+        protected_branches     = true
+      }
+    )
 
-    reviewers = object({
-      teams = list(string)
-      users = list(string)
-    })
+    reviewers = optional(object({
+      teams = optional(list(string))
+      users = optional(list(string))
+    }), null)
+
   }))
   default     = {}
   description = "An optional map with GitHub environments to configure"

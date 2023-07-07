@@ -29,20 +29,20 @@ locals {
 
 #tfsec:ignore:github-repositories-vulnerability-alerts
 resource "github_repository" "default" {
-  name                   = var.name
-  description            = var.description
   allow_auto_merge       = var.allow_auto_merge
   allow_rebase_merge     = var.allow_rebase_merge
   allow_squash_merge     = var.allow_squash_merge
   archived               = var.archived
   auto_init              = var.auto_init
   delete_branch_on_merge = var.delete_branch_on_merge
+  description            = var.description
   gitignore_template     = var.gitignore_template
   has_downloads          = var.has_downloads
   has_issues             = var.has_issues
   has_projects           = var.has_projects
   has_wiki               = var.has_wiki
   is_template            = var.is_template
+  name                   = var.name
   visibility             = var.visibility
   vulnerability_alerts   = var.vulnerability_alerts
 
@@ -65,21 +65,25 @@ resource "github_repository" "default" {
 ################################################################################
 
 resource "github_branch" "default" {
-  for_each   = local.branches
+  for_each = local.branches
+
   branch     = each.value
   repository = github_repository.default.name
 }
 
 resource "github_branch_default" "default" {
-  count      = local.default_branch != "main" ? 1 : 0
+  count = local.default_branch != "main" ? 1 : 0
+
   branch     = local.default_branch
   repository = github_repository.default.name
+
   depends_on = [github_branch.default]
 }
 
 #checkov:skip=CKV_GIT_5:Pull requests should require at least 2 approvals - consumer of the module should decide
 resource "github_branch_protection" "default" {
-  count                  = length(local.protection)
+  count = length(local.protection)
+
   enforce_admins         = local.protection[count.index].enforce_admins
   pattern                = local.protection[count.index].branch
   push_restrictions      = local.protection[count.index].push_restrictions
@@ -92,8 +96,8 @@ resource "github_branch_protection" "default" {
     content {
       dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
       dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_restrictions
-      required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
       require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
+      required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
     }
   }
 
@@ -101,8 +105,8 @@ resource "github_branch_protection" "default" {
     for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
 
     content {
-      strict   = local.protection[count.index].required_checks.strict
       contexts = local.protection[count.index].required_checks.contexts
+      strict   = local.protection[count.index].required_checks.strict
     }
   }
 
@@ -119,21 +123,24 @@ resource "github_branch_protection" "default" {
 ################################################################################
 
 resource "github_team_repository" "admins" {
-  count      = length(var.admins)
-  team_id    = var.admins[count.index]
+  count = length(var.admins)
+
   permission = "admin"
   repository = github_repository.default.name
+  team_id    = var.admins[count.index]
 }
 
 resource "github_team_repository" "writers" {
-  count      = length(var.writers)
+  count = length(var.writers)
+
   team_id    = var.writers[count.index]
   permission = "push"
   repository = github_repository.default.name
 }
 
 resource "github_team_repository" "readers" {
-  count      = length(var.readers)
+  count = length(var.readers)
+
   team_id    = var.readers[count.index]
   permission = "pull"
   repository = github_repository.default.name
@@ -144,24 +151,27 @@ resource "github_team_repository" "readers" {
 ################################################################################
 
 resource "github_actions_repository_access_level" "actions_access_level" {
-  count        = var.actions_access_level != null ? 1 : 0
+  count = var.actions_access_level != null ? 1 : 0
+
   access_level = var.actions_access_level
   repository   = github_repository.default.name
 }
 
 #checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - consumer of the module should decide
 resource "github_actions_secret" "secrets" {
-  for_each        = var.actions_secrets
+  for_each = var.actions_secrets
+
+  plaintext_value = each.value
   repository      = github_repository.default.name
   secret_name     = each.key
-  plaintext_value = each.value
 }
 
 resource "github_actions_variable" "action_variables" {
-  for_each      = var.actions_variables
+  for_each = var.actions_variables
+
   repository    = github_repository.default.name
-  variable_name = each.key
   value         = each.value
+  variable_name = each.key
 }
 
 ################################################################################
@@ -169,7 +179,8 @@ resource "github_actions_variable" "action_variables" {
 ################################################################################
 
 resource "github_repository_file" "default" {
-  for_each            = var.repository_files
+  for_each = var.repository_files
+
   branch              = local.default_branch
   content             = each.value.content
   file                = each.value.path

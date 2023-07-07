@@ -9,7 +9,7 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | >= 5.18.3 |
 
 ## Providers
@@ -39,8 +39,6 @@ No modules.
 | [github_team_repository.admins](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) | resource |
 | [github_team_repository.readers](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) | resource |
 | [github_team_repository.writers](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) | resource |
-| [github_team.default](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/team) | data source |
-| [github_user.default](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/user) | data source |
 
 ## Inputs
 
@@ -60,7 +58,7 @@ No modules.
 | <a name="input_default_branch"></a> [default\_branch](#input\_default\_branch) | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
 | <a name="input_delete_branch_on_merge"></a> [delete\_branch\_on\_merge](#input\_delete\_branch\_on\_merge) | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description for the GitHub repository | `string` | `null` | no |
-| <a name="input_environments"></a> [environments](#input\_environments) | An optional map with GitHub environments to configure | <pre>map(object({<br>    secrets    = map(string)<br>    wait_timer = number<br><br>    deployment_branch_policy = object({<br>      custom_branch_policies = bool<br>      protected_branches     = bool<br>    })<br><br>    reviewers = object({<br>      teams = list(string)<br>      users = list(string)<br>    })<br>  }))</pre> | `{}` | no |
+| <a name="input_environments"></a> [environments](#input\_environments) | An optional map with GitHub environments to configure | <pre>map(object({<br>    secrets    = optional(map(string), {})<br>    wait_timer = optional(number, null)<br><br>    deployment_branch_policy = optional(object(<br>      {<br>        custom_branch_policies = optional(bool, false)<br>        protected_branches     = optional(bool, true)<br>      }),<br>      {<br>        custom_branch_policies = false<br>        protected_branches     = true<br>      }<br>    )<br><br>    reviewers = optional(object({<br>      teams = optional(list(string))<br>      users = optional(list(string))<br>    }), null)<br><br>  }))</pre> | `{}` | no |
 | <a name="input_gitignore_template"></a> [gitignore\_template](#input\_gitignore\_template) | The name of the template without the extension | `string` | `null` | no |
 | <a name="input_has_downloads"></a> [has\_downloads](#input\_has\_downloads) | To enable downloads features on the repository | `bool` | `false` | no |
 | <a name="input_has_issues"></a> [has\_issues](#input\_has\_issues) | To enable GitHub Issues features on the repository | `bool` | `false` | no |

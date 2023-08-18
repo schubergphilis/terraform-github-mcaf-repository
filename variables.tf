@@ -154,6 +154,12 @@ variable "is_template" {
   description = "To mark this repository as a template repository"
 }
 
+variable "maintainers" {
+  type        = list(string)
+  default     = []
+  description = "A list of GitHub teams that should have maintain access"
+}
+
 variable "readers" {
   type        = list(string)
   default     = []

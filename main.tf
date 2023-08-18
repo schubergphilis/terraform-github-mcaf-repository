@@ -130,6 +130,14 @@ resource "github_team_repository" "admins" {
   team_id    = var.admins[count.index]
 }
 
+resource "github_team_repository" "maintainers" {
+  count = length(var.maintainers)
+
+  permission = "maintain"
+  repository = github_repository.default.name
+  team_id    = var.maintainers[count.index]
+}
+
 resource "github_team_repository" "writers" {
   count = length(var.writers)
 

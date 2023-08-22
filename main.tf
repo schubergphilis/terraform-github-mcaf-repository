@@ -123,35 +123,35 @@ resource "github_branch_protection" "default" {
 ################################################################################
 
 resource "github_team_repository" "admins" {
-  count = length(var.admins)
+  for_each = toset(var.admins)
 
   permission = "admin"
   repository = github_repository.default.name
-  team_id    = var.admins[count.index]
+  team_id    = each.key
 }
 
 resource "github_team_repository" "maintainers" {
-  count = length(var.maintainers)
+  for_each = toset(var.maintainers)
 
   permission = "maintain"
   repository = github_repository.default.name
-  team_id    = var.maintainers[count.index]
+  team_id    = each.key
 }
 
 resource "github_team_repository" "writers" {
-  count = length(var.writers)
+  for_each = toset(var.writers)
 
-  team_id    = var.writers[count.index]
   permission = "push"
   repository = github_repository.default.name
+  team_id    = each.key
 }
 
 resource "github_team_repository" "readers" {
-  count = length(var.readers)
+  for_each = toset(var.readers)
 
-  team_id    = var.readers[count.index]
   permission = "pull"
   repository = github_repository.default.name
+  team_id    = each.key
 }
 
 ################################################################################

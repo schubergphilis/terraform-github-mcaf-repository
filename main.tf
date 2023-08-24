@@ -1,11 +1,12 @@
 locals {
   default_branch = var.default_branch != "main" ? var.default_branch : "main"
 
-  branches = setunion(flatten([
+  # The default branch has to be created first, so make sure that's the first in the list
+  branches = distinct(concat([local.default_branch], flatten([
     for config in var.branch_protection : [
       config.branches
     ]
-  ]), [local.default_branch])
+  ])))
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -67,8 +68,9 @@ resource "github_repository" "default" {
 resource "github_branch" "default" {
   for_each = local.branches
 
-  branch     = each.value
-  repository = github_repository.default.name
+  branch        = each.value
+  repository    = github_repository.default.name
+  source_branch = local.default_branch
 }
 
 resource "github_branch_default" "default" {

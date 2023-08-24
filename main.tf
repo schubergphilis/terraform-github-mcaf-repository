@@ -1,7 +1,7 @@
 locals {
   default_branch = var.default_branch != "main" ? var.default_branch : "main"
 
-  branches = setsubtract(flatten([
+  branches = setunion(flatten([
     for config in var.branch_protection : [
       config.branches
     ]

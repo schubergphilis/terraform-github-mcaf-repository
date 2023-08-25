@@ -15,6 +15,16 @@ variable "actions_variables" {
   description = " An optional map with GitHub Actions variables"
 }
 
+variable "branches" {
+  type = list(object({
+    name          = string
+    source_branch = optional(string, null)
+    source_sha    = optional(string, null)
+  }))
+  default     = []
+  description = "A list of branches to be created in this repository"
+}
+
 variable "admins" {
   type        = list(string)
   default     = []

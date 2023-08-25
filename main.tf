@@ -1,11 +1,12 @@
 locals {
   default_branch = var.default_branch != "main" ? var.default_branch : "main"
 
-  branches = setsubtract(flatten([
-    for config in var.branch_protection : [
-      config.branches
-    ]
-  ]), [local.default_branch])
+  branches = merge({
+    (local.default_branch) = {
+      source_branch = local.default_branch
+    } },
+    { for branch in var.branches : branch.name => branch
+  })
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -67,13 +68,13 @@ resource "github_repository" "default" {
 resource "github_branch" "default" {
   for_each = local.branches
 
-  branch     = each.value
-  repository = github_repository.default.name
+  branch        = each.key
+  repository    = github_repository.default.name
+  source_branch = try(each.value.source_branch, null)
+  source_sha    = try(each.value.source_sha, null)
 }
 
 resource "github_branch_default" "default" {
-  count = local.default_branch != "main" ? 1 : 0
-
   branch     = local.default_branch
   repository = github_repository.default.name
 

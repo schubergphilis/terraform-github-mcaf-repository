@@ -1,12 +1,11 @@
 locals {
   default_branch = var.default_branch != "main" ? var.default_branch : "main"
 
-  # The default branch has to be created first, so make sure that's the first in the list
-  branches = distinct(concat([local.default_branch], flatten([
+  branches = setsubtract(flatten([
     for config in var.branch_protection : [
       config.branches
     ]
-  ])))
+  ]), [local.default_branch])
 
   protection = flatten([
     for config in var.branch_protection : [
@@ -65,12 +64,25 @@ resource "github_repository" "default" {
 # Branch and Branch protection
 ################################################################################
 
+resource "github_branch" "default_branch" {
+  branch        = local.default_branch
+  repository    = github_repository.default.name
+  source_branch = local.default_branch
+}
+
 resource "github_branch" "default" {
   for_each = local.branches
 
   branch        = each.value
   repository    = github_repository.default.name
   source_branch = local.default_branch
+
+  depends_on = [github_branch.default_branch]
+}
+
+moved {
+  from = github_branch.default[local.default_branch]
+  to   = github_branch.default_branch
 }
 
 resource "github_branch_default" "default" {

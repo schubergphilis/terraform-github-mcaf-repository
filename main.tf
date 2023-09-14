@@ -118,6 +118,13 @@ resource "github_branch_protection" "default" {
   ]
 }
 
+resource "github_repository_tag_protection" "default" {
+  count = var.tag_protection != null ? 1 : 0
+
+  repository = github_repository.default.name
+  pattern    = var.tag_protection
+}
+
 ################################################################################
 # Access
 ################################################################################

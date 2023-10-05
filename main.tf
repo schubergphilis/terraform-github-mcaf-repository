@@ -189,7 +189,7 @@ resource "github_actions_variable" "action_variables" {
 resource "github_repository_file" "default" {
   for_each = var.repository_files
 
-  branch              = local.default_branch
+  branch              = coalesce(each.value.branch, local.default_branch)
   content             = each.value.content
   file                = each.value.path
   overwrite_on_create = true

@@ -176,6 +176,12 @@ variable "repository_files" {
   description = "A list of GitHub repository files that should be created"
 }
 
+variable "tag_protection" {
+  type        = string
+  default     = null
+  description = "The repository tag protection pattern"
+}
+
 variable "template_repository" {
   type = object({
     owner      = string

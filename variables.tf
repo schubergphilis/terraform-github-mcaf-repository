@@ -168,6 +168,7 @@ variable "readers" {
 
 variable "repository_files" {
   type = map(object({
+    branch  = optional(string)
     path    = string
     content = string
   }))

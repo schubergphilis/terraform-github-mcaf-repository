@@ -51,36 +51,68 @@ variable "auto_init" {
   description = "Disable to not produce an initial commit in the repository"
 }
 
-variable "branch_protection" {
-  type = list(object({
-    branches       = list(string)
-    enforce_admins = bool
-    restrict_pushes = optional(object({
-      blocks_creations = optional(bool)
-      push_allowances  = optional(list(string))
-    }))
-    require_signed_commits = bool
+variable "branches" {
+  type = map(object({
+    source_branch                 = optional(string)
+    source_sha                    = optional(string)
+    use_default_branch_protection = optional(bool, true)
 
-    required_checks = optional(object({
-      strict   = bool
-      contexts = list(string)
-    }))
+    branch_protection = optional(object({
+      enforce_admins         = optional(bool, false)
+      require_signed_commits = optional(bool, false)
 
-    required_reviews = object({
-      dismiss_stale_reviews           = bool
-      dismissal_restrictions          = list(string)
-      required_approving_review_count = number
-      require_code_owner_reviews      = bool
-    })
+      required_checks = optional(object({
+        strict   = optional(bool)
+        contexts = optional(list(string))
+      }))
+
+      restrict_pushes = optional(object({
+        blocks_creations = optional(bool)
+        push_allowances  = optional(list(string))
+      }))
+
+      required_reviews = optional(object({
+        dismiss_stale_reviews           = optional(bool, true)
+        dismissal_restrictions          = optional(list(string))
+        required_approving_review_count = optional(number, 2)
+        require_code_owner_reviews      = optional(bool, true)
+      }))
+    }), null)
   }))
-  default     = []
-  description = "The GitHub branches to protect from forced pushes and deletion"
+  default     = {}
+  description = "An optional map with GitHub branches to create"
 }
 
 variable "default_branch" {
   type        = string
   default     = "main"
   description = "Name of the default branch for the GitHub repository"
+}
+
+variable "default_branch_protection" {
+  type = object({
+    enforce_admins         = optional(bool, false)
+    require_signed_commits = optional(bool, false)
+
+    required_checks = optional(object({
+      strict   = optional(bool)
+      contexts = optional(list(string))
+    }))
+
+    restrict_pushes = optional(object({
+      blocks_creations = optional(bool)
+      push_allowances  = optional(list(string))
+    }))
+
+    required_reviews = optional(object({
+      dismiss_stale_reviews           = optional(bool, true)
+      dismissal_restrictions          = optional(list(string))
+      required_approving_review_count = optional(number, 2)
+      require_code_owner_reviews      = optional(bool, true)
+    }))
+  })
+  default     = {}
+  description = "Default branch protection settings for managed branches"
 }
 
 variable "delete_branch_on_merge" {

@@ -22,6 +22,6 @@ tasks:
   test:
     desc: Run Terraform tests
     cmds:
-      - terraform init -test-directory=examples/basic
-      - terraform test -test-directory=examples/basic
+      - terraform init
+      - terraform test
     silent: true

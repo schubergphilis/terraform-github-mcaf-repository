@@ -13,9 +13,14 @@ module "master_protected" {
     {
       branches               = ["master"]
       enforce_admins         = false
-      required_checks        = null
-      push_restrictions      = []
       require_signed_commits = false
+
+      restrict_pushes = {
+        blocks_creations = false
+        push_allowances = [
+          "/exampleuser",
+        ]
+      }
 
       required_reviews = {
         dismiss_stale_reviews           = true

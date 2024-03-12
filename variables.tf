@@ -61,10 +61,10 @@ variable "branch_protection" {
     }))
     require_signed_commits = bool
 
-    required_checks = object({
+    required_checks = optional(object({
       strict   = bool
       contexts = list(string)
-    })
+    }))
 
     required_reviews = object({
       dismiss_stale_reviews           = bool

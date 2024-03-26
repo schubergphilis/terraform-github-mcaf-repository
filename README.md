@@ -66,6 +66,7 @@ No modules.
 | <a name="input_has_issues"></a> [has\_issues](#input\_has\_issues) | To enable GitHub Issues features on the repository | `bool` | `false` | no |
 | <a name="input_has_projects"></a> [has\_projects](#input\_has\_projects) | To enable GitHub Projects features on the repository | `bool` | `false` | no |
 | <a name="input_has_wiki"></a> [has\_wiki](#input\_has\_wiki) | To enable GitHub Wiki features on the repository | `bool` | `false` | no |
+| <a name="input_homepage_url"></a> [homepage\_url](#input\_homepage\_url) | URL of a page describing the project | `string` | `null` | no |
 | <a name="input_is_template"></a> [is\_template](#input\_is\_template) | To mark this repository as a template repository | `bool` | `false` | no |
 | <a name="input_maintainers"></a> [maintainers](#input\_maintainers) | A list of GitHub teams that should have maintain access | `list(string)` | `[]` | no |
 | <a name="input_readers"></a> [readers](#input\_readers) | A list of GitHub teams that should have read access | `list(string)` | `[]` | no |

@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v0.11.0 - 2024-03-26
+
+### What's Changed
+
+#### 🚀 Features
+
+* feat : Add homepage_url support (#64) @sbkg0002
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v0.10.0...v0.11.0
+
 ## v0.10.0 - 2023-10-06
 
 ### What's Changed

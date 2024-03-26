@@ -154,6 +154,12 @@ variable "is_template" {
   description = "To mark this repository as a template repository"
 }
 
+variable "homepage_url" {
+  type        = string
+  default     = null
+  description = "URL of a page describing the project"
+}
+
 variable "maintainers" {
   type        = list(string)
   default     = []

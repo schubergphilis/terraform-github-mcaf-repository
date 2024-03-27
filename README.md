@@ -10,13 +10,13 @@ IMPORTANT: We do not pin modules to versions in our examples. We highly recommen
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 5.18 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 5.18 |
+| <a name="provider_github"></a> [github](#provider\_github) | ~> 6.0 |
 
 ## Modules
 
@@ -56,7 +56,7 @@ No modules.
 | <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | To enable squash merges on the repository | `bool` | `false` | no |
 | <a name="input_archived"></a> [archived](#input\_archived) | Specifies if the repository should be archived | `bool` | `false` | no |
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
-| <a name="input_branch_protection"></a> [branch\_protection](#input\_branch\_protection) | The GitHub branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches               = list(string)<br>    enforce_admins         = bool<br>    push_restrictions      = list(string)<br>    require_signed_commits = bool<br><br>    required_checks = object({<br>      strict   = bool<br>      contexts = list(string)<br>    })<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br>  }))</pre> | `[]` | no |
+| <a name="input_branch_protection"></a> [branch\_protection](#input\_branch\_protection) | The GitHub branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches       = list(string)<br>    enforce_admins = bool<br>    restrict_pushes = optional(object({<br>      blocks_creations = optional(bool)<br>      push_allowances  = optional(list(string))<br>    }))<br>    require_signed_commits = bool<br><br>    required_checks = optional(object({<br>      strict   = bool<br>      contexts = list(string)<br>    }))<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br>  }))</pre> | `[]` | no |
 | <a name="input_default_branch"></a> [default\_branch](#input\_default\_branch) | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
 | <a name="input_delete_branch_on_merge"></a> [delete\_branch\_on\_merge](#input\_delete\_branch\_on\_merge) | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description for the GitHub repository | `string` | `null` | no |

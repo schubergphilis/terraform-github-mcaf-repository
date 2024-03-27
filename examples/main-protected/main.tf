@@ -12,8 +12,6 @@ module "test_main_protected" {
     {
       branches               = ["main"]
       enforce_admins         = false
-      required_checks        = null
-      push_restrictions      = []
       require_signed_commits = false
 
       required_reviews = {

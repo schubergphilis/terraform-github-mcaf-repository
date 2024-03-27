@@ -12,7 +12,7 @@ locals {
       for branch in config.branches : {
         branch                 = branch
         enforce_admins         = config.enforce_admins
-        push_restrictions      = config.push_restrictions
+        restrict_pushes        = config.restrict_pushes
         require_signed_commits = config.require_signed_commits
         required_checks        = config.required_checks
         required_reviews       = config.required_reviews
@@ -87,9 +87,17 @@ resource "github_branch_protection" "default" {
 
   enforce_admins         = local.protection[count.index].enforce_admins
   pattern                = local.protection[count.index].branch
-  push_restrictions      = local.protection[count.index].push_restrictions
   repository_id          = github_repository.default.name
   require_signed_commits = local.protection[count.index].require_signed_commits
+
+  dynamic "restrict_pushes" {
+    for_each = local.protection[count.index].restrict_pushes != null ? { create : true } : {}
+
+    content {
+      blocks_creations = local.protection[count.index].restrict_pushes.blocks_creations
+      push_allowances  = local.protection[count.index].restrict_pushes.push_allowances
+    }
+  }
 
   dynamic "required_pull_request_reviews" {
     for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}

@@ -351,8 +351,6 @@ run "with_custom_branch_protection" {
 
     branches = {
       "develop" = {
-        use_default_branch_protection = false
-
         branch_protection = {
           enforce_admins         = true
           require_signed_commits = true
@@ -468,9 +466,7 @@ run "with_no_branch_protection" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = {
-        use_default_branch_protection = false
-      }
+      "develop" = { use_branch_protection = false }
     }
   }
 

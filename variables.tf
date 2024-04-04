@@ -53,9 +53,9 @@ variable "auto_init" {
 
 variable "branches" {
   type = map(object({
-    source_branch                 = optional(string)
-    source_sha                    = optional(string)
-    use_default_branch_protection = optional(bool, true)
+    source_branch         = optional(string)
+    source_sha            = optional(string)
+    use_branch_protection = optional(bool, true)
 
     branch_protection = optional(object({
       enforce_admins         = optional(bool, false)
@@ -99,19 +99,28 @@ variable "default_branch_protection" {
       contexts = optional(list(string))
     }))
 
-    restrict_pushes = optional(object({
-      blocks_creations = optional(bool)
-      push_allowances  = optional(list(string))
-    }))
-
     required_reviews = optional(object({
       dismiss_stale_reviews           = optional(bool, true)
       dismissal_restrictions          = optional(list(string))
       required_approving_review_count = optional(number, 2)
       require_code_owner_reviews      = optional(bool, true)
     }))
+
+    restrict_pushes = optional(object({
+      blocks_creations = optional(bool)
+      push_allowances  = optional(list(string))
+    }))
   })
-  default     = {}
+  default = {
+    enforce_admins         = false
+    require_signed_commits = false
+
+    required_reviews = {
+      dismiss_stale_reviews           = true
+      required_approving_review_count = 2
+      require_code_owner_reviews      = true
+    }
+  }
   description = "Default branch protection settings for managed branches"
 }
 

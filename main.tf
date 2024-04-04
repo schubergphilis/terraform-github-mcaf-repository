@@ -1,7 +1,7 @@
 locals {
   // Make sure we also manage the default branch by adding it to the branches map.
   branches = merge(
-    { (var.default_branch) = { branch_protection = null, use_default_branch_protection = true } },
+    { (var.default_branch) = { branch_protection = null, use_branch_protection = true } },
     var.branches,
   )
 }
@@ -65,54 +65,54 @@ resource "github_branch_default" "default" {
 }
 
 resource "github_branch_protection" "default" {
-  for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_default_branch_protection == true }
+  for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
 
-  enforce_admins         = each.value.use_default_branch_protection ? var.default_branch_protection.enforce_admins : try(each.value.branch_protection.enforce_admins, null)
+  enforce_admins         = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
   pattern                = each.key
   repository_id          = github_repository.default.name
-  require_signed_commits = each.value.use_default_branch_protection ? var.default_branch_protection.require_signed_commits : try(each.value.branch_protection.require_signed_commits, null)
+  require_signed_commits = each.value.branch_protection != null ? try(each.value.branch_protection.require_signed_commits, null) : var.default_branch_protection.require_signed_commits
 
   dynamic "restrict_pushes" {
     for_each = try(each.value.branch_protection.restrict_pushes, null) != null ? { create : true } : {}
 
     content {
-      blocks_creations = each.value.use_default_branch_protection ? var.default_branch_protection.restrict_pushes.blocks_creations : each.value.branch_protection.restrict_pushes.blocks_creations
-      push_allowances  = each.value.use_default_branch_protection ? var.default_branch_protection.restrict_pushes.push_allowances : each.value.branch_protection.restrict_pushes.push_allowances
+      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
+      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
     }
   }
 
   dynamic "required_pull_request_reviews" {
-    for_each = try(each.value.branch_protection.required_reviews, null) != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_reviews, null) != null || var.default_branch_protection.required_reviews != null ? { create : true } : {}
 
     content {
-      dismiss_stale_reviews           = each.value.use_default_branch_protection ? var.default_branch_protection.required_reviews.dismiss_stale_reviews : each.value.branch_protection.required_reviews.dismiss_stale_reviews
-      dismissal_restrictions          = each.value.use_default_branch_protection ? var.default_branch_protection.required_reviews.restrict_dismissals : each.value.branch_protection.required_reviews.dismissal_restrictions
-      require_code_owner_reviews      = each.value.use_default_branch_protection ? var.default_branch_protection.required_reviews.require_code_owner_reviews : each.value.branch_protection.required_reviews.require_code_owner_reviews
-      required_approving_review_count = each.value.use_default_branch_protection ? var.default_branch_protection.required_reviews.required_approving_review_count : each.value.branch_protection.required_reviews.required_approving_review_count
-    }
-  }
-
-  dynamic "restrict_pushes" {
-    for_each = try(each.value.branch_protection.restrict_pushes, null) != null ? { create : true } : {}
-
-    content {
-      blocks_creations = each.value.use_default_branch_protection ? var.default_branch_protection.restrict_pushes.blocks_creations : each.value.branch_protection.restrict_pushes.blocks_creations
-      push_allowances  = each.value.use_default_branch_protection ? var.default_branch_protection.restrict_pushes.push_allowances : each.value.branch_protection.restrict_pushes.push_allowances
+      dismiss_stale_reviews           = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismiss_stale_reviews, null) : try(var.default_branch_protection.required_reviews.dismiss_stale_reviews, null)
+      dismissal_restrictions          = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismissal_restrictions, null) : try(var.default_branch_protection.required_reviews.dismissal_restrictions, null)
+      require_code_owner_reviews      = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.require_code_owner_reviews, null) : try(var.default_branch_protection.required_reviews.require_code_owner_reviews, null)
+      required_approving_review_count = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.required_approving_review_count, null) : try(var.default_branch_protection.required_reviews.required_approving_review_count, null)
     }
   }
 
   dynamic "required_status_checks" {
-    for_each = try(each.value.branch_protection.required_checks, null) != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_checks, null) != null || var.default_branch_protection.required_checks != null ? { create : true } : {}
 
     content {
-      contexts = each.value.use_default_branch_protection ? var.default_branch_protection.required_checks.contexts : each.value.branch_protection.required_checks.contexts
-      strict   = each.value.use_default_branch_protection ? var.default_branch_protection.required_checks.strict : each.value.branch_protection.required_checks.strict
+      contexts = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.contexts, null) : try(var.default_branch_protection.required_checks.contexts, null)
+      strict   = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.strict, null) : try(var.default_branch_protection.required_checks.strict, null)
     }
   }
 
   depends_on = [
     github_branch.default,
   ]
+
+  dynamic "restrict_pushes" {
+    for_each = try(each.value.branch_protection.restrict_pushes, null) != null || var.default_branch_protection.restrict_pushes != null ? { create : true } : {}
+
+    content {
+      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
+      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
+    }
+  }
 }
 
 resource "github_repository_tag_protection" "default" {

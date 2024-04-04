@@ -63,8 +63,7 @@ module "with_custom_branch_protection" {
 
   branches = {
     "develop" = {
-      use_default_branch_protection = false
-
+      // if this is set, it takes precedence over the default branch protection settings
       branch_protection = {
         enforce_admins         = true
         require_signed_commits = true
@@ -82,8 +81,6 @@ module "with_no_branch_protection" {
   name = "basic"
 
   branches = {
-    "develop" = {
-      use_default_branch_protection = false
-    }
+    "develop" = { use_branch_protection = false }
   }
 }

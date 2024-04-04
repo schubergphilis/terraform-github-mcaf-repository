@@ -1,8 +1,63 @@
 # terraform-github-mcaf-repository
 
-MCAF Terraform module to create and manage a GitHub repository.
+Terraform module to create and manage a GitHub repository.
 
-IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
+## Configuring (additional) branches
+
+Additional branches can be created and configured using `var.branches`. Any branches created here are in addition to the default branch (`var.default_branch`).
+
+The default behaviour is for any branch created by this branch to inherit the default branch protection settings (`var.default_branch_protection`), but this can be overridden by either settings the `branch_protection` key or disabling branch protection by setting the `use_branch_protection` field to `false`.
+
+The following example shows how to configure a `develop` branch, in addition to the default `main` branch:
+
+```hcl
+module "with_default_branch" {
+  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {}
+  }
+}
+```
+
+To override the default branch protection settings, specify the `branch_protection` key:
+
+```hcl
+module "with_default_branch" {
+  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      branch_protection = {
+        enforce_admins         = true
+        require_signed_commits = true
+      }
+    }
+  }
+}
+```
+
+In the event you want to create branches using Terraform but do not want any branch protection to be configured, you can set `use_branch_protection` to `false`:
+
+```hcl
+module "with_default_branch" {
+  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      branch_protection = { use_branch_protection = false }
+    }
+  }
+}
+```
+
+For more examples, see the [branches examples](https://github.com/schubergphilis/terraform-github-mcaf-repository/blob/master/examples/branches/main.tf).
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

@@ -58,7 +58,7 @@ run "basic" {
     error_message = "Branch protection require_conversation_resolution does not match"
   }
   assert {
-    condition     = resource.github_branch_protection.default["main"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["main"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
   assert {

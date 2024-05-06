@@ -65,7 +65,7 @@ run "basic" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["develop"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["develop"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 
@@ -105,7 +105,7 @@ run "basic" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["main"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 
@@ -121,7 +121,7 @@ run "with_default_branch" {
 
     branches = {
       "develop" = {}
-      "main" = {}
+      "main"    = {}
     }
   }
 
@@ -178,7 +178,7 @@ run "with_default_branch" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["develop"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["develop"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 
@@ -219,7 +219,7 @@ run "with_default_branch" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["main"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 
@@ -451,7 +451,7 @@ run "with_custom_branch_protection" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["main"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 
@@ -532,7 +532,7 @@ run "with_no_branch_protection" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].require_signed_commits == false
+    condition     = resource.github_branch_protection.default["main"].require_signed_commits == true
     error_message = "Branch protection require_signed_commits does not match"
   }
 

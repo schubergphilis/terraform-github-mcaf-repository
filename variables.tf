@@ -59,7 +59,7 @@ variable "branches" {
 
     branch_protection = optional(object({
       enforce_admins         = optional(bool, false)
-      require_signed_commits = optional(bool, false)
+      require_signed_commits = optional(bool, true)
 
       required_checks = optional(object({
         strict   = optional(bool)
@@ -92,7 +92,7 @@ variable "default_branch" {
 variable "default_branch_protection" {
   type = object({
     enforce_admins         = optional(bool, false)
-    require_signed_commits = optional(bool, false)
+    require_signed_commits = optional(bool, true)
 
     required_checks = optional(object({
       strict   = optional(bool)
@@ -113,7 +113,7 @@ variable "default_branch_protection" {
   })
   default = {
     enforce_admins         = false
-    require_signed_commits = false
+    require_signed_commits = true
 
     required_reviews = {
       dismiss_stale_reviews           = true

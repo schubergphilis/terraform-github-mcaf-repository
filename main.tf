@@ -65,12 +65,14 @@ resource "github_branch_default" "default" {
 }
 
 resource "github_branch_protection" "default" {
+  # checkov:skip=CKV_GIT_6:GitHub repository defined in Terraform does not have GPG signatures for all commits - this is a false positive, we default to `true` but checkov can't see this
+
   for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
 
   enforce_admins         = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
   pattern                = each.key
   repository_id          = github_repository.default.name
-  require_signed_commits = each.value.branch_protection != null ? try(each.value.branch_protection.require_signed_commits, null) : var.default_branch_protection.require_signed_commits
+  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : var.default_branch_protection.require_signed_commits
 
   dynamic "restrict_pushes" {
     for_each = try(each.value.branch_protection.restrict_pushes, null) != null ? { create : true } : {}
@@ -169,8 +171,8 @@ resource "github_actions_repository_access_level" "actions_access_level" {
   repository   = github_repository.default.name
 }
 
-#checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - consumer of the module should decide
 resource "github_actions_secret" "secrets" {
+  # checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
   for_each = var.actions_secrets
 
   plaintext_value = each.value

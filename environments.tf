@@ -11,6 +11,7 @@ locals {
 }
 
 resource "github_actions_environment_secret" "secrets" {
+  # checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
   for_each = {
     for secret in local.environment_secrets : "${secret.environment}:${secret.name}" => secret
   }

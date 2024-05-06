@@ -2,17 +2,15 @@
 
 Terraform module to create and manage a GitHub repository.
 
-## Configuring (additional) branches
+## Creating branches
 
 Additional branches can be created and configured using `var.branches`. Any branches created here are in addition to the default branch (`var.default_branch`).
 
-The default behaviour is for any branch created by this branch to inherit the default branch protection settings (`var.default_branch_protection`), but this can be overridden by either settings the `branch_protection` key or disabling branch protection by setting the `use_branch_protection` field to `false`.
-
-The following example shows how to configure a `develop` branch, in addition to the default `main` branch:
+You can create branches by either adding them to `var.branches`:
 
 ```hcl
-module "with_default_branch" {
-  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
 
   name = "my-repo"
 
@@ -22,11 +20,33 @@ module "with_default_branch" {
 }
 ```
 
+Or by specifying the source branch or hash by setting `source_branch` or `source_sha` respectively:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      source_branch = "release"
+    }
+  }
+}
+```
+
+See the [github_branch resource](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch) for more details
+
+## Configuring (additional) branches
+
+The default behaviour is for any branch created by this branch to inherit the default branch protection settings (`var.default_branch_protection`), but this can be overridden by either settings the `branch_protection` key or disabling branch protection by setting the `use_branch_protection` field to `false`.
+
 To override the default branch protection settings, specify the `branch_protection` key:
 
 ```hcl
-module "with_default_branch" {
-  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
 
   name = "my-repo"
 
@@ -44,8 +64,8 @@ module "with_default_branch" {
 In the event you want to create branches using Terraform but do not want any branch protection to be configured, you can set `use_branch_protection` to `false`:
 
 ```hcl
-module "with_default_branch" {
-  source = "github.com/schubergphilis/terraform-github-mcaf-repository"
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
 
   name = "my-repo"
 

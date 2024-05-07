@@ -5,6 +5,17 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.0.0 - 2024-05-07
+
+### What's Changed
+
+#### 🚀 Features
+
+* breaking: create and set branch configuration using `var.branches` (#61) @shoekstra
+* feat: Upgrade to GitHub provider v6.0 (#62) @ninadpage
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v0.12.0...v1.0.0
+
 ## v0.12.0 - 2024-03-27
 
 ### What's Changed

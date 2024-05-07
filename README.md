@@ -1,8 +1,83 @@
 # terraform-github-mcaf-repository
 
-MCAF Terraform module to create and manage a GitHub repository.
+Terraform module to create and manage a GitHub repository.
 
-IMPORTANT: We do not pin modules to versions in our examples. We highly recommend that in your code you pin the version to the exact version you are using so that your infrastructure remains stable.
+## Creating branches
+
+Additional branches can be created and configured using `var.branches`. Any branches created here are in addition to the default branch (`var.default_branch`).
+
+You can create branches by either adding them to `var.branches`:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {}
+  }
+}
+```
+
+Or by specifying the source branch or hash by setting `source_branch` or `source_sha` respectively:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      source_branch = "release"
+    }
+  }
+}
+```
+
+See the [github_branch resource](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch) for more details
+
+## Configuring (additional) branches
+
+The default behaviour is for any branch created by this branch to inherit the default branch protection settings (`var.default_branch_protection`), but this can be overridden by either settings the `branch_protection` key or disabling branch protection by setting the `use_branch_protection` field to `false`.
+
+To override the default branch protection settings, specify the `branch_protection` key:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      branch_protection = {
+        enforce_admins         = true
+        require_signed_commits = true
+      }
+    }
+  }
+}
+```
+
+In the event you want to create branches using Terraform but do not want any branch protection to be configured, you can set `use_branch_protection` to `false`:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  branches = {
+    "develop" = {
+      branch_protection = { use_branch_protection = false }
+    }
+  }
+}
+```
+
+For more examples, see the [branches examples](https://github.com/schubergphilis/terraform-github-mcaf-repository/blob/master/examples/branches/main.tf).
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -56,8 +131,9 @@ No modules.
 | <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | To enable squash merges on the repository | `bool` | `false` | no |
 | <a name="input_archived"></a> [archived](#input\_archived) | Specifies if the repository should be archived | `bool` | `false` | no |
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
-| <a name="input_branch_protection"></a> [branch\_protection](#input\_branch\_protection) | The GitHub branches to protect from forced pushes and deletion | <pre>list(object({<br>    branches       = list(string)<br>    enforce_admins = bool<br>    restrict_pushes = optional(object({<br>      blocks_creations = optional(bool)<br>      push_allowances  = optional(list(string))<br>    }))<br>    require_signed_commits = bool<br><br>    required_checks = optional(object({<br>      strict   = bool<br>      contexts = list(string)<br>    }))<br><br>    required_reviews = object({<br>      dismiss_stale_reviews           = bool<br>      dismissal_restrictions          = list(string)<br>      required_approving_review_count = number<br>      require_code_owner_reviews      = bool<br>    })<br>  }))</pre> | `[]` | no |
+| <a name="input_branches"></a> [branches](#input\_branches) | An optional map with GitHub branches to create | <pre>map(object({<br>    source_branch         = optional(string)<br>    source_sha            = optional(string)<br>    use_branch_protection = optional(bool, true)<br><br>    branch_protection = optional(object({<br>      enforce_admins         = optional(bool, false)<br>      require_signed_commits = optional(bool, true)<br><br>      required_checks = optional(object({<br>        strict   = optional(bool)<br>        contexts = optional(list(string))<br>      }))<br><br>      restrict_pushes = optional(object({<br>        blocks_creations = optional(bool)<br>        push_allowances  = optional(list(string))<br>      }))<br><br>      required_reviews = optional(object({<br>        dismiss_stale_reviews           = optional(bool, true)<br>        dismissal_restrictions          = optional(list(string))<br>        required_approving_review_count = optional(number, 2)<br>        require_code_owner_reviews      = optional(bool, true)<br>      }))<br>    }), null)<br>  }))</pre> | `{}` | no |
 | <a name="input_default_branch"></a> [default\_branch](#input\_default\_branch) | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
+| <a name="input_default_branch_protection"></a> [default\_branch\_protection](#input\_default\_branch\_protection) | Default branch protection settings for managed branches | <pre>object({<br>    enforce_admins         = optional(bool, false)<br>    require_signed_commits = optional(bool, true)<br><br>    required_checks = optional(object({<br>      strict   = optional(bool)<br>      contexts = optional(list(string))<br>    }))<br><br>    required_reviews = optional(object({<br>      dismiss_stale_reviews           = optional(bool, true)<br>      dismissal_restrictions          = optional(list(string))<br>      required_approving_review_count = optional(number, 2)<br>      require_code_owner_reviews      = optional(bool, true)<br>    }))<br><br>    restrict_pushes = optional(object({<br>      blocks_creations = optional(bool)<br>      push_allowances  = optional(list(string))<br>    }))<br>  })</pre> | <pre>{<br>  "enforce_admins": false,<br>  "require_signed_commits": true,<br>  "required_reviews": {<br>    "dismiss_stale_reviews": true,<br>    "require_code_owner_reviews": true,<br>    "required_approving_review_count": 2<br>  }<br>}</pre> | no |
 | <a name="input_delete_branch_on_merge"></a> [delete\_branch\_on\_merge](#input\_delete\_branch\_on\_merge) | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description for the GitHub repository | `string` | `null` | no |
 | <a name="input_environments"></a> [environments](#input\_environments) | An optional map with GitHub environments to configure | <pre>map(object({<br>    secrets    = optional(map(string), {})<br>    wait_timer = optional(number, null)<br><br>    deployment_branch_policy = optional(object(<br>      {<br>        custom_branch_policies = optional(bool, false)<br>        protected_branches     = optional(bool, true)<br>      }),<br>      {<br>        custom_branch_policies = false<br>        protected_branches     = true<br>      }<br>    )<br><br>    reviewers = optional(object({<br>      teams = optional(list(string))<br>      users = optional(list(string))<br>    }), null)<br><br>  }))</pre> | `{}` | no |

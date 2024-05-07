@@ -1,26 +1,9 @@
 locals {
-  default_branch = var.default_branch != "main" ? var.default_branch : "main"
-
-  branches = setsubtract(flatten([
-    for config in var.branch_protection : [
-      config.branches
-    ]
-  ]), [local.default_branch])
-
-  protection = flatten([
-    for config in var.branch_protection : [
-      for branch in config.branches : {
-        branch                 = branch
-        enforce_admins         = config.enforce_admins
-        restrict_pushes        = config.restrict_pushes
-        require_signed_commits = config.require_signed_commits
-        required_checks        = config.required_checks
-        required_reviews       = config.required_reviews
-      }
-    ]
-  ])
-
-  template_repository = var.template_repository != null ? { create = true } : {}
+  // Make sure we also manage the default branch by adding it to the branches map.
+  branches = merge(
+    { (var.default_branch) = { branch_protection = null, use_branch_protection = true } },
+    var.branches,
+  )
 }
 
 ################################################################################
@@ -48,7 +31,7 @@ resource "github_repository" "default" {
   vulnerability_alerts   = var.vulnerability_alerts
 
   dynamic "template" {
-    for_each = local.template_repository
+    for_each = var.template_repository != null ? { create = true } : {}
 
     content {
       owner      = var.template_repository.owner
@@ -68,63 +51,70 @@ resource "github_repository" "default" {
 resource "github_branch" "default" {
   for_each = local.branches
 
-  branch     = each.value
-  repository = github_repository.default.name
+  branch        = each.key
+  repository    = github_repository.default.name
+  source_branch = coalesce(try(each.value.source_branch, null), var.default_branch)
+  source_sha    = try(each.value.source_sha, null)
 }
 
 resource "github_branch_default" "default" {
-  count = local.default_branch != "main" ? 1 : 0
-
-  branch     = local.default_branch
+  branch     = var.default_branch
   repository = github_repository.default.name
 
   depends_on = [github_branch.default]
 }
 
-#checkov:skip=CKV_GIT_5:Pull requests should require at least 2 approvals - consumer of the module should decide
 resource "github_branch_protection" "default" {
-  count = length(local.protection)
+  # checkov:skip=CKV_GIT_6:GitHub repository defined in Terraform does not have GPG signatures for all commits - this is a false positive, we default to `true` but checkov can't see this
 
-  enforce_admins         = local.protection[count.index].enforce_admins
-  pattern                = local.protection[count.index].branch
+  for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
+
+  enforce_admins         = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
+  pattern                = each.key
   repository_id          = github_repository.default.name
-  require_signed_commits = local.protection[count.index].require_signed_commits
+  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : var.default_branch_protection.require_signed_commits
 
   dynamic "restrict_pushes" {
-    for_each = local.protection[count.index].restrict_pushes != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.restrict_pushes, null) != null ? { create : true } : {}
 
     content {
-      blocks_creations = local.protection[count.index].restrict_pushes.blocks_creations
-      push_allowances  = local.protection[count.index].restrict_pushes.push_allowances
+      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
+      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
     }
   }
 
   dynamic "required_pull_request_reviews" {
-    for_each = local.protection[count.index].required_reviews != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_reviews, null) != null || var.default_branch_protection.required_reviews != null ? { create : true } : {}
 
     content {
-      dismiss_stale_reviews           = local.protection[count.index].required_reviews.dismiss_stale_reviews
-      dismissal_restrictions          = local.protection[count.index].required_reviews.dismissal_restrictions
-      require_code_owner_reviews      = local.protection[count.index].required_reviews.require_code_owner_reviews
-      required_approving_review_count = local.protection[count.index].required_reviews.required_approving_review_count
+      dismiss_stale_reviews           = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismiss_stale_reviews, null) : try(var.default_branch_protection.required_reviews.dismiss_stale_reviews, null)
+      dismissal_restrictions          = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismissal_restrictions, null) : try(var.default_branch_protection.required_reviews.dismissal_restrictions, null)
+      require_code_owner_reviews      = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.require_code_owner_reviews, null) : try(var.default_branch_protection.required_reviews.require_code_owner_reviews, null)
+      required_approving_review_count = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.required_approving_review_count, null) : try(var.default_branch_protection.required_reviews.required_approving_review_count, null)
     }
   }
 
   dynamic "required_status_checks" {
-    for_each = local.protection[count.index].required_checks != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_checks, null) != null || var.default_branch_protection.required_checks != null ? { create : true } : {}
 
     content {
-      contexts = local.protection[count.index].required_checks.contexts
-      strict   = local.protection[count.index].required_checks.strict
+      contexts = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.contexts, null) : try(var.default_branch_protection.required_checks.contexts, null)
+      strict   = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.strict, null) : try(var.default_branch_protection.required_checks.strict, null)
     }
   }
 
   depends_on = [
     github_branch.default,
-    github_branch_default.default,
-    github_repository.default,
-    github_repository_file.default
   ]
+
+  dynamic "restrict_pushes" {
+    for_each = try(each.value.branch_protection.restrict_pushes, null) != null || var.default_branch_protection.restrict_pushes != null ? { create : true } : {}
+
+    content {
+      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
+      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
+    }
+  }
 }
 
 resource "github_repository_tag_protection" "default" {
@@ -181,8 +171,8 @@ resource "github_actions_repository_access_level" "actions_access_level" {
   repository   = github_repository.default.name
 }
 
-#checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - consumer of the module should decide
 resource "github_actions_secret" "secrets" {
+  # checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
   for_each = var.actions_secrets
 
   plaintext_value = each.value
@@ -205,7 +195,7 @@ resource "github_actions_variable" "action_variables" {
 resource "github_repository_file" "default" {
   for_each = var.repository_files
 
-  branch              = coalesce(each.value.branch, local.default_branch)
+  branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
   file                = each.value.path
   overwrite_on_create = true
@@ -213,7 +203,6 @@ resource "github_repository_file" "default" {
 
   depends_on = [
     github_branch.default,
-    github_branch_default.default
   ]
 
   lifecycle {

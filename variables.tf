@@ -139,10 +139,12 @@ variable "description" {
 variable "environments" {
   type = map(object({
     secrets    = optional(map(string), {})
+    variables  = optional(map(string), {})
     wait_timer = optional(number, null)
 
     deployment_branch_policy = optional(object(
       {
+        branch_patterns        = optional(list(string), [])
         custom_branch_policies = optional(bool, false)
         protected_branches     = optional(bool, true)
       }),

@@ -94,10 +94,6 @@ resource "github_branch_protection" "default" {
     }
   }
 
-  depends_on = [
-    github_branch.default,
-  ]
-
   dynamic "restrict_pushes" {
     for_each = try(each.value.branch_protection.restrict_pushes, null) != null || var.default_branch_protection.restrict_pushes != null ? { create : true } : {}
 
@@ -106,6 +102,10 @@ resource "github_branch_protection" "default" {
       push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
     }
   }
+
+  depends_on = [
+    github_branch.default,
+  ]
 }
 
 resource "github_repository_tag_protection" "default" {

@@ -74,15 +74,6 @@ resource "github_branch_protection" "default" {
   repository_id          = github_repository.default.name
   require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : var.default_branch_protection.require_signed_commits
 
-  dynamic "restrict_pushes" {
-    for_each = try(each.value.branch_protection.restrict_pushes, null) != null ? { create : true } : {}
-
-    content {
-      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
-      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
-    }
-  }
-
   dynamic "required_pull_request_reviews" {
     for_each = try(each.value.branch_protection.required_reviews, null) != null || var.default_branch_protection.required_reviews != null ? { create : true } : {}
 

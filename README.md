@@ -71,7 +71,7 @@ module "mcaf-repository" {
 
   branches = {
     "develop" = {
-      branch_protection = { use_branch_protection = false }
+      use_branch_protection = false
     }
   }
 }

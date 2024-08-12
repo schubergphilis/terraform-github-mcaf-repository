@@ -228,6 +228,28 @@ variable "repository_files" {
   description = "A list of GitHub repository files that should be created"
 }
 
+variable "squash_merge_commit_message" {
+  type        = string
+  default     = "COMMIT_MESSAGES"
+  description = "The default commit message for squash merges"
+
+  validation {
+    condition     = can(regex("^(PR_BODY|COMMIT_MESSAGES|BLANK)$", var.squash_merge_commit_message))
+    error_message = "The value of the variable 'squash_merge_commit_message' must be one of 'PR_BODY', 'COMMIT_MESSAGES' or 'BLANK'"
+  }
+}
+
+variable "squash_merge_commit_title" {
+  type        = string
+  default     = "COMMIT_OR_PR_TITLE"
+  description = "The default commit title for squash merges"
+
+  validation {
+    condition     = can(regex("^(PR_TITLE|COMMIT_OR_PR_TITLE)$", var.squash_merge_commit_title))
+    error_message = "The value of the variable 'squash_merge_commit_title' must be one of 'PR_TITLE' or 'COMMIT_OR_PR_TITLE'"
+  }
+}
+
 variable "tag_protection" {
   type        = string
   default     = null

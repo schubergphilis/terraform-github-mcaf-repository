@@ -12,23 +12,25 @@ locals {
 
 #tfsec:ignore:github-repositories-vulnerability-alerts
 resource "github_repository" "default" {
-  allow_auto_merge       = var.allow_auto_merge
-  allow_rebase_merge     = var.allow_rebase_merge
-  allow_squash_merge     = var.allow_squash_merge
-  archived               = var.archived
-  auto_init              = var.auto_init
-  delete_branch_on_merge = var.delete_branch_on_merge
-  description            = var.description
-  gitignore_template     = var.gitignore_template
-  has_downloads          = var.has_downloads
-  has_issues             = var.has_issues
-  has_projects           = var.has_projects
-  has_wiki               = var.has_wiki
-  homepage_url           = var.homepage_url
-  is_template            = var.is_template
-  name                   = var.name
-  visibility             = var.visibility
-  vulnerability_alerts   = var.vulnerability_alerts
+  allow_auto_merge            = var.allow_auto_merge
+  allow_rebase_merge          = var.allow_rebase_merge
+  allow_squash_merge          = var.allow_squash_merge
+  archived                    = var.archived
+  auto_init                   = var.auto_init
+  delete_branch_on_merge      = var.delete_branch_on_merge
+  description                 = var.description
+  gitignore_template          = var.gitignore_template
+  has_downloads               = var.has_downloads
+  has_issues                  = var.has_issues
+  has_projects                = var.has_projects
+  has_wiki                    = var.has_wiki
+  homepage_url                = var.homepage_url
+  is_template                 = var.is_template
+  name                        = var.name
+  squash_merge_commit_message = var.allow_squash_merge ? var.squash_merge_commit_message : null
+  squash_merge_commit_title   = var.allow_squash_merge ? var.squash_merge_commit_title : null
+  visibility                  = var.visibility
+  vulnerability_alerts        = var.vulnerability_alerts
 
   dynamic "template" {
     for_each = var.template_repository != null ? { create = true } : {}

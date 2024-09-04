@@ -110,11 +110,35 @@ resource "github_branch_protection" "default" {
   ]
 }
 
-resource "github_repository_tag_protection" "default" {
-  count = var.tag_protection != null ? 1 : 0
+resource "github_repository_ruleset" "default" {
+  count       = var.tag_protection != null ? 1 : 0
+  name        = "Tag protection"
+  repository  = github_repository.default.name
+  target      = "tag"
+  enforcement = "active"
 
-  repository = github_repository.default.name
-  pattern    = var.tag_protection
+  bypass_actors {
+    actor_id    = 5 # Repository admins
+    actor_type  = "RepositoryRole"
+    bypass_mode = "always"
+  }
+
+  bypass_actors {
+    actor_id    = 1 # Organization admins
+    actor_type  = "OrganizationAdmin"
+    bypass_mode = "always"
+  }
+
+  rules {
+    creation = true
+    update   = true
+    deletion = true
+
+    tag_name_pattern {
+      operator = "regex"
+      pattern  = var.tag_protection
+    }
+  }
 }
 
 ################################################################################

@@ -127,15 +127,17 @@ resource "github_repository_ruleset" "default" {
     bypass_mode = "always"
   }
 
+  conditions {
+    ref_name {
+      exclude = []
+      include = ["refs/tags/${var.tag_protection}"]
+    }
+  }
+
   rules {
     creation = true
     update   = true
     deletion = true
-
-    tag_name_pattern {
-      operator = "regex"
-      pattern  = var.tag_protection
-    }
   }
 }
 

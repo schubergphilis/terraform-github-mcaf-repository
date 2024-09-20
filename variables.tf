@@ -39,6 +39,12 @@ variable "allow_squash_merge" {
   description = "To enable squash merges on the repository"
 }
 
+variable "archive_on_destroy" {
+  type        = bool
+  default     = false
+  description = "Set to true to archive the repository instead of deleting on destroy"
+}
+
 variable "archived" {
   type        = bool
   default     = false

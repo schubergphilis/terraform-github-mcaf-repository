@@ -9,7 +9,7 @@ run "basic" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = {}
+      develop = {}
     }
   }
 
@@ -120,8 +120,8 @@ run "with_default_branch" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = {}
-      "main"    = {}
+      develop = {}
+      main = {}
     }
   }
 
@@ -234,7 +234,7 @@ run "with_updated_default_branch_protection" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = {}
+      develop = {}
     }
 
     default_branch_protection = {
@@ -350,7 +350,7 @@ run "with_custom_branch_protection" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = {
+      develop = {
         branch_protection = {
           enforce_admins         = true
           require_signed_commits = true
@@ -466,7 +466,9 @@ run "with_no_branch_protection" {
     name = "basic-${run.setup.random_string}"
 
     branches = {
-      "develop" = { use_branch_protection = false }
+      develop = {
+        use_branch_protection = false
+      }
     }
   }
 

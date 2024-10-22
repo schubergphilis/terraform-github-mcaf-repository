@@ -9,23 +9,25 @@ module "master_protected" {
   delete_branch_on_merge = true
   description            = "test master"
 
-  branch_protection = {
+  branches = {
     master = {
-      enforce_admins         = false
-      require_signed_commits = false
+      branch_protection = {
+        enforce_admins         = false
+        require_signed_commits = false
 
-      restrict_pushes = {
-        blocks_creations = false
-        push_allowances = [
-          "/exampleuser",
-        ]
-      }
+        restrict_pushes = {
+          blocks_creations = false
+          push_allowances = [
+            "/exampleuser",
+          ]
+        }
 
-      required_reviews = {
-        dismiss_stale_reviews           = true
-        dismissal_restrictions          = []
-        required_approving_review_count = 2
-        require_code_owner_reviews      = true
+        required_reviews = {
+          dismiss_stale_reviews           = true
+          dismissal_restrictions          = []
+          required_approving_review_count = 2
+          require_code_owner_reviews      = true
+        }
       }
     }
   }

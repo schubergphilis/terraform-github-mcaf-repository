@@ -10,14 +10,16 @@ module "test_main_protected" {
 
   branches = {
     main = {
-      enforce_admins         = false
-      require_signed_commits = false
+      branch_protection = {
+        enforce_admins         = false
+        require_signed_commits = false
 
-      required_reviews = {
-        dismiss_stale_reviews           = true
-        dismissal_restrictions          = []
-        required_approving_review_count = 2
-        require_code_owner_reviews      = true
+        required_reviews = {
+          dismiss_stale_reviews           = true
+          dismissal_restrictions          = []
+          required_approving_review_count = 2
+          require_code_owner_reviews      = true
+        }
       }
     }
   }

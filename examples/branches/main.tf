@@ -17,7 +17,7 @@ module "basic" {
   name = "basic"
 
   branches = {
-    "develop" = {}
+    develop = {}
   }
 }
 
@@ -30,8 +30,8 @@ module "with_default_branch" {
   name = "basic"
 
   branches = {
-    "develop" = {}
-    "main"    = {}
+    develop = {}
+    main    = {}
   }
 }
 
@@ -44,7 +44,7 @@ module "with_updated_default_branch_protection" {
   name = "basic"
 
   branches = {
-    "develop" = {}
+    develop = {}
   }
 
   default_branch_protection = {
@@ -62,7 +62,7 @@ module "with_custom_branch_protection" {
   name = "basic"
 
   branches = {
-    "develop" = {
+    develop = {
       // if this is set, it takes precedence over the default branch protection settings
       branch_protection = {
         enforce_admins         = true
@@ -81,6 +81,8 @@ module "with_no_branch_protection" {
   name = "basic"
 
   branches = {
-    "develop" = { use_branch_protection = false }
+    develop = {
+      use_branch_protection = false
+    }
   }
 }

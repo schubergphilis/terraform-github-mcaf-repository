@@ -3,7 +3,8 @@ terraform {
 
   required_providers {
     github = {
-      source = "integrations/github"
+      source  = "integrations/github"
+      version = "~> 6.0"
     }
   }
 }
@@ -21,7 +22,7 @@ module "basic" {
   }
 }
 
-// This example should be the same as the above example.
+// It's not needed to specify the default branch name as it's already merged in by the module, but for completeness and for testing purposes, it's shown here
 module "with_default_branch" {
   #checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - n/a for the example
 

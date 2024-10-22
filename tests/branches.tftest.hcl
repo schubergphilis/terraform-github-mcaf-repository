@@ -121,7 +121,7 @@ run "with_default_branch" {
 
     branches = {
       develop = {}
-      main = {}
+      main    = {}
     }
   }
 

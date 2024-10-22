@@ -23,7 +23,7 @@ module "main_no_branch_protection" {
 
   source = "../.."
 
-  name = "basic"
+  name = "test"
 
   branches = {
     main = {
@@ -47,7 +47,7 @@ module "master_no_branch_protection" {
 
   source = "../.."
 
-  name           = "basic"
+  name           = "test"
   default_branch = "master"
 
   branches = {

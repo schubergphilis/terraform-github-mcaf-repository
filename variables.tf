@@ -64,6 +64,7 @@ variable "branches" {
     use_branch_protection = optional(bool, true)
 
     branch_protection = optional(object({
+      allows_force_pushes    = optional(bool, false)
       enforce_admins         = optional(bool, false)
       require_signed_commits = optional(bool, true)
 
@@ -97,6 +98,7 @@ variable "default_branch" {
 
 variable "default_branch_protection" {
   type = object({
+    allows_force_pushes    = optional(bool, false)
     enforce_admins         = optional(bool, false)
     require_signed_commits = optional(bool, true)
 

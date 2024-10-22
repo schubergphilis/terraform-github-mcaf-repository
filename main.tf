@@ -72,9 +72,11 @@ resource "github_branch_protection" "default" {
 
   for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
 
-  enforce_admins         = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
-  pattern                = each.key
-  repository_id          = github_repository.default.name
+  allows_force_pushes = each.value.branch_protection != null ? try(each.value.branch_protection.allows_force_pushes, null) : var.default_branch_protection.allows_force_pushes
+  enforce_admins      = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
+  pattern             = each.key
+  repository_id       = github_repository.default.name
+
   require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : var.default_branch_protection.require_signed_commits
 
   dynamic "required_pull_request_reviews" {

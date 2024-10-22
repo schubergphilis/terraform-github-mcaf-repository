@@ -9,9 +9,8 @@ module "master_protected" {
   delete_branch_on_merge = true
   description            = "test master"
 
-  branch_protection = [
-    {
-      branches               = ["master"]
+  branch_protection = {
+    master = {
       enforce_admins         = false
       require_signed_commits = false
 
@@ -29,5 +28,5 @@ module "master_protected" {
         require_code_owner_reviews      = true
       }
     }
-  ]
+  }
 }

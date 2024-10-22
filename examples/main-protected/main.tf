@@ -8,9 +8,8 @@ module "test_main_protected" {
   delete_branch_on_merge = true
   description            = "test main"
 
-  branch_protection = [
-    {
-      branches               = ["main"]
+  branches = {
+    main = {
       enforce_admins         = false
       require_signed_commits = false
 
@@ -21,5 +20,5 @@ module "test_main_protected" {
         require_code_owner_reviews      = true
       }
     }
-  ]
+  }
 }

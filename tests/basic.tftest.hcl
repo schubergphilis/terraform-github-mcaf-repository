@@ -46,7 +46,7 @@ run "basic" {
     error_message = "Branch protection allows_force_pushes does not match"
   }
   assert {
-    condition     = resource.github_branch_protection.default["main"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["main"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
   assert {

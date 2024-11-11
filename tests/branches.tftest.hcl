@@ -50,7 +50,7 @@ run "basic" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["develop"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["develop"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 
@@ -90,7 +90,7 @@ run "basic" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["main"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 
@@ -163,7 +163,7 @@ run "with_default_branch" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["develop"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["develop"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 
@@ -204,7 +204,7 @@ run "with_default_branch" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["main"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 
@@ -436,7 +436,7 @@ run "with_custom_branch_protection" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["main"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 
@@ -517,7 +517,7 @@ run "with_no_branch_protection" {
   }
 
   assert {
-    condition     = resource.github_branch_protection.default["main"].enforce_admins == false
+    condition     = resource.github_branch_protection.default["main"].enforce_admins == true
     error_message = "Branch protection enforce_admins does not match"
   }
 

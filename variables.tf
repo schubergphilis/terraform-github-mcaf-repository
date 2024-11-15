@@ -83,6 +83,7 @@ variable "branches" {
         dismissal_restrictions          = optional(list(string))
         required_approving_review_count = optional(number, 2)
         require_code_owner_reviews      = optional(bool, true)
+        pull_request_bypassers          = optional(list(string))
       }))
     }), null)
   }))
@@ -112,6 +113,7 @@ variable "default_branch_protection" {
       dismissal_restrictions          = optional(list(string))
       required_approving_review_count = optional(number, 2)
       require_code_owner_reviews      = optional(bool, true)
+      pull_request_bypassers          = optional(list(string))
     }))
 
     restrict_pushes = optional(object({

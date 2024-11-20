@@ -43,7 +43,7 @@ resource "github_repository" "default" {
   }
 
   lifecycle {
-    ignore_changes = [pages]
+    ignore_changes = [pages, template]
   }
 }
 

@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v1.5.1 - 2024-11-22
+
+### What's Changed
+
+#### 🐛 Bug Fixes
+
+* bug: template is added every plan (#77) @Plork
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v1.5.0...v1.5.1
+
 ## v1.5.0 - 2024-11-18
 
 ### What's Changed

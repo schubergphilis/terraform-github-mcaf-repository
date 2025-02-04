@@ -128,7 +128,7 @@ resource "github_repository_ruleset" "default" {
   }
 
   bypass_actors {
-    actor_id    = 1 # Organization admins
+    actor_id    = 0 # Organization admins
     actor_type  = "OrganizationAdmin"
     bypass_mode = "always"
   }

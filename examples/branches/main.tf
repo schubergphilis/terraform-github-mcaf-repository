@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">= 1.3.0"
-
-  required_providers {
-    github = {
-      source  = "integrations/github"
-      version = "~> 6.0"
-    }
-  }
-}
-
 // This example to create and manage an additional branch called `develop`
 module "basic" {
   #checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - n/a for the example

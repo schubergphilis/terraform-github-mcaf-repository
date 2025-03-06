@@ -72,15 +72,15 @@ resource "github_branch_protection" "default" {
 
   for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
 
-  allows_force_pushes = each.value.branch_protection != null ? try(each.value.branch_protection.allows_force_pushes, null) : var.default_branch_protection.allows_force_pushes
-  enforce_admins      = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : var.default_branch_protection.enforce_admins
+  allows_force_pushes = each.value.branch_protection != null ? try(each.value.branch_protection.allows_force_pushes, null) : try(var.default_branch_protection.allows_force_pushes, null)
+  enforce_admins      = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : try(var.default_branch_protection.enforce_admins, null)
   pattern             = each.key
   repository_id       = github_repository.default.name
 
-  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : var.default_branch_protection.require_signed_commits
+  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : try(var.default_branch_protection.require_signed_commits, null)
 
   dynamic "required_pull_request_reviews" {
-    for_each = try(each.value.branch_protection.required_reviews, null) != null || var.default_branch_protection.required_reviews != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_reviews, null) != null || try(var.default_branch_protection.required_reviews, null) != null ? { create : true } : {}
 
     content {
       dismiss_stale_reviews           = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismiss_stale_reviews, null) : try(var.default_branch_protection.required_reviews.dismiss_stale_reviews, null)
@@ -92,7 +92,7 @@ resource "github_branch_protection" "default" {
   }
 
   dynamic "required_status_checks" {
-    for_each = try(each.value.branch_protection.required_checks, null) != null || var.default_branch_protection.required_checks != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_checks, null) != null || try(var.default_branch_protection.required_checks, null) != null ? { create : true } : {}
 
     content {
       contexts = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.contexts, null) : try(var.default_branch_protection.required_checks.contexts, null)
@@ -101,7 +101,7 @@ resource "github_branch_protection" "default" {
   }
 
   dynamic "restrict_pushes" {
-    for_each = try(each.value.branch_protection.restrict_pushes, null) != null || var.default_branch_protection.restrict_pushes != null ? { create : true } : {}
+    for_each = try(each.value.branch_protection.restrict_pushes, null) != null || try(var.default_branch_protection.restrict_pushes, null) != null ? { create : true } : {}
 
     content {
       blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)

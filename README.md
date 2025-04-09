@@ -123,6 +123,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_name"></a> [name](#input\_name) | The name of the repository | `string` | n/a | yes |
 | <a name="input_actions_access_level"></a> [actions\_access\_level](#input\_actions\_access\_level) | Control how this repository is used by GitHub Actions workflows in other repositories | `string` | `null` | no |
 | <a name="input_actions_secrets"></a> [actions\_secrets](#input\_actions\_secrets) | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
 | <a name="input_actions_variables"></a> [actions\_variables](#input\_actions\_variables) | An optional map with GitHub Actions variables | `map(string)` | `{}` | no |
@@ -147,7 +148,6 @@ No modules.
 | <a name="input_homepage_url"></a> [homepage\_url](#input\_homepage\_url) | URL of a page describing the project | `string` | `null` | no |
 | <a name="input_is_template"></a> [is\_template](#input\_is\_template) | To mark this repository as a template repository | `bool` | `false` | no |
 | <a name="input_maintainers"></a> [maintainers](#input\_maintainers) | A list of GitHub teams that should have maintain access | `list(string)` | `[]` | no |
-| <a name="input_name"></a> [name](#input\_name) | The name of the repository | `string` | n/a | yes |
 | <a name="input_readers"></a> [readers](#input\_readers) | A list of GitHub teams that should have read access | `list(string)` | `[]` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A list of GitHub repository files that should be created | <pre>map(object({<br/>    branch  = optional(string)<br/>    path    = string<br/>    content = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |

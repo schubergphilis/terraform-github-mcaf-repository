@@ -215,8 +215,10 @@ resource "github_actions_variable" "action_variables" {
 # Files
 ################################################################################
 
-resource "github_repository_file" "default" {
-  for_each = var.repository_files
+# Files created by this resource are fully managed. Any downstream updates will be replaced the
+# next time Terraform runs.
+resource "github_repository_file" "managed" {
+  for_each = { for k, v in var.repository_files : k => v if v.managed }
 
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
@@ -229,9 +231,31 @@ resource "github_repository_file" "default" {
   ]
 
   lifecycle {
-    ignore_changes = [
-      commit_author,
-      commit_email
-    ]
+    ignore_changes = [commit_author, commit_email]
+  }
+}
+
+moved { # FIXME: This can be removed in the next major version.
+  from = github_repository_file.default
+  to   = github_repository_file.managed
+}
+
+# Files created by this resource are a one time action. Any downstream content changes will not be
+# overwritten. This helps to build a repository skeleton where you want some templating.
+resource "github_repository_file" "unmanaged" {
+  for_each = { for k, v in var.repository_files : k => v if !v.managed }
+
+  branch              = coalesce(each.value.branch, github_branch_default.default.branch)
+  content             = each.value.content
+  file                = each.value.path
+  overwrite_on_create = true
+  repository          = github_repository.default.name
+
+  depends_on = [
+    github_branch.default,
+  ]
+
+  lifecycle {
+    ignore_changes = [commit_author, commit_email, content]
   }
 }

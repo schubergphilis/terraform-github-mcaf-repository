@@ -77,7 +77,48 @@ module "mcaf-repository" {
 }
 ```
 
-For more examples, see the [branches examples](https://github.com/schubergphilis/terraform-github-mcaf-repository/blob/master/examples/branches/main.tf).
+For more examples, see the [branches examples](/examples/branches/main.tf).
+
+## Granting access to a repository
+
+This module manages repository access by granting access to pre-existing teams. To grant a team access, populate the `access` map, using the team name as the key and the desired level as the value, for example:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  access = {
+    MyTeam   = "maintain"
+    Everyone = "push"
+  }
+}
+```
+
+The module will use a data resource to look up the team ID and assign the team the desired permissions.
+
+> [!IMPORTANT]
+> If you're creating a GitHub team in the same run/workspace that assigns permissions to the repository, you must set an explicit dependency to ensure the team is created before repository:
+>
+> ```hcl
+> resource "github_team" "myteam" {
+>   name = "MyTeam"
+> }
+>
+> module "mcaf-repository" {
+>   source = "schubergphilis/mcaf-repository/github"
+>
+>   name = "my-repo"
+>
+>   access = {
+>     MyTeam   = "maintain"
+>     Everyone = "push"
+>   }
+>
+>   depends_on = [github_team.myteam]
+> }
+> ```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

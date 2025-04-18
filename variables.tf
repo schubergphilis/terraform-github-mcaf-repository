@@ -233,6 +233,7 @@ variable "repository_files" {
     branch  = optional(string)
     path    = string
     content = string
+    managed = optional(bool, true)
   }))
   default     = {}
   description = "A list of GitHub repository files that should be created"

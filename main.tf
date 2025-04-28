@@ -151,36 +151,20 @@ resource "github_repository_ruleset" "default" {
 # Access
 ################################################################################
 
-resource "github_team_repository" "admins" {
-  for_each = toset(var.admins)
+# Add data resource to look up the team ID. Team names must be unique in an organization so using
+# them as an input is safe.
+data "github_team" "default" {
+  for_each = var.access
 
-  permission = "admin"
-  repository = github_repository.default.name
-  team_id    = each.key
+  slug = each.key
 }
 
-resource "github_team_repository" "maintainers" {
-  for_each = toset(var.maintainers)
+resource "github_team_repository" "default" {
+  for_each = var.access
 
-  permission = "maintain"
+  permission = lower(each.value)
   repository = github_repository.default.name
-  team_id    = each.key
-}
-
-resource "github_team_repository" "writers" {
-  for_each = toset(var.writers)
-
-  permission = "push"
-  repository = github_repository.default.name
-  team_id    = each.key
-}
-
-resource "github_team_repository" "readers" {
-  for_each = toset(var.readers)
-
-  permission = "pull"
-  repository = github_repository.default.name
-  team_id    = each.key
+  team_id    = data.github_team.default[each.key].id
 }
 
 ################################################################################

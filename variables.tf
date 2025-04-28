@@ -1,3 +1,14 @@
+variable "access" {
+  type        = map(string)
+  default     = {}
+  description = "An optional map with GitHub team names and their access level to the repository"
+
+  validation {
+    condition     = alltrue([for value in values(var.access) : can(regex("^(admin|maintain|pull|push)$", lower(value)))])
+    error_message = "The value of the variable 'access' must be one of 'admin', 'maintain', 'pull' or 'push'"
+  }
+}
+
 variable "name" {
   type        = string
   description = "The name of the repository"
@@ -13,12 +24,6 @@ variable "actions_variables" {
   type        = map(string)
   default     = {}
   description = " An optional map with GitHub Actions variables"
-}
-
-variable "admins" {
-  type        = list(string)
-  default     = []
-  description = "A list of GitHub teams that should have admins access"
 }
 
 variable "allow_auto_merge" {
@@ -216,18 +221,6 @@ variable "homepage_url" {
   description = "URL of a page describing the project"
 }
 
-variable "maintainers" {
-  type        = list(string)
-  default     = []
-  description = "A list of GitHub teams that should have maintain access"
-}
-
-variable "readers" {
-  type        = list(string)
-  default     = []
-  description = "A list of GitHub teams that should have read access"
-}
-
 variable "repository_files" {
   type = map(object({
     branch  = optional(string)
@@ -286,12 +279,6 @@ variable "vulnerability_alerts" {
   type        = bool
   default     = false
   description = "To enable security alerts for vulnerable dependencies"
-}
-
-variable "writers" {
-  type        = list(string)
-  default     = []
-  description = "A list of GitHub teams that should have write access"
 }
 
 variable "actions_access_level" {

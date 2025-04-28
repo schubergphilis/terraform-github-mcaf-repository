@@ -2,6 +2,23 @@
 
 This document captures breaking changes.
 
+## Upgrading to v2.0.0
+
+To fix a bug where group IDs are not known at plan time, `var.access` has been added to replace the `var.admins`, `var.maintainers`, `var.readers` and `var.writers`. This allows specifying the team name as the map key and the desired access level as the value.
+
+To migrate, map the old variables to the new variable:
+
+```hcl
+access = {
+  MyRepoAdmins      = "admin" // was admins      = [github_group.admin.id]
+  MyRepoMaintainers = "write" // was maintainers = [github_group.maintainer.id]
+  MyRepoReaders     = "pull"  // was readers     = [github_group.reader.id]
+  MyRepoWriters     = "push"  // was writers     = [github_group.writer.id]
+}
+```
+
+There are `moved` blocks inside the module so this upgrade should not cause any disruption.
+
 ## Upgrading to v1.0.0
 
 First major release which also includes some breaking changes regarding how branches are configured:

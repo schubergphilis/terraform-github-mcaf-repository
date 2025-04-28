@@ -2,6 +2,12 @@
 
 Terraform module to create and manage a GitHub repository.
 
+## Adding a license or `.gitignore` template
+
+Take care when configuring either `var.license_template` or `var.gitignore_template` as the values are case sensitive. See [here for a list of supported licenses](https://github.com/github/choosealicense.com/tree/gh-pages/_licenses) or [here for a list of supported gitignore templates](https://github.com/github/gitignore) - to use either, provide the file name without the extension, e.g. `mit` or `Terraform` respectively.
+
+Setting one of these templates can only be done during creation of the repository. If you want to add a `LICENSE` or `.gitignore` file after repository creation, you'll need to do it like any other file.
+
 ## Creating branches
 
 Additional branches can be created and configured using `var.branches`. Any branches created here are in addition to the default branch (`var.default_branch`).

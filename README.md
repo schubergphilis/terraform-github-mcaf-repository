@@ -2,6 +2,12 @@
 
 Terraform module to create and manage a GitHub repository.
 
+## Adding a license or `.gitignore` template
+
+Take care when configuring either `var.license_template` or `var.gitignore_template` as the values are case sensitive. See [here for a list of supported licenses](https://github.com/github/choosealicense.com/tree/gh-pages/_licenses) or [here for a list of supported gitignore templates](https://github.com/github/gitignore) - to use either, provide the file name without the extension, e.g. `mit` or `Terraform` respectively.
+
+Setting one of these templates can only be done during creation of the repository. If you want to add a `LICENSE` or `.gitignore` file after repository creation, you'll need to do it like any other file.
+
 ## Creating branches
 
 Additional branches can be created and configured using `var.branches`. Any branches created here are in addition to the default branch (`var.default_branch`).
@@ -168,9 +174,11 @@ No modules.
 | <a name="input_actions_access_level"></a> [actions\_access\_level](#input\_actions\_access\_level) | Control how this repository is used by GitHub Actions workflows in other repositories | `string` | `null` | no |
 | <a name="input_actions_secrets"></a> [actions\_secrets](#input\_actions\_secrets) | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
 | <a name="input_actions_variables"></a> [actions\_variables](#input\_actions\_variables) | An optional map with GitHub Actions variables | `map(string)` | `{}` | no |
-| <a name="input_allow_auto_merge"></a> [allow\_auto\_merge](#input\_allow\_auto\_merge) | Enable to allow auto-merging pull requests on the repository | `bool` | `false` | no |
-| <a name="input_allow_rebase_merge"></a> [allow\_rebase\_merge](#input\_allow\_rebase\_merge) | To enable rebase merges on the repository | `bool` | `false` | no |
-| <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | To enable squash merges on the repository | `bool` | `false` | no |
+| <a name="input_allow_auto_merge"></a> [allow\_auto\_merge](#input\_allow\_auto\_merge) | Enable allow auto-merging pull requests on the repository | `bool` | `true` | no |
+| <a name="input_allow_merge_commit"></a> [allow\_merge\_commit](#input\_allow\_merge\_commit) | Enable merge commits on the repository | `bool` | `false` | no |
+| <a name="input_allow_rebase_merge"></a> [allow\_rebase\_merge](#input\_allow\_rebase\_merge) | Enable rebase merges on the repository | `bool` | `false` | no |
+| <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | Enable squash merges on the repository | `bool` | `true` | no |
+| <a name="input_allow_update_branch"></a> [allow\_update\_branch](#input\_allow\_update\_branch) | Enable to allow suggestions to update pull request branches | `bool` | `true` | no |
 | <a name="input_archive_on_destroy"></a> [archive\_on\_destroy](#input\_archive\_on\_destroy) | Set to true to archive the repository instead of deleting on destroy | `bool` | `false` | no |
 | <a name="input_archived"></a> [archived](#input\_archived) | Specifies if the repository should be archived | `bool` | `false` | no |
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
@@ -187,11 +195,15 @@ No modules.
 | <a name="input_has_wiki"></a> [has\_wiki](#input\_has\_wiki) | To enable GitHub Wiki features on the repository | `bool` | `false` | no |
 | <a name="input_homepage_url"></a> [homepage\_url](#input\_homepage\_url) | URL of a page describing the project | `string` | `null` | no |
 | <a name="input_is_template"></a> [is\_template](#input\_is\_template) | To mark this repository as a template repository | `bool` | `false` | no |
+| <a name="input_license_template"></a> [license\_template](#input\_license\_template) | The name of the (case sensitive) license template to use | `string` | `null` | no |
+| <a name="input_merge_commit_message"></a> [merge\_commit\_message](#input\_merge\_commit\_message) | The default commit message for merge commits | `string` | `"PR_BODY"` | no |
+| <a name="input_merge_commit_title"></a> [merge\_commit\_title](#input\_merge\_commit\_title) | The default commit title for merge commits | `string` | `"PR_TITLE"` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A list of GitHub repository files that should be created | <pre>map(object({<br/>    branch  = optional(string)<br/>    path    = string<br/>    content = string<br/>    managed = optional(bool, true)<br/>  }))</pre> | `{}` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |
-| <a name="input_squash_merge_commit_title"></a> [squash\_merge\_commit\_title](#input\_squash\_merge\_commit\_title) | The default commit title for squash merges | `string` | `"COMMIT_OR_PR_TITLE"` | no |
+| <a name="input_squash_merge_commit_title"></a> [squash\_merge\_commit\_title](#input\_squash\_merge\_commit\_title) | The default commit title for squash merges | `string` | `"PR_TITLE"` | no |
 | <a name="input_tag_protection"></a> [tag\_protection](#input\_tag\_protection) | The repository tag protection pattern | `string` | `null` | no |
 | <a name="input_template_repository"></a> [template\_repository](#input\_template\_repository) | The settings of the template repostitory to use on creation | <pre>object({<br/>    owner      = string<br/>    repository = string<br/>  })</pre> | `null` | no |
+| <a name="input_topics"></a> [topics](#input\_topics) | A list of topics to set on the repository | `list(string)` | `[]` | no |
 | <a name="input_visibility"></a> [visibility](#input\_visibility) | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
 | <a name="input_vulnerability_alerts"></a> [vulnerability\_alerts](#input\_vulnerability\_alerts) | To enable security alerts for vulnerable dependencies | `bool` | `false` | no |
 

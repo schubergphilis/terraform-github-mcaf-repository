@@ -9,9 +9,15 @@ variable "access" {
   }
 }
 
-variable "name" {
+variable "actions_access_level" {
   type        = string
-  description = "The name of the repository"
+  default     = null
+  description = "Control how this repository is used by GitHub Actions workflows in other repositories"
+
+  validation {
+    condition     = var.actions_access_level == null || can(regex("^(none|user|organization|enterprise)$", var.actions_access_level))
+    error_message = "The value of the variable 'actions_access_level' must be one of 'none', 'user', 'organization' or 'enterprise'"
+  }
 }
 
 variable "actions_secrets" {
@@ -23,25 +29,37 @@ variable "actions_secrets" {
 variable "actions_variables" {
   type        = map(string)
   default     = {}
-  description = " An optional map with GitHub Actions variables"
+  description = "An optional map with GitHub Actions variables"
 }
 
 variable "allow_auto_merge" {
   type        = bool
+  default     = true
+  description = "Enable allow auto-merging pull requests on the repository"
+}
+
+variable "allow_merge_commit" {
+  type        = bool
   default     = false
-  description = "Enable to allow auto-merging pull requests on the repository"
+  description = "Enable merge commits on the repository"
 }
 
 variable "allow_rebase_merge" {
   type        = bool
   default     = false
-  description = "To enable rebase merges on the repository"
+  description = "Enable rebase merges on the repository"
 }
 
 variable "allow_squash_merge" {
   type        = bool
-  default     = false
-  description = "To enable squash merges on the repository"
+  default     = true
+  description = "Enable squash merges on the repository"
+}
+
+variable "allow_update_branch" {
+  type        = bool
+  default     = true
+  description = "Enable to allow suggestions to update pull request branches"
 }
 
 variable "archive_on_destroy" {
@@ -221,6 +239,39 @@ variable "homepage_url" {
   description = "URL of a page describing the project"
 }
 
+variable "license_template" {
+  type        = string
+  default     = null
+  description = "The name of the (case sensitive) license template to use"
+}
+
+variable "merge_commit_message" {
+  type        = string
+  default     = "PR_BODY"
+  description = "The default commit message for merge commits"
+
+  validation {
+    condition     = can(regex("^(PR_BODY|PR_TITLE|BLANK)$", var.merge_commit_message))
+    error_message = "The value of the variable 'merge_commit_message' must be one of 'PR_BODY', 'PR_TITLE' or 'BLANK'"
+  }
+}
+
+variable "merge_commit_title" {
+  type        = string
+  default     = "PR_TITLE"
+  description = "The default commit title for merge commits"
+
+  validation {
+    condition     = can(regex("^(PR_TITLE|MERGE_MESSAGE)$", var.merge_commit_title))
+    error_message = "The value of the variable 'merge_commit_title' must be one of 'PR_TITLE' or 'MERGE_MESSAGE'"
+  }
+}
+
+variable "name" {
+  type        = string
+  description = "The name of the repository"
+}
+
 variable "repository_files" {
   type = map(object({
     branch  = optional(string)
@@ -245,7 +296,7 @@ variable "squash_merge_commit_message" {
 
 variable "squash_merge_commit_title" {
   type        = string
-  default     = "COMMIT_OR_PR_TITLE"
+  default     = "PR_TITLE"
   description = "The default commit title for squash merges"
 
   validation {
@@ -269,6 +320,12 @@ variable "template_repository" {
   description = "The settings of the template repostitory to use on creation"
 }
 
+variable "topics" {
+  type        = list(string)
+  default     = []
+  description = "A list of topics to set on the repository"
+}
+
 variable "visibility" {
   type        = string
   default     = "private"
@@ -279,15 +336,4 @@ variable "vulnerability_alerts" {
   type        = bool
   default     = false
   description = "To enable security alerts for vulnerable dependencies"
-}
-
-variable "actions_access_level" {
-  type        = string
-  default     = null
-  description = "Control how this repository is used by GitHub Actions workflows in other repositories"
-
-  validation {
-    condition     = var.actions_access_level == null || can(regex("^(none|user|organization|enterprise)$", var.actions_access_level))
-    error_message = "The value of the variable 'actions_access_level' must be one of 'none', 'user', 'organization' or 'enterprise'"
-  }
 }

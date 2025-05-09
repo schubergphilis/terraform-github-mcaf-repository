@@ -4,6 +4,14 @@ This document captures breaking changes.
 
 ## Upgrading to v2.0.0
 
+### Merging pull requests
+
+Starting from v2.0.0, the default behavior is to support only squash merging. This approach combines all commits from the head branch into a single commit on the base branch. It allows committers to make multiple commits while addressing pull request feedback and keeps the default branch history clean by squashing all changes into one commit upon merge. Additionally, the pull request title is used as the commit message title, which ensures consistency and supports workflows that rely on conventional commit messages.
+
+To enable previous behaviour, set `var.allow_merge_commit = true` and `var.allow_squash_merge = false`.
+
+### Migrating to `var.access`
+
 To fix a bug where group IDs are not known at plan time, `var.access` has been added to replace the `var.admins`, `var.maintainers`, `var.readers` and `var.writers`. This allows specifying the team name as the map key and the desired access level as the value.
 
 To migrate, map the old variables to the new variable:

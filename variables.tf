@@ -334,6 +334,6 @@ variable "visibility" {
 
 variable "vulnerability_alerts" {
   type        = bool
-  default     = false
-  description = "To enable security alerts for vulnerable dependencies"
+  default     = true
+  description = "Set to true to enable security alerts for vulnerable dependencies"
 }

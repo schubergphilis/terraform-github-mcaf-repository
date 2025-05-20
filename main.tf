@@ -53,6 +53,32 @@ resource "github_repository" "default" {
   }
 }
 
+# Configure Dependabot security updates for the repository.
+resource "github_repository_dependabot_security_updates" "default" {
+  repository = github_repository.default.name
+  enabled    = var.dependabot_enabled
+
+  depends_on = [
+    github_repository.default
+  ]
+}
+
+resource "github_dependabot_secret" "plaintext" {
+  for_each = var.dependabot_plaintext_secrets
+
+  repository      = github_repository_dependabot_security_updates.default.repository
+  secret_name     = each.key
+  plaintext_value = each.value
+}
+
+resource "github_dependabot_secret" "encrypted" {
+  for_each = var.dependabot_encrypted_secrets
+
+  repository      = github_repository_dependabot_security_updates.default.repository
+  secret_name     = each.key
+  encrypted_value = each.value
+}
+
 ################################################################################
 # Branch and Branch protection
 ################################################################################

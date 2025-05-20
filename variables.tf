@@ -163,6 +163,24 @@ variable "delete_branch_on_merge" {
   description = "Automatically delete head branch after a pull request is merged"
 }
 
+variable "dependabot_enabled" {
+  type        = bool
+  default     = false
+  description = "Set to true to enable Dependabot alerts and security updates"
+}
+
+variable "dependabot_plaintext_secrets" {
+  type        = map(string)
+  default     = {}
+  description = "Map with plaintext Dependabot secrets"
+}
+
+variable "dependabot_encrypted_secrets" {
+  type        = map(string)
+  default     = {}
+  description = "Map with encrypted Dependabot secrets"
+}
+
 variable "description" {
   type        = string
   default     = null

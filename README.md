@@ -205,7 +205,7 @@ No modules.
 | <a name="input_template_repository"></a> [template\_repository](#input\_template\_repository) | The settings of the template repostitory to use on creation | <pre>object({<br/>    owner      = string<br/>    repository = string<br/>  })</pre> | `null` | no |
 | <a name="input_topics"></a> [topics](#input\_topics) | A list of topics to set on the repository | `list(string)` | `[]` | no |
 | <a name="input_visibility"></a> [visibility](#input\_visibility) | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
-| <a name="input_vulnerability_alerts"></a> [vulnerability\_alerts](#input\_vulnerability\_alerts) | To enable security alerts for vulnerable dependencies | `bool` | `false` | no |
+| <a name="input_vulnerability_alerts"></a> [vulnerability\_alerts](#input\_vulnerability\_alerts) | Set to true to enable security alerts for vulnerable dependencies | `bool` | `true` | no |
 
 ## Outputs
 

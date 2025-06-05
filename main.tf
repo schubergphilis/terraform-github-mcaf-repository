@@ -67,7 +67,7 @@ resource "github_repository_dependabot_security_updates" "default" {
 resource "github_dependabot_secret" "plaintext" {
   for_each = var.dependabot_plaintext_secrets
 
-  repository      = github_repository_dependabot_security_updates.default.repository
+  repository      = github_repository_dependabot_security_updates.default[0].repository
   secret_name     = each.key
   plaintext_value = each.value
 }
@@ -75,7 +75,7 @@ resource "github_dependabot_secret" "plaintext" {
 resource "github_dependabot_secret" "encrypted" {
   for_each = var.dependabot_encrypted_secrets
 
-  repository      = github_repository_dependabot_security_updates.default.repository
+  repository      = github_repository_dependabot_security_updates.default[0].repository
   secret_name     = each.key
   encrypted_value = each.value
 }

@@ -55,6 +55,7 @@ resource "github_repository" "default" {
 
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
+  count      = var.vulnerability_alerts ? 1 : 0
   repository = github_repository.default.name
   enabled    = var.dependabot_enabled
 

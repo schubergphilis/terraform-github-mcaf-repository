@@ -5,6 +5,16 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.1.1 - 2025-06-10
+
+### What's Changed
+
+#### 🐛 Bug Fixes
+
+* fix: Ensure you do not enable dependabot when your vulnerability alerts are not (#86) @stromp
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v2.1.0...v2.1.1
+
 ## v2.1.0 - 2025-05-20
 
 ### What's Changed

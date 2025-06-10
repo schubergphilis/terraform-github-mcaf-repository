@@ -167,6 +167,11 @@ variable "dependabot_enabled" {
   type        = bool
   default     = false
   description = "Set to true to enable Dependabot alerts and security updates"
+
+  validation {
+    condition     = (!var.dependabot_enabled) || var.vulnerability_alerts
+    error_message = "Vulnerability alerts must be enabled to use Dependabot"
+  }
 }
 
 variable "dependabot_plaintext_secrets" {

@@ -53,8 +53,14 @@ resource "github_repository" "default" {
   }
 }
 
+moved {
+  from = github_repository_dependabot_security_updates.default
+  to   = github_repository_dependabot_security_updates.default[0]
+}
+
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
+  count      = var.vulnerability_alerts ? 1 : 0
   repository = github_repository.default.name
   enabled    = var.dependabot_enabled
 
@@ -66,7 +72,7 @@ resource "github_repository_dependabot_security_updates" "default" {
 resource "github_dependabot_secret" "plaintext" {
   for_each = var.dependabot_plaintext_secrets
 
-  repository      = github_repository_dependabot_security_updates.default.repository
+  repository      = github_repository_dependabot_security_updates.default[0].repository
   secret_name     = each.key
   plaintext_value = each.value
 }
@@ -74,7 +80,7 @@ resource "github_dependabot_secret" "plaintext" {
 resource "github_dependabot_secret" "encrypted" {
   for_each = var.dependabot_encrypted_secrets
 
-  repository      = github_repository_dependabot_security_updates.default.repository
+  repository      = github_repository_dependabot_security_updates.default[0].repository
   secret_name     = each.key
   encrypted_value = each.value
 }
@@ -251,7 +257,8 @@ resource "github_repository_file" "managed" {
   }
 }
 
-moved { # FIXME: This can be removed in the next major version.
+# FIXME: This can be removed in the next major version.
+moved {
   from = github_repository_file.default
   to   = github_repository_file.managed
 }

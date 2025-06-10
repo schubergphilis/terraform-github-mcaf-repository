@@ -257,8 +257,8 @@ resource "github_repository_file" "managed" {
   }
 }
 
+# FIXME: This can be removed in the next major version.
 moved {
-  # FIXME: This can be removed in the next major version.
   from = github_repository_file.default
   to   = github_repository_file.managed
 }

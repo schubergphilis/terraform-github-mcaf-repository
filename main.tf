@@ -53,6 +53,11 @@ resource "github_repository" "default" {
   }
 }
 
+moved {
+  from = github_repository_dependabot_security_updates.default
+  to = github_repository_dependabot_security_updates.default[0]
+}
+
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
   count      = var.vulnerability_alerts ? 1 : 0

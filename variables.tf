@@ -1,10 +1,10 @@
 variable "access" {
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
   description = "An optional map with GitHub team names and their access level to the repository"
 
   validation {
-    condition = alltrue([for value in values(var.access) : can(regex("^(admin|maintain|pull|push)$", lower(value)))])
+    condition     = alltrue([for value in values(var.access) : can(regex("^(admin|maintain|pull|push)$", lower(value)))])
     error_message = "The value of the variable 'access' must be one of 'admin', 'maintain', 'pull' or 'push'"
   }
 }
@@ -21,14 +21,14 @@ variable "actions_access_level" {
 }
 
 variable "actions_secrets" {
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
   description = "An optional map with GitHub action secrets"
 }
 
 variable "actions_variables" {
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
   description = "An optional map with GitHub Actions variables"
 }
 
@@ -82,35 +82,35 @@ variable "auto_init" {
 
 variable "branches" {
   type = map(object({
-    source_branch = optional(string)
-    source_sha = optional(string)
+    source_branch         = optional(string)
+    source_sha            = optional(string)
     use_branch_protection = optional(bool, true)
 
     branch_protection = optional(object({
-      allows_force_pushes = optional(bool, false)
-      enforce_admins = optional(bool, false)
+      allows_force_pushes    = optional(bool, false)
+      enforce_admins         = optional(bool, false)
       require_signed_commits = optional(bool, true)
 
       required_checks = optional(object({
-        strict = optional(bool)
+        strict   = optional(bool)
         contexts = optional(list(string))
       }))
 
       restrict_pushes = optional(object({
         blocks_creations = optional(bool)
-        push_allowances = optional(list(string))
+        push_allowances  = optional(list(string))
       }))
 
       required_reviews = optional(object({
-        dismiss_stale_reviews = optional(bool, true)
-        dismissal_restrictions = optional(list(string))
+        dismiss_stale_reviews           = optional(bool, true)
+        dismissal_restrictions          = optional(list(string))
         required_approving_review_count = optional(number, 2)
-        require_code_owner_reviews = optional(bool, true)
-        pull_request_bypassers = optional(list(string))
+        require_code_owner_reviews      = optional(bool, true)
+        pull_request_bypassers          = optional(list(string))
       }))
     }), null)
   }))
-  default = {}
+  default     = {}
   description = "An optional map with GitHub branches to create"
 }
 
@@ -122,26 +122,26 @@ variable "default_branch" {
 
 variable "default_branch_protection" {
   type = object({
-    allows_force_pushes = optional(bool, false)
-    enforce_admins = optional(bool, false)
+    allows_force_pushes    = optional(bool, false)
+    enforce_admins         = optional(bool, false)
     require_signed_commits = optional(bool, true)
 
     required_checks = optional(object({
-      strict = optional(bool)
+      strict   = optional(bool)
       contexts = optional(list(string))
     }))
 
     required_reviews = optional(object({
-      dismiss_stale_reviews = optional(bool, true)
-      dismissal_restrictions = optional(list(string))
+      dismiss_stale_reviews           = optional(bool, true)
+      dismissal_restrictions          = optional(list(string))
       required_approving_review_count = optional(number, 2)
-      require_code_owner_reviews = optional(bool, true)
-      pull_request_bypassers = optional(list(string))
+      require_code_owner_reviews      = optional(bool, true)
+      pull_request_bypassers          = optional(list(string))
     }))
 
     restrict_pushes = optional(object({
       blocks_creations = optional(bool)
-      push_allowances = optional(list(string))
+      push_allowances  = optional(list(string))
     }))
   })
   default = {
@@ -174,14 +174,14 @@ variable "dependabot_enabled" {
 }
 
 variable "dependabot_plaintext_secrets" {
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
   description = "Map with plaintext Dependabot secrets"
 }
 
 variable "dependabot_encrypted_secrets" {
-  type = map(string)
-  default = {}
+  type        = map(string)
+  default     = {}
   description = "Map with encrypted Dependabot secrets"
 }
 
@@ -193,15 +193,15 @@ variable "description" {
 
 variable "environments" {
   type = map(object({
-    secrets = optional(map(string), {})
-    variables = optional(map(string), {})
+    secrets    = optional(map(string), {})
+    variables  = optional(map(string), {})
     wait_timer = optional(number, null)
 
     deployment_branch_policy = optional(object(
       {
-        branch_patterns = optional(list(string), [])
+        branch_patterns        = optional(list(string), [])
         custom_branch_policies = optional(bool, false)
-        protected_branches = optional(bool, true)
+        protected_branches     = optional(bool, true)
       }),
       {
         custom_branch_policies = false
@@ -215,7 +215,7 @@ variable "environments" {
     }), null)
 
   }))
-  default = {}
+  default     = {}
   description = "An optional map with GitHub environments to configure"
 }
 
@@ -273,7 +273,7 @@ variable "merge_commit_message" {
   description = "The default commit message for merge commits"
 
   validation {
-    condition = can(regex("^(PR_BODY|PR_TITLE|BLANK)$", var.merge_commit_message))
+    condition     = can(regex("^(PR_BODY|PR_TITLE|BLANK)$", var.merge_commit_message))
     error_message = "The value of the variable 'merge_commit_message' must be one of 'PR_BODY', 'PR_TITLE' or 'BLANK'"
   }
 }
@@ -284,7 +284,7 @@ variable "merge_commit_title" {
   description = "The default commit title for merge commits"
 
   validation {
-    condition = can(regex("^(PR_TITLE|MERGE_MESSAGE)$", var.merge_commit_title))
+    condition     = can(regex("^(PR_TITLE|MERGE_MESSAGE)$", var.merge_commit_title))
     error_message = "The value of the variable 'merge_commit_title' must be one of 'PR_TITLE' or 'MERGE_MESSAGE'"
   }
 }
@@ -296,12 +296,12 @@ variable "name" {
 
 variable "repository_files" {
   type = map(object({
-    branch = optional(string)
+    branch  = optional(string)
     path    = string
     content = string
     managed = optional(bool, true)
   }))
-  default = {}
+  default     = {}
   description = "A list of GitHub repository files that should be created"
 }
 
@@ -311,7 +311,7 @@ variable "squash_merge_commit_message" {
   description = "The default commit message for squash merges"
 
   validation {
-    condition = can(regex("^(PR_BODY|COMMIT_MESSAGES|BLANK)$", var.squash_merge_commit_message))
+    condition     = can(regex("^(PR_BODY|COMMIT_MESSAGES|BLANK)$", var.squash_merge_commit_message))
     error_message = "The value of the variable 'squash_merge_commit_message' must be one of 'PR_BODY', 'COMMIT_MESSAGES' or 'BLANK'"
   }
 }
@@ -322,7 +322,7 @@ variable "squash_merge_commit_title" {
   description = "The default commit title for squash merges"
 
   validation {
-    condition = can(regex("^(PR_TITLE|COMMIT_OR_PR_TITLE)$", var.squash_merge_commit_title))
+    condition     = can(regex("^(PR_TITLE|COMMIT_OR_PR_TITLE)$", var.squash_merge_commit_title))
     error_message = "The value of the variable 'squash_merge_commit_title' must be one of 'PR_TITLE' or 'COMMIT_OR_PR_TITLE'"
   }
 }
@@ -343,8 +343,8 @@ variable "template_repository" {
 }
 
 variable "topics" {
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
   description = "A list of topics to set on the repository"
 }
 

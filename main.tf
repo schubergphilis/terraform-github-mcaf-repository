@@ -92,10 +92,10 @@ resource "github_dependabot_secret" "encrypted" {
 resource "github_branch" "default" {
   for_each = local.branches
 
-  branch     = each.key
-  repository = github_repository.default.name
+  branch        = each.key
+  repository    = github_repository.default.name
   source_branch = coalesce(try(each.value.source_branch, null), var.default_branch)
-  source_sha = try(each.value.source_sha, null)
+  source_sha    = try(each.value.source_sha, null)
 }
 
 resource "github_branch_default" "default" {
@@ -108,68 +108,42 @@ resource "github_branch_default" "default" {
 resource "github_branch_protection" "default" {
   # checkov:skip=CKV_GIT_6:GitHub repository defined in Terraform does not have GPG signatures for all commits - this is a false positive, we default to `true` but checkov can't see this
 
-  for_each = {for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true}
+  for_each = { for k, v in local.branches : k => v if v.branch_protection != null || v.use_branch_protection == true }
 
-  allows_force_pushes = each.value.branch_protection != null ?
-    try(each.value.branch_protection.allows_force_pushes, null) :
-    try(var.default_branch_protection.allows_force_pushes, null)
-  enforce_admins      = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) :
-    try(var.default_branch_protection.enforce_admins, null)
+  allows_force_pushes = each.value.branch_protection != null ? try(each.value.branch_protection.allows_force_pushes, null) : try(var.default_branch_protection.allows_force_pushes, null)
+  enforce_admins      = each.value.branch_protection != null ? try(each.value.branch_protection.enforce_admins, null) : try(var.default_branch_protection.enforce_admins, null)
   pattern             = each.key
   repository_id       = github_repository.default.name
 
-  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits :
-    try(var.default_branch_protection.require_signed_commits, null)
+  require_signed_commits = each.value.branch_protection != null ? each.value.branch_protection.require_signed_commits : try(var.default_branch_protection.require_signed_commits, null)
 
   dynamic "required_pull_request_reviews" {
-    for_each =
-      try(each.value.branch_protection.required_reviews, null) != null || try(var.default_branch_protection.required_reviews, null) != null
-      ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_reviews, null) != null || try(var.default_branch_protection.required_reviews, null) != null ? { create : true } : {}
 
     content {
-      dismiss_stale_reviews           = each.value.branch_protection != null ?
-        try(each.value.branch_protection.required_reviews.dismiss_stale_reviews, null) :
-        try(var.default_branch_protection.required_reviews.dismiss_stale_reviews, null)
-      dismissal_restrictions          = each.value.branch_protection != null ?
-        try(each.value.branch_protection.required_reviews.dismissal_restrictions, null) :
-        try(var.default_branch_protection.required_reviews.dismissal_restrictions, null)
-      require_code_owner_reviews      = each.value.branch_protection != null ?
-        try(each.value.branch_protection.required_reviews.require_code_owner_reviews, null) :
-        try(var.default_branch_protection.required_reviews.require_code_owner_reviews, null)
-      required_approving_review_count = each.value.branch_protection != null ?
-        try(each.value.branch_protection.required_reviews.required_approving_review_count, null) :
-        try(var.default_branch_protection.required_reviews.required_approving_review_count, null)
-      pull_request_bypassers          = each.value.branch_protection != null ?
-        try(each.value.branch_protection.required_reviews.pull_request_bypassers, null) :
-        try(var.default_branch_protection.required_reviews.pull_request_bypassers, null)
+      dismiss_stale_reviews           = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismiss_stale_reviews, null) : try(var.default_branch_protection.required_reviews.dismiss_stale_reviews, null)
+      dismissal_restrictions          = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.dismissal_restrictions, null) : try(var.default_branch_protection.required_reviews.dismissal_restrictions, null)
+      require_code_owner_reviews      = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.require_code_owner_reviews, null) : try(var.default_branch_protection.required_reviews.require_code_owner_reviews, null)
+      required_approving_review_count = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.required_approving_review_count, null) : try(var.default_branch_protection.required_reviews.required_approving_review_count, null)
+      pull_request_bypassers          = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.pull_request_bypassers, null) : try(var.default_branch_protection.required_reviews.pull_request_bypassers, null)
     }
   }
 
   dynamic "required_status_checks" {
-    for_each =
-      try(each.value.branch_protection.required_checks, null) != null || try(var.default_branch_protection.required_checks, null) != null
-      ? { create : true } : {}
+    for_each = try(each.value.branch_protection.required_checks, null) != null || try(var.default_branch_protection.required_checks, null) != null ? { create : true } : {}
 
     content {
-      contexts = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.contexts, null)
-        : try(var.default_branch_protection.required_checks.contexts, null)
-      strict   = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.strict, null) :
-        try(var.default_branch_protection.required_checks.strict, null)
+      contexts = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.contexts, null) : try(var.default_branch_protection.required_checks.contexts, null)
+      strict   = each.value.branch_protection != null ? try(each.value.branch_protection.required_checks.strict, null) : try(var.default_branch_protection.required_checks.strict, null)
     }
   }
 
   dynamic "restrict_pushes" {
-    for_each =
-      try(each.value.branch_protection.restrict_pushes, null) != null || try(var.default_branch_protection.restrict_pushes, null) != null
-      ? { create : true } : {}
+    for_each = try(each.value.branch_protection.restrict_pushes, null) != null || try(var.default_branch_protection.restrict_pushes, null) != null ? { create : true } : {}
 
     content {
-      blocks_creations = each.value.branch_protection != null ?
-        try(each.value.branch_protection.restrict_pushes.blocks_creations, null) :
-        try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
-      push_allowances  = each.value.branch_protection != null ?
-        try(each.value.branch_protection.restrict_pushes.push_allowances, null) :
-        try(var.default_branch_protection.restrict_pushes.push_allowances, null)
+      blocks_creations = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.blocks_creations, null) : try(var.default_branch_protection.restrict_pushes.blocks_creations, null)
+      push_allowances  = each.value.branch_protection != null ? try(each.value.branch_protection.restrict_pushes.push_allowances, null) : try(var.default_branch_protection.restrict_pushes.push_allowances, null)
     }
   }
 
@@ -186,13 +160,13 @@ resource "github_repository_ruleset" "default" {
   enforcement = "active"
 
   bypass_actors {
-    actor_id = 5 # Repository admins
+    actor_id    = 5 # Repository admins
     actor_type  = "RepositoryRole"
     bypass_mode = "always"
   }
 
   bypass_actors {
-    actor_id = 0 # Organization admins
+    actor_id    = 0 # Organization admins
     actor_type  = "OrganizationAdmin"
     bypass_mode = "always"
   }
@@ -266,9 +240,9 @@ resource "github_actions_variable" "action_variables" {
 # Files created by this resource are fully managed. Any downstream updates will be replaced the
 # next time Terraform runs.
 resource "github_repository_file" "managed" {
-  for_each = {for k, v in var.repository_files : k => v if v.managed}
+  for_each = { for k, v in var.repository_files : k => v if v.managed }
 
-  branch = coalesce(each.value.branch, github_branch_default.default.branch)
+  branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
   file                = each.value.path
   overwrite_on_create = true
@@ -292,9 +266,9 @@ moved {
 # Files created by this resource are a one time action. Any downstream content changes will not be
 # overwritten. This helps to build a repository skeleton where you want some templating.
 resource "github_repository_file" "unmanaged" {
-  for_each = {for k, v in var.repository_files : k => v if !v.managed}
+  for_each = { for k, v in var.repository_files : k => v if !v.managed }
 
-  branch = coalesce(each.value.branch, github_branch_default.default.branch)
+  branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
   file                = each.value.path
   overwrite_on_create = true

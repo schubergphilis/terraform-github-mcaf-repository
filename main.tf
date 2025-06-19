@@ -126,6 +126,7 @@ resource "github_branch_protection" "default" {
       require_code_owner_reviews      = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.require_code_owner_reviews, null) : try(var.default_branch_protection.required_reviews.require_code_owner_reviews, null)
       required_approving_review_count = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.required_approving_review_count, null) : try(var.default_branch_protection.required_reviews.required_approving_review_count, null)
       pull_request_bypassers          = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.pull_request_bypassers, null) : try(var.default_branch_protection.required_reviews.pull_request_bypassers, null)
+      require_last_push_approval      = each.value.branch_protection != null ? try(each.value.branch_protection.required_reviews.require_last_push_approval, null) : try(var.default_branch_protection.required_reviews.require_last_push_approval, null)
     }
   }
 

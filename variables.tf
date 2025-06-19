@@ -137,6 +137,7 @@ variable "default_branch_protection" {
       required_approving_review_count = optional(number, 2)
       require_code_owner_reviews      = optional(bool, true)
       pull_request_bypassers          = optional(list(string))
+      require_last_push_approval      = optional(bool, null)
     }))
 
     restrict_pushes = optional(object({

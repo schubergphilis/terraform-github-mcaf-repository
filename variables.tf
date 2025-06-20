@@ -104,9 +104,10 @@ variable "branches" {
       required_reviews = optional(object({
         dismiss_stale_reviews           = optional(bool, true)
         dismissal_restrictions          = optional(list(string))
-        required_approving_review_count = optional(number, 2)
-        require_code_owner_reviews      = optional(bool, true)
         pull_request_bypassers          = optional(list(string))
+        require_code_owner_reviews      = optional(bool, true)
+        require_last_push_approval      = optional(bool, null)
+        required_approving_review_count = optional(number, 2)
       }))
     }), null)
   }))
@@ -134,9 +135,10 @@ variable "default_branch_protection" {
     required_reviews = optional(object({
       dismiss_stale_reviews           = optional(bool, true)
       dismissal_restrictions          = optional(list(string))
-      required_approving_review_count = optional(number, 2)
-      require_code_owner_reviews      = optional(bool, true)
       pull_request_bypassers          = optional(list(string))
+      require_code_owner_reviews      = optional(bool, true)
+      require_last_push_approval      = optional(bool, null)
+      required_approving_review_count = optional(number, 2)
     }))
 
     restrict_pushes = optional(object({

@@ -126,6 +126,18 @@ The module will use a data resource to look up the team ID and assign the team t
 > }
 > ```
 
+## Selecting a merge strategy
+
+By default, the module will enable squash merges and disable merge commits and rebase merges. You can change this by setting the `allow_merge_commit`, `allow_rebase_merge` and `allow_squash_merge` variables to `true` or `false`.
+
+To more easily select a single strategy, you can set the `merge_strategy` variable to one of the following values:
+
+* `merge`
+* `rebase`
+* `squash`
+
+Using `merge_strategy` will override the above variables.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

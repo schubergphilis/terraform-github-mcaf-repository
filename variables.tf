@@ -40,13 +40,13 @@ variable "allow_auto_merge" {
 
 variable "allow_merge_commit" {
   type        = bool
-  default     = false
+  default     = true
   description = "Enable merge commits on the repository"
 }
 
 variable "allow_rebase_merge" {
   type        = bool
-  default     = false
+  default     = true
   description = "Enable rebase merges on the repository"
 }
 
@@ -289,6 +289,17 @@ variable "merge_commit_title" {
   validation {
     condition     = can(regex("^(PR_TITLE|MERGE_MESSAGE)$", var.merge_commit_title))
     error_message = "The value of the variable 'merge_commit_title' must be one of 'PR_TITLE' or 'MERGE_MESSAGE'"
+  }
+}
+
+variable "merge_strategy" {
+  type        = string
+  default     = null
+  description = "The merge strategy to use for pull requests"
+
+  validation {
+    condition     = var.merge_strategy == null || can(regex("^(merge|rebase|squash)$", lower(var.merge_strategy)))
+    error_message = "The value of the variable 'merge_strategy' must be one of 'merge', 'rebase' or 'squash'"
   }
 }
 

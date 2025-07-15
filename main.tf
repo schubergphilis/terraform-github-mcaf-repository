@@ -4,6 +4,11 @@ locals {
     { (var.default_branch) = { branch_protection = null, use_branch_protection = true } },
     var.branches,
   )
+
+  # Use var.merge_strategy value if set, otherwise fallback to the variable value.
+  allow_merge_commit = var.merge_strategy != null ? var.merge_strategy == "merge" : var.allow_merge_commit
+  allow_rebase_merge = var.merge_strategy != null ? var.merge_strategy == "rebase" : var.allow_rebase_merge
+  allow_squash_merge = var.merge_strategy != null ? var.merge_strategy == "squash" : var.allow_squash_merge
 }
 
 ################################################################################
@@ -14,9 +19,9 @@ locals {
 resource "github_repository" "default" {
   name                        = var.name
   allow_auto_merge            = var.allow_auto_merge
-  allow_merge_commit          = var.allow_merge_commit
-  allow_rebase_merge          = var.allow_rebase_merge
-  allow_squash_merge          = var.allow_squash_merge
+  allow_merge_commit          = local.allow_merge_commit
+  allow_rebase_merge          = local.allow_rebase_merge
+  allow_squash_merge          = local.allow_squash_merge
   allow_update_branch         = var.allow_update_branch
   archive_on_destroy          = var.archive_on_destroy
   archived                    = var.archived
@@ -31,10 +36,10 @@ resource "github_repository" "default" {
   homepage_url                = var.homepage_url
   is_template                 = var.is_template
   license_template            = var.license_template
-  merge_commit_message        = var.allow_merge_commit ? var.merge_commit_message : null
-  merge_commit_title          = var.allow_merge_commit ? var.merge_commit_title : null
-  squash_merge_commit_message = var.allow_squash_merge ? var.squash_merge_commit_message : null
-  squash_merge_commit_title   = var.allow_squash_merge ? var.squash_merge_commit_title : null
+  merge_commit_message        = local.allow_merge_commit ? var.merge_commit_message : null
+  merge_commit_title          = local.allow_merge_commit ? var.merge_commit_title : null
+  squash_merge_commit_message = local.allow_squash_merge ? var.squash_merge_commit_message : null
+  squash_merge_commit_title   = local.allow_squash_merge ? var.squash_merge_commit_title : null
   topics                      = var.topics
   visibility                  = var.visibility
   vulnerability_alerts        = var.vulnerability_alerts

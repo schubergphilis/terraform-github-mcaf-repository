@@ -46,8 +46,8 @@ resource "github_repository_environment_deployment_policy" "tag_patterns" {
   tag_pattern = each.value
 }
 
-# checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
 resource "github_actions_environment_secret" "default" {
+  # checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
   for_each = var.secrets
 
   environment     = github_repository_environment.default.environment

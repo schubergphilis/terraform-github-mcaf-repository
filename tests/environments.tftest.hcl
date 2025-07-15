@@ -47,22 +47,22 @@ run "basic" {
   }
 
   command = plan
- 
+
   assert {
-     condition     = github_repository_environment.default.environment == "basic-${run.setup.random_string}"
-     error_message = "Name does not match: expected basic-${run.setup.random_string}, got ${github_repository_environment.default.environment}"
+    condition     = github_repository_environment.default.environment == "basic-${run.setup.random_string}"
+    error_message = "Name does not match: expected basic-${run.setup.random_string}, got ${github_repository_environment.default.environment}"
   }
   assert {
-     condition     = github_repository_environment.default.repository == "basic-${run.setup.random_string}"
-     error_message = "Repository name does not match: expected basic-${run.setup.random_string}, got ${github_repository_environment.default.repository}"
+    condition     = github_repository_environment.default.repository == "basic-${run.setup.random_string}"
+    error_message = "Repository name does not match: expected basic-${run.setup.random_string}, got ${github_repository_environment.default.repository}"
   }
   assert {
-     condition     = github_repository_environment.default.deployment_branch_policy[0].custom_branch_policies == false
+    condition     = github_repository_environment.default.deployment_branch_policy[0].custom_branch_policies == false
     error_message = "Custom branch policies does not match: expected false, got ${github_repository_environment.default.deployment_branch_policy[0].custom_branch_policies}"
   }
   assert {
-     condition     = github_repository_environment.default.deployment_branch_policy[0].protected_branches == true
-     error_message = "Protected branches policy does not match: expected true, got ${github_repository_environment.default.deployment_branch_policy[0].protected_branches}"
+    condition     = github_repository_environment.default.deployment_branch_policy[0].protected_branches == true
+    error_message = "Protected branches policy does not match: expected true, got ${github_repository_environment.default.deployment_branch_policy[0].protected_branches}"
   }
 }
 
@@ -170,7 +170,7 @@ run "variables" {
     error_message = "Variable repository does not match: expected basic-${run.setup.random_string}, got ${github_actions_environment_variable.default["myvariable"].repository}"
   }
   assert {
-    condition     = github_actions_environment_variable.default["myvariable"].value  == "myvalue"
+    condition     = github_actions_environment_variable.default["myvariable"].value == "myvalue"
     error_message = "Variable value does not match: expected myvalue, got ${github_actions_environment_variable.default["myvariable"].value}"
   }
   assert {

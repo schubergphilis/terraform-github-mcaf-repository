@@ -2,6 +2,17 @@
 
 This document captures breaking changes.
 
+## Upgrading to v3.0.0
+
+### Move environment configuration to its own module
+
+This change moves the environment-related resources into a dedicated module. It reduces complexity by removing deeply nested loops in local variables, and it enables managing environments for repositories that were already created.
+
+To ease migration, a helper script is provided at `scripts/v3-generate-environment-moved-blocks.sh`. Run this script from within your Terraform workspace directory. It will generate a `v3-environment-moved.tf` file containing the necessary `moved` blocks to preserve resource history and avoid resource destruction during your next `terraform plan` or `apply`.
+
+> [!IMPORTANT]
+> Prior to v3, environment reviewers were specified used team IDs. This has been updated to use team or user names to match the behaviour in `var.access`. We moved away from IDs because Terraform struggles to handle lists that contain generated values, resulting in the "cannot be computed" error.
+
 ## Upgrading to v2.0.0
 
 ### Merging pull requests

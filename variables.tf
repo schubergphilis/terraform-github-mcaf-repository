@@ -213,13 +213,12 @@ variable "environments" {
     )
 
     reviewers = optional(object({
-      teams = optional(list(string))
-      users = optional(list(string))
+      teams = optional(list(string)) # Use team names here
+      users = optional(list(string)) # USe user names here
     }), null)
-
   }))
   default     = {}
-  description = "An optional map with GitHub environments to configure"
+  description = "An optional map of GitHub environments to configure"
 }
 
 variable "gitignore_template" {

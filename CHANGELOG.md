@@ -5,6 +5,21 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v3.0.0 - 2025-07-17
+
+### What's Changed
+
+#### 🚀 Features
+
+* feat!: Move environment configuration to dedicated submodule (#90) @shoekstra
+* feat: Add `var.merge_strategy` to select merge strategy (#89) @shoekstra
+
+#### 🐛 Bug Fixes
+
+* fix(environment-module): Handle null inputs better (#91) @shoekstra
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v2.2.0...v3.0.0
+
 ## v2.2.0 - 2025-06-20
 
 ### What's Changed

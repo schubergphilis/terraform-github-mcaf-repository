@@ -7,6 +7,7 @@ variable "deployment_policy" {
   })
   default     = {}
   description = "Environment deployment policy."
+  nullable    = false
 }
 
 variable "name" {
@@ -47,12 +48,14 @@ variable "secrets" {
   type        = map(string)
   description = "A map of environment secrets to create."
   default     = {}
+  nullable    = false
 }
 
 variable "variables" {
   type        = map(string)
   description = "A map of environment variables to create."
   default     = {}
+  nullable    = false
 }
 
 variable "wait_timer" {

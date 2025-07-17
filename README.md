@@ -85,6 +85,14 @@ module "mcaf-repository" {
 
 For more examples, see the [branches examples](/examples/branches/main.tf).
 
+## Configuring environments
+
+Enviroments can be configured using the `var.environments` variable. This allows you to create environments with secrets, variables, and deployment policies.
+
+You can also call the module directory, see its [README] for more details, or see the [environments examples](/examples/environments/main.tf).
+
+````hcl
+
 ## Granting access to a repository
 
 This module manages repository access by granting access to pre-existing teams. To grant a team access, populate the `access` map, using the team name as the key and the desired level as the value, for example:
@@ -154,14 +162,14 @@ Using `merge_strategy` will override the above variables.
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_environment"></a> [environment](#module\_environment) | ./modules/environment | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [github_actions_environment_secret.secrets](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_secret) | resource |
-| [github_actions_environment_variable.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_variable) | resource |
 | [github_actions_repository_access_level.actions_access_level](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_access_level) | resource |
 | [github_actions_secret.secrets](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_variable.action_variables](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_variable) | resource |
@@ -172,8 +180,6 @@ No modules.
 | [github_dependabot_secret.plaintext](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/dependabot_secret) | resource |
 | [github_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository) | resource |
 | [github_repository_dependabot_security_updates.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_dependabot_security_updates) | resource |
-| [github_repository_environment.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_environment) | resource |
-| [github_repository_environment_deployment_policy.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_environment_deployment_policy) | resource |
 | [github_repository_file.managed](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.unmanaged](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_ruleset.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset) | resource |
@@ -205,7 +211,7 @@ No modules.
 | <a name="input_dependabot_encrypted_secrets"></a> [dependabot\_encrypted\_secrets](#input\_dependabot\_encrypted\_secrets) | Map with encrypted Dependabot secrets | `map(string)` | `{}` | no |
 | <a name="input_dependabot_plaintext_secrets"></a> [dependabot\_plaintext\_secrets](#input\_dependabot\_plaintext\_secrets) | Map with plaintext Dependabot secrets | `map(string)` | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | A description for the GitHub repository | `string` | `null` | no |
-| <a name="input_environments"></a> [environments](#input\_environments) | An optional map with GitHub environments to configure | <pre>map(object({<br/>    secrets    = optional(map(string), {})<br/>    variables  = optional(map(string), {})<br/>    wait_timer = optional(number, null)<br/><br/>    deployment_branch_policy = optional(object(<br/>      {<br/>        branch_patterns        = optional(list(string), [])<br/>        custom_branch_policies = optional(bool, false)<br/>        protected_branches     = optional(bool, true)<br/>      }),<br/>      {<br/>        custom_branch_policies = false<br/>        protected_branches     = true<br/>      }<br/>    )<br/><br/>    reviewers = optional(object({<br/>      teams = optional(list(string))<br/>      users = optional(list(string))<br/>    }), null)<br/><br/>  }))</pre> | `{}` | no |
+| <a name="input_environments"></a> [environments](#input\_environments) | An optional map of GitHub environments to configure | <pre>map(object({<br/>    secrets    = optional(map(string), {})<br/>    variables  = optional(map(string), {})<br/>    wait_timer = optional(number, null)<br/><br/>    deployment_branch_policy = optional(object(<br/>      {<br/>        branch_patterns        = optional(list(string), [])<br/>        custom_branch_policies = optional(bool, false)<br/>        protected_branches     = optional(bool, true)<br/>      }),<br/>      {<br/>        custom_branch_policies = false<br/>        protected_branches     = true<br/>      }<br/>    )<br/><br/>    reviewers = optional(object({<br/>      teams = optional(list(string)) # Use team names here<br/>      users = optional(list(string)) # USe user names here<br/>    }), null)<br/>  }))</pre> | `{}` | no |
 | <a name="input_gitignore_template"></a> [gitignore\_template](#input\_gitignore\_template) | The name of the template without the extension | `string` | `null` | no |
 | <a name="input_has_downloads"></a> [has\_downloads](#input\_has\_downloads) | To enable downloads features on the repository | `bool` | `false` | no |
 | <a name="input_has_issues"></a> [has\_issues](#input\_has\_issues) | To enable GitHub Issues features on the repository | `bool` | `false` | no |

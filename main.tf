@@ -240,6 +240,25 @@ resource "github_actions_variable" "action_variables" {
 }
 
 ################################################################################
+# Environments
+################################################################################
+
+module "environment" {
+  for_each = var.environments
+
+  source = "./modules/environment"
+
+  name              = each.key
+  deployment_policy = each.value.deployment_branch_policy
+  repository        = github_repository.default.name
+  reviewer_teams    = try(each.value.reviewers.teams, null)
+  reviewer_users    = try(each.value.reviewers.users, null)
+  secrets           = each.value.secrets
+  variables         = each.value.variables
+  wait_timer        = each.value.wait_timer
+}
+
+################################################################################
 # Files
 ################################################################################
 

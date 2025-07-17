@@ -126,6 +126,18 @@ The module will use a data resource to look up the team ID and assign the team t
 > }
 > ```
 
+## Selecting a merge strategy
+
+By default, the module will enable squash merges and disable merge commits and rebase merges. You can change this by setting the `allow_merge_commit`, `allow_rebase_merge` and `allow_squash_merge` variables to `true` or `false`.
+
+To more easily select a single strategy, you can set the `merge_strategy` variable to one of the following values:
+
+* `merge`
+* `rebase`
+* `squash`
+
+Using `merge_strategy` will override the above variables.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -178,8 +190,8 @@ No modules.
 | <a name="input_actions_secrets"></a> [actions\_secrets](#input\_actions\_secrets) | An optional map with GitHub action secrets | `map(string)` | `{}` | no |
 | <a name="input_actions_variables"></a> [actions\_variables](#input\_actions\_variables) | An optional map with GitHub Actions variables | `map(string)` | `{}` | no |
 | <a name="input_allow_auto_merge"></a> [allow\_auto\_merge](#input\_allow\_auto\_merge) | Enable allow auto-merging pull requests on the repository | `bool` | `true` | no |
-| <a name="input_allow_merge_commit"></a> [allow\_merge\_commit](#input\_allow\_merge\_commit) | Enable merge commits on the repository | `bool` | `false` | no |
-| <a name="input_allow_rebase_merge"></a> [allow\_rebase\_merge](#input\_allow\_rebase\_merge) | Enable rebase merges on the repository | `bool` | `false` | no |
+| <a name="input_allow_merge_commit"></a> [allow\_merge\_commit](#input\_allow\_merge\_commit) | Enable merge commits on the repository | `bool` | `true` | no |
+| <a name="input_allow_rebase_merge"></a> [allow\_rebase\_merge](#input\_allow\_rebase\_merge) | Enable rebase merges on the repository | `bool` | `true` | no |
 | <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | Enable squash merges on the repository | `bool` | `true` | no |
 | <a name="input_allow_update_branch"></a> [allow\_update\_branch](#input\_allow\_update\_branch) | Enable to allow suggestions to update pull request branches | `bool` | `true` | no |
 | <a name="input_archive_on_destroy"></a> [archive\_on\_destroy](#input\_archive\_on\_destroy) | Set to true to archive the repository instead of deleting on destroy | `bool` | `false` | no |
@@ -204,6 +216,7 @@ No modules.
 | <a name="input_license_template"></a> [license\_template](#input\_license\_template) | The name of the (case sensitive) license template to use | `string` | `null` | no |
 | <a name="input_merge_commit_message"></a> [merge\_commit\_message](#input\_merge\_commit\_message) | The default commit message for merge commits | `string` | `"PR_BODY"` | no |
 | <a name="input_merge_commit_title"></a> [merge\_commit\_title](#input\_merge\_commit\_title) | The default commit title for merge commits | `string` | `"PR_TITLE"` | no |
+| <a name="input_merge_strategy"></a> [merge\_strategy](#input\_merge\_strategy) | The merge strategy to use for pull requests | `string` | `null` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A list of GitHub repository files that should be created | <pre>map(object({<br/>    branch  = optional(string)<br/>    path    = string<br/>    content = string<br/>    managed = optional(bool, true)<br/>  }))</pre> | `{}` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |
 | <a name="input_squash_merge_commit_title"></a> [squash\_merge\_commit\_title](#input\_squash\_merge\_commit\_title) | The default commit title for squash merges | `string` | `"PR_TITLE"` | no |

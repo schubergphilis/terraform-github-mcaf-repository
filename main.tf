@@ -270,7 +270,7 @@ resource "github_repository_file" "managed" {
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
   file                = each.value.path
-  overwrite_on_create = true
+  overwrite_on_create = each.value.overwrite_on_create
   repository          = github_repository.default.name
 
   depends_on = [
@@ -296,7 +296,7 @@ resource "github_repository_file" "unmanaged" {
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
   file                = each.value.path
-  overwrite_on_create = true
+  overwrite_on_create = each.value.overwrite_on_create
   repository          = github_repository.default.name
 
   depends_on = [

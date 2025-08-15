@@ -309,13 +309,14 @@ variable "name" {
 
 variable "repository_files" {
   type = map(object({
-    branch  = optional(string)
-    path    = string
-    content = string
-    managed = optional(bool, true)
+    branch              = optional(string)
+    content             = string
+    managed             = optional(bool, true)
+    overwrite_on_create = optional(bool, false)
+    path                = string
   }))
   default     = {}
-  description = "A list of GitHub repository files that should be created"
+  description = "A map of GitHub repository files that should be created"
 }
 
 variable "squash_merge_commit_message" {

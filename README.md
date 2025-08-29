@@ -146,6 +146,38 @@ To more easily select a single strategy, you can set the `merge_strategy` variab
 
 Using `merge_strategy` will override the above variables.
 
+## Managing files in a repository
+
+It is possible to create (and manage) files within a GitHub repository using this module. We have a `repository_files` variable that takes a map of files to create; the key represents the name (and path) for the file, and the value is an object with the following attributes:
+
+* `branch`: optional value to specify the branch, defaults to the default branch
+* `content`: content of the file, can be a string or string sourced from a file or template using `file()` or `templatefile()` respectively.
+* `managed`: whether Terraform should manage this file, or if it is a one time commit and any changes done outside of Terraform, defaults to `true`
+* `overwrite_on_create`: whether to overwrite the file if it already exists when creating it, defaults to `false`
+
+Example:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  repository_files = {
+    "README.md" = {
+      content = "# My repo"
+      managed = false
+    }
+    ".github/workflows/ci.yml" = {
+      content = templatefile("${path.module}/ci.yml.tpl", { name = "My repo" })
+    }
+    "docs/index.md" = {
+      content = file("${path.module}/index.md")
+    }
+  }
+}
+```
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -223,7 +255,7 @@ Using `merge_strategy` will override the above variables.
 | <a name="input_merge_commit_message"></a> [merge\_commit\_message](#input\_merge\_commit\_message) | The default commit message for merge commits | `string` | `"PR_BODY"` | no |
 | <a name="input_merge_commit_title"></a> [merge\_commit\_title](#input\_merge\_commit\_title) | The default commit title for merge commits | `string` | `"PR_TITLE"` | no |
 | <a name="input_merge_strategy"></a> [merge\_strategy](#input\_merge\_strategy) | The merge strategy to use for pull requests | `string` | `null` | no |
-| <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A map of GitHub repository files that should be created | <pre>map(object({<br/>    branch              = optional(string)<br/>    content             = string<br/>    managed             = optional(bool, true)<br/>    overwrite_on_create = optional(bool, false)<br/>    path                = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A map of GitHub repository files that should be created | <pre>map(object({<br/>    branch              = optional(string)<br/>    content             = string<br/>    managed             = optional(bool, true)<br/>    overwrite_on_create = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |
 | <a name="input_squash_merge_commit_title"></a> [squash\_merge\_commit\_title](#input\_squash\_merge\_commit\_title) | The default commit title for squash merges | `string` | `"PR_TITLE"` | no |
 | <a name="input_tag_protection"></a> [tag\_protection](#input\_tag\_protection) | The repository tag protection pattern | `string` | `null` | no |

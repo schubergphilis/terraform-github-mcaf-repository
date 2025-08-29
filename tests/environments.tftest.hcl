@@ -35,7 +35,7 @@ run "repo" {
   command = plan
 }
 
-
+# Out the box a new environment should have a deployment policy that limits deployments to protected branches.
 run "basic" {
   variables {
     name       = "basic-${run.setup.random_string}"
@@ -63,6 +63,59 @@ run "basic" {
   assert {
     condition     = github_repository_environment.default.deployment_branch_policy[0].protected_branches == true
     error_message = "Protected branches policy does not match: expected true, got ${github_repository_environment.default.deployment_branch_policy[0].protected_branches}"
+  }
+}
+
+# When a tag or branch is set, custom_branch_policies should be true and protected_branches false.
+# We should also see the tag or branch names in the policy.
+run "custom_branch_policy" {
+  variables {
+    name       = "custom-branch-policy-${run.setup.random_string}"
+    repository = "basic-${run.setup.random_string}"
+
+    deployment_policy = {
+      branch_patterns = ["main"]
+      tag_patterns    = ["v*"]
+    }
+  }
+
+  module {
+    source = "./modules/environment"
+  }
+
+  command = plan
+
+  assert {
+    condition     = github_repository_environment.default.environment == "custom-branch-policy-${run.setup.random_string}"
+    error_message = "Name does not match: expected custom-branch-policy-${run.setup.random_string}, got ${github_repository_environment.default.environment}"
+  }
+  assert {
+    condition     = github_repository_environment.default.repository == "basic-${run.setup.random_string}"
+    error_message = "Repository name does not match: expected basic-${run.setup.random_string}, got ${github_repository_environment.default.repository}"
+  }
+  assert {
+    condition     = github_repository_environment.default.deployment_branch_policy[0].custom_branch_policies == true
+    error_message = "Custom branch policies does not match: expected true, got ${github_repository_environment.default.deployment_branch_policy[0].custom_branch_policies}"
+  }
+  assert {
+    condition     = github_repository_environment.default.deployment_branch_policy[0].protected_branches == false
+    error_message = "Protected branches policy does not match: expected false, got ${github_repository_environment.default.deployment_branch_policy[0].protected_branches}"
+  }
+  assert {
+    condition     = length(github_repository_environment_deployment_policy.branch_patterns) == 1
+    error_message = "Number of branch patterns does not match: expected 1, got ${length(github_repository_environment_deployment_policy.branch_patterns)}"
+  }
+  assert {
+    condition     = github_repository_environment_deployment_policy.branch_patterns["main"].branch_pattern == "main"
+    error_message = "Branch pattern does not match: expected main, got ${github_repository_environment_deployment_policy.branch_patterns["main"].branch_pattern}"
+  }
+  assert {
+    condition     = length(github_repository_environment_deployment_policy.tag_patterns) == 1
+    error_message = "Number of tag patterns does not match: expected 1, got ${length(github_repository_environment_deployment_policy.tag_patterns)}"
+  }
+  assert {
+    condition     = github_repository_environment_deployment_policy.tag_patterns["v*"].tag_pattern == "v*"
+    error_message = "Tag pattern does not match: expected v*, got ${github_repository_environment_deployment_policy.tag_patterns["v*"].tag_pattern}"
   }
 }
 

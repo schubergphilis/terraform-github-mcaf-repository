@@ -269,7 +269,7 @@ resource "github_repository_file" "managed" {
 
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
-  file                = each.value.path
+  file                = each.key
   overwrite_on_create = each.value.overwrite_on_create
   repository          = github_repository.default.name
 
@@ -282,12 +282,6 @@ resource "github_repository_file" "managed" {
   }
 }
 
-# FIXME: This can be removed in the next major version.
-moved {
-  from = github_repository_file.default
-  to   = github_repository_file.managed
-}
-
 # Files created by this resource are a one time action. Any downstream content changes will not be
 # overwritten. This helps to build a repository skeleton where you want some templating.
 resource "github_repository_file" "unmanaged" {
@@ -295,7 +289,7 @@ resource "github_repository_file" "unmanaged" {
 
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
   content             = each.value.content
-  file                = each.value.path
+  file                = each.key
   overwrite_on_create = each.value.overwrite_on_create
   repository          = github_repository.default.name
 

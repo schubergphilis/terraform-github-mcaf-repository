@@ -1,3 +1,8 @@
+locals {
+  # Calculate if we should be using protected branches or a custom policy based on the deployment policy
+  protected_branches = length(var.deployment_policy.branch_patterns) == 0 && length(var.deployment_policy.tag_patterns) == 0
+}
+
 data "github_team" "default" {
   for_each = toset(var.reviewer_teams)
 
@@ -16,8 +21,11 @@ resource "github_repository_environment" "default" {
   wait_timer  = var.wait_timer
 
   deployment_branch_policy {
-    custom_branch_policies = var.deployment_policy.custom_branch_policies
-    protected_branches     = var.deployment_policy.protected_branches
+    # If a branch policy is not defined we configure the environment to allow deploys from protected branches
+    protected_branches = local.protected_branches
+    # If a branch policy is defined we configure the environment to use a custom branch policy;
+    # this setting must be the inverse of local.protected_branches
+    custom_branch_policies = !local.protected_branches
   }
 
   dynamic "reviewers" {

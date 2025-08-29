@@ -200,22 +200,15 @@ variable "environments" {
     variables  = optional(map(string), {})
     wait_timer = optional(number, null)
 
-    deployment_branch_policy = optional(object(
-      {
-        branch_patterns        = optional(list(string), [])
-        custom_branch_policies = optional(bool, false)
-        protected_branches     = optional(bool, true)
-      }),
-      {
-        custom_branch_policies = false
-        protected_branches     = true
-      }
-    )
+    deployment_policy = optional(object({
+      branch_patterns = optional(set(string), [])
+      tag_patterns    = optional(set(string), [])
+    }))
 
     reviewers = optional(object({
       teams = optional(list(string)) # Use team names here
-      users = optional(list(string)) # USe user names here
-    }), null)
+      users = optional(list(string)) # Use user names here
+    }))
   }))
   default     = {}
   description = "An optional map of GitHub environments to configure"

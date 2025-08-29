@@ -24,10 +24,8 @@ module "environment_prod" {
   wait_timer = 30
 
   deployment_policy = {
-    branch_patterns        = ["main"]
-    protected_branches     = true
-    custom_branch_policies = false
-    tag_patterns           = ["v*"]
+    branch_patterns = ["main"]
+    tag_patterns    = ["v*"]
   }
 
   reviewer_teams = [

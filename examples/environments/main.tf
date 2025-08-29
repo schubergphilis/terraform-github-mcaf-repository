@@ -30,16 +30,27 @@ module "repository_with_environments" {
 
   environments = {
     staging = {
-      deployment_branch_policy = {
-        protected_branches = false
-      }
+      secrets   = { API_KEY = "super-secret-staging-value" }
+      variables = { STAGE = "staging" }
     }
 
     prod = {
+      deployment_policy = {
+        protected_branches = false
+
+        # Allow deployments from specific branches or tags.
+        branch_patterns = ["main", "release"]
+        tag_patterns    = ["v*", "release/prod"]
+      }
+
+      # Specify deployment reviewers for this environment.
       reviewers = {
-        teams = [github_team.test.id]
+        teams = [github_team.test.name]
         users = [data.github_user.current.login]
       }
+
+      secrets   = { API_KEY = "super-secret-prod-value" }
+      variables = { STAGE = "prod" }
     }
   }
 }

@@ -91,8 +91,6 @@ Enviroments can be configured using the `var.environments` variable. This allows
 
 You can also call the module directory, see its [README] for more details, or see the [environments examples](/examples/environments/main.tf).
 
-````hcl
-
 ## Granting access to a repository
 
 This module manages repository access by granting access to pre-existing teams. To grant a team access, populate the `access` map, using the team name as the key and the desired level as the value, for example:

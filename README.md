@@ -44,6 +44,32 @@ module "mcaf-repository" {
 
 See the [github_branch resource](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch) for more details
 
+## Creating files
+
+This module allows creating and managing files in a GitHub repository by using `var.repository_files`.
+
+To create files:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  repository_files = {
+    ".github/dependabot.yml" = {
+      content = file("${path.root}/files/dependabot.yml")
+    }
+    "README.md" = {
+      content = "Welcome to my project!"
+      managed = false
+    }
+  }
+}
+```
+
+The map key refers to the file path in the repository, and the `content` field contains the file content. By default, files created using this method are managed by Terraform, but this can be changed by setting the `managed` field to `false`, meaning any changes done outside of Terraform will be ignored.
+
 ## Configuring (additional) branches
 
 The default behaviour is for any branch created by this branch to inherit the default branch protection settings (`var.default_branch_protection`), but this can be overridden by either settings the `branch_protection` key or disabling branch protection by setting the `use_branch_protection` field to `false`.

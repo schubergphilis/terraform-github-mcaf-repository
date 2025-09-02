@@ -2,6 +2,69 @@
 
 This document captures breaking changes.
 
+When upgrading, it is important to go from one major version to the next. Skipping major versions may cause errors that are not documented here.
+
+## Upgrading to v4.0.0
+
+### `repository_files`: Use map key in favour of `path` attribute
+
+The `repository_files` variable now expects each map key to define the file path. The `path` attribute is no longer supported and will cause errors.
+
+**Old syntax:**
+
+```hcl
+repository_files = {
+  "foo.txt" = {
+    path    = "/path/to/foo.txt"
+    content = file("foo.txt")
+  }
+}
+```
+
+**New syntax:**
+
+```hcl
+repository_files = {
+  "/path/to/foo.txt" = {
+    content = file("foo.txt")
+  }
+}
+```
+
+### `deployment_policy`: Consolidated object with computed logic
+
+> [!NOTE]
+> This change applies to the variable in the root module and the `environment` sub-module.
+
+Renamed `deployment_branch_policy` to `deployment_policy`: this variable is used to configure tag and branch patterns for deployments so removed `branch` from the name.
+
+The prior boolean flags, `protected_branches` and `custom_branch_policies`, have been removed. Instead, only `branch_patterns` and `tag_patterns` should be used. The former needed to be set depending on how the latter were set, we now handle this inside the module.
+
+- If neither `branch_patterns` nor `tag_patterns` are defined, the module defaults to `protected_branches = true`.
+- If either is defined, the module will automatically handle enabling custom branch/tag logic and disabling `protected_branches`.
+
+This change maintains the original behaviour, where not configuring `deployment_policy` results in `protected_branches = true`, only allowing deployments from protected branches.
+
+**Old syntax:**
+
+```hcl
+deployment_policy = {
+  protected_branches     = true
+  custom_branch_policies = false
+  branch_patterns        = []
+  tag_patterns           = []
+}
+```
+
+**New syntax:**
+
+```hcl
+deployment_policy = {
+  branch_patterns = ["releas*"]
+  tag_patterns    = ["v*"]
+}
+```
+
 ## Upgrading to v3.0.0
 
 ### Move environment configuration to its own module

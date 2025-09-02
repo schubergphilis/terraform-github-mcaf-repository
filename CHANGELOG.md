@@ -5,6 +5,21 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v4.0.0 - 2025-09-02
+
+### What's Changed
+
+#### 🚀 Features
+
+* Remove `path` from `var.repository_files` settings object (#93) @shoekstra
+* Remove computable values from `var.deployment_policy` (#94) @shoekstra
+
+#### 🐛 Bug Fixes
+
+* Configure `overwrite_on_create` using variable (#92) @shoekstra
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v3.0.0...v4.0.0
+
 ## v3.0.0 - 2025-07-17
 
 ### What's Changed

@@ -48,7 +48,7 @@ This change maintains the original behaviour, where not configuring `deployment_
 **Old syntax:**
 
 ```hcl
-deployment_policy = {
+deployment_branch_policy = {
   protected_branches     = true
   custom_branch_policies = false
   branch_patterns        = []

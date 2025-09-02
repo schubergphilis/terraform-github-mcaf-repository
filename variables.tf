@@ -306,7 +306,6 @@ variable "repository_files" {
     content             = string
     managed             = optional(bool, true)
     overwrite_on_create = optional(bool, false)
-    path                = string
   }))
   default     = {}
   description = "A map of GitHub repository files that should be created"

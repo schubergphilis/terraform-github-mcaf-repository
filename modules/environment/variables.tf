@@ -1,9 +1,7 @@
 variable "deployment_policy" {
   type = object({
-    branch_patterns        = optional(set(string), [])
-    custom_branch_policies = optional(bool, false)
-    protected_branches     = optional(bool, true)
-    tag_patterns           = optional(set(string), [])
+    branch_patterns = optional(set(string), [])
+    tag_patterns    = optional(set(string), [])
   })
   default     = {}
   description = "Environment deployment policy."

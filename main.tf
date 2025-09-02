@@ -249,7 +249,7 @@ module "environment" {
   source = "./modules/environment"
 
   name              = each.key
-  deployment_policy = each.value.deployment_branch_policy
+  deployment_policy = each.value.deployment_policy
   repository        = github_repository.default.name
   reviewer_teams    = try(each.value.reviewers.teams, null)
   reviewer_users    = try(each.value.reviewers.users, null)

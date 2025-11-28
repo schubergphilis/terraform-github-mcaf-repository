@@ -301,3 +301,15 @@ resource "github_repository_file" "unmanaged" {
     ignore_changes = [commit_author, commit_email, content]
   }
 }
+
+
+################################################################################
+# GitHub App
+################################################################################
+
+resource "github_app_installation_repository" "default" {
+  for_each = var.app_installation_ids
+
+  installation_id = each.value
+  repository      = github_repository.default.name
+}

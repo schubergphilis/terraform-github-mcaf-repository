@@ -62,6 +62,12 @@ variable "allow_update_branch" {
   description = "Enable to allow suggestions to update pull request branches"
 }
 
+variable "app_installation_ids" {
+  type        = set(string)
+  default     = []
+  description = "Set of GitHub App installation IDs to associate with the repository"
+}
+
 variable "archive_on_destroy" {
   type        = bool
   default     = false

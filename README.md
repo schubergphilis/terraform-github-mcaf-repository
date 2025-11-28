@@ -229,6 +229,7 @@ module "mcaf-repository" {
 | [github_actions_repository_access_level.actions_access_level](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_repository_access_level) | resource |
 | [github_actions_secret.secrets](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_secret) | resource |
 | [github_actions_variable.action_variables](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_variable) | resource |
+| [github_app_installation_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/app_installation_repository) | resource |
 | [github_branch.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch) | resource |
 | [github_branch_default.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch_default) | resource |
 | [github_branch_protection.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/branch_protection) | resource |
@@ -256,6 +257,7 @@ module "mcaf-repository" {
 | <a name="input_allow_rebase_merge"></a> [allow\_rebase\_merge](#input\_allow\_rebase\_merge) | Enable rebase merges on the repository | `bool` | `true` | no |
 | <a name="input_allow_squash_merge"></a> [allow\_squash\_merge](#input\_allow\_squash\_merge) | Enable squash merges on the repository | `bool` | `true` | no |
 | <a name="input_allow_update_branch"></a> [allow\_update\_branch](#input\_allow\_update\_branch) | Enable to allow suggestions to update pull request branches | `bool` | `true` | no |
+| <a name="input_app_installation_ids"></a> [app\_installation\_ids](#input\_app\_installation\_ids) | Set of GitHub App installation IDs to associate with the repository | `set(string)` | `[]` | no |
 | <a name="input_archive_on_destroy"></a> [archive\_on\_destroy](#input\_archive\_on\_destroy) | Set to true to archive the repository instead of deleting on destroy | `bool` | `false` | no |
 | <a name="input_archived"></a> [archived](#input\_archived) | Specifies if the repository should be archived | `bool` | `false` | no |
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |

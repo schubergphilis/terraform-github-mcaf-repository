@@ -281,6 +281,7 @@ module "mcaf-repository" {
 | <a name="input_merge_commit_message"></a> [merge\_commit\_message](#input\_merge\_commit\_message) | The default commit message for merge commits | `string` | `"PR_BODY"` | no |
 | <a name="input_merge_commit_title"></a> [merge\_commit\_title](#input\_merge\_commit\_title) | The default commit title for merge commits | `string` | `"PR_TITLE"` | no |
 | <a name="input_merge_strategy"></a> [merge\_strategy](#input\_merge\_strategy) | The merge strategy to use for pull requests | `string` | `null` | no |
+| <a name="input_pages"></a> [pages](#input\_pages) | The repository's GitHub Pages configuration. | <pre>object({<br/>    branch = string<br/>    path   = optional(string, "/")<br/>    cname  = optional(string)<br/>  })</pre> | `null` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A map of GitHub repository files that should be created | <pre>map(object({<br/>    branch              = optional(string)<br/>    content             = string<br/>    managed             = optional(bool, true)<br/>    overwrite_on_create = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |
 | <a name="input_squash_merge_commit_title"></a> [squash\_merge\_commit\_title](#input\_squash\_merge\_commit\_title) | The default commit title for squash merges | `string` | `"PR_TITLE"` | no |

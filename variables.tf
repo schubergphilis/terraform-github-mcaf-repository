@@ -306,6 +306,17 @@ variable "name" {
   description = "The name of the repository"
 }
 
+variable "pages" {
+  type = object({
+    branch = string
+    path   = optional(string, "/")
+    cname  = optional(string)
+  })
+
+  default     = null
+  description = "The repository's GitHub Pages configuration."
+}
+
 variable "repository_files" {
   type = map(object({
     branch              = optional(string)

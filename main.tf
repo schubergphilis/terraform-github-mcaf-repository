@@ -44,6 +44,18 @@ resource "github_repository" "default" {
   visibility                  = var.visibility
   vulnerability_alerts        = var.vulnerability_alerts
 
+  dynamic "pages" {
+    for_each = var.pages != null ? { create = true } : {}
+
+    content {
+      source {
+        branch = var.pages.branch
+        path   = var.pages.path
+      }
+      cname = var.pages.cname
+    }
+  }
+
   dynamic "template" {
     for_each = var.template_repository != null ? { create = true } : {}
 
@@ -54,7 +66,7 @@ resource "github_repository" "default" {
   }
 
   lifecycle {
-    ignore_changes = [pages, template]
+    ignore_changes = [template]
   }
 }
 

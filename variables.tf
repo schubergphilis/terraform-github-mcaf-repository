@@ -308,13 +308,24 @@ variable "name" {
 
 variable "pages" {
   type = object({
-    branch = string
-    path   = optional(string, "/")
-    cname  = optional(string)
+    build_type = string
+    branch     = optional(string)
+    cname      = optional(string)
+    path       = optional(string, "/")
   })
 
   default     = null
   description = "The repository's GitHub Pages configuration."
+
+  validation {
+    condition     = (var.pages == null || contains(["legacy", "workflow"], var.pages.build_type))
+    error_message = "The value of the variable 'build_type' must be either 'legacy' or 'workflow'"
+  }
+
+  validation {
+    condition     = (var.pages == null || var.pages.build_type != "legacy" || try(var.pages.branch != null && var.pages.branch != "", false))
+    error_message = "The variable 'branch' is required when 'build_type' is set to 'legacy'"
+  }
 }
 
 variable "repository_files" {

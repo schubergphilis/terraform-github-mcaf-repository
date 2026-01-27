@@ -48,11 +48,17 @@ resource "github_repository" "default" {
     for_each = var.pages != null ? { create = true } : {}
 
     content {
-      source {
-        branch = var.pages.branch
-        path   = var.pages.path
+      build_type = var.pages.build_type
+      cname      = var.pages.cname
+
+      dynamic "source" {
+        for_each = var.pages.build_type == "legacy" ? { create = true } : {}
+
+        content {
+          branch = var.pages.branch
+          path   = var.pages.path
+        }
       }
-      cname = var.pages.cname
     }
   }
 

@@ -87,7 +87,10 @@ variable "auto_init" {
 }
 
 variable "autolink_references" {
-  type        = map(string)
+  type = map(object({
+    is_alphanumeric = optional(bool, false)
+    url_template    = string
+  }))
   default     = {}
   description = "Optional map with autolink reference key prefix and their corresponding URL templates"
   nullable    = false

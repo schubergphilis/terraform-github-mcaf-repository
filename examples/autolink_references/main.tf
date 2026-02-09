@@ -7,6 +7,6 @@ module "repo" {
   name = "basic"
 
   autolink_references = {
-    "JIRA" = "https://my-jira-instance.atlassian.net/browse/<num>"
+    "JIRA" = { url_template = "https://my-jira-instance.atlassian.net/browse/<num>" }
   }
 }

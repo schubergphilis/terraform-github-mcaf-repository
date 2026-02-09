@@ -85,9 +85,10 @@ moved {
 resource "github_repository_autolink_reference" "default" {
   for_each = var.autolink_references
 
-  repository          = github_repository.default.name
   key_prefix          = each.key
-  target_url_template = each.value
+  is_alphanumeric     = each.value.is_alphanumeric
+  repository          = github_repository.default.name
+  target_url_template = each.value.url_template
 }
 
 # Configure Dependabot security updates for the repository.

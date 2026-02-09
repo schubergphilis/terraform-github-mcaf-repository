@@ -86,6 +86,16 @@ variable "auto_init" {
   description = "Disable to not produce an initial commit in the repository"
 }
 
+variable "autolink_references" {
+  type = map(object({
+    is_alphanumeric = optional(bool, false)
+    url_template    = string
+  }))
+  default     = {}
+  description = "Optional map with autolink reference key prefix and their corresponding URL templates"
+  nullable    = false
+}
+
 variable "branches" {
   type = map(object({
     source_branch         = optional(string)

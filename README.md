@@ -111,6 +111,29 @@ module "mcaf-repository" {
 
 For more examples, see the [branches examples](/examples/branches/main.tf).
 
+## Configuring autolink references
+
+References to URLs, issues, pull requests, and commits are automatically shortened and converted into links. You can configure custom autolink references for a repository using the `autolink_references` variable.
+
+You define custom autolinks by specifying a reference prefix and a target URL using `var.autolink_references`:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  autolink_references = {
+    "JIRA" = { url_template = "https://my-jira-instance.atlassian.net/browse/<num>" }
+  }
+}
+```
+
+In the above example, `JIRA-123` is converted to `https://jira.example.com/issue?query=123` when viewing comments or commit messages.
+
+> [!IMPORTANT]
+> Reference prefixes cannot have overlapping names. For example, a repository cannot have two custom autolinks with prefixes such as `TICKET` and `TICK`, since both prefixes would match the string `TICKET123a`.
+
 ## Configuring environments
 
 Enviroments can be configured using the `var.environments` variable. This allows you to create environments with secrets, variables, and deployment policies.
@@ -164,9 +187,9 @@ By default, the module will enable squash merges and disable merge commits and r
 
 To more easily select a single strategy, you can set the `merge_strategy` variable to one of the following values:
 
-* `merge`
-* `rebase`
-* `squash`
+- `merge`
+- `rebase`
+- `squash`
 
 Using `merge_strategy` will override the above variables.
 
@@ -174,10 +197,10 @@ Using `merge_strategy` will override the above variables.
 
 It is possible to create (and manage) files within a GitHub repository using this module. We have a `repository_files` variable that takes a map of files to create; the key represents the name (and path) for the file, and the value is an object with the following attributes:
 
-* `branch`: optional value to specify the branch, defaults to the default branch
-* `content`: content of the file, can be a string or string sourced from a file or template using `file()` or `templatefile()` respectively.
-* `managed`: whether Terraform should manage this file, or if it is a one time commit and any changes done outside of Terraform, defaults to `true`
-* `overwrite_on_create`: whether to overwrite the file if it already exists when creating it, defaults to `false`
+- `branch`: optional value to specify the branch, defaults to the default branch
+- `content`: content of the file, can be a string or string sourced from a file or template using `file()` or `templatefile()` respectively.
+- `managed`: whether Terraform should manage this file, or if it is a one time commit and any changes done outside of Terraform, defaults to `true`
+- `overwrite_on_create`: whether to overwrite the file if it already exists when creating it, defaults to `false`
 
 Example:
 
@@ -236,6 +259,7 @@ module "mcaf-repository" {
 | [github_dependabot_secret.encrypted](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/dependabot_secret) | resource |
 | [github_dependabot_secret.plaintext](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/dependabot_secret) | resource |
 | [github_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository) | resource |
+| [github_repository_autolink_reference.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_autolink_reference) | resource |
 | [github_repository_dependabot_security_updates.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_dependabot_security_updates) | resource |
 | [github_repository_file.managed](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.unmanaged](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
@@ -261,6 +285,7 @@ module "mcaf-repository" {
 | <a name="input_archive_on_destroy"></a> [archive\_on\_destroy](#input\_archive\_on\_destroy) | Set to true to archive the repository instead of deleting on destroy | `bool` | `false` | no |
 | <a name="input_archived"></a> [archived](#input\_archived) | Specifies if the repository should be archived | `bool` | `false` | no |
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
+| <a name="input_autolink_references"></a> [autolink\_references](#input\_autolink\_references) | Optional map with autolink reference key prefix and their corresponding URL templates | <pre>map(object({<br/>    is_alphanumeric = optional(bool, false)<br/>    url_template    = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_branches"></a> [branches](#input\_branches) | An optional map with GitHub branches to create | <pre>map(object({<br/>    source_branch         = optional(string)<br/>    source_sha            = optional(string)<br/>    use_branch_protection = optional(bool, true)<br/><br/>    branch_protection = optional(object({<br/>      allows_force_pushes    = optional(bool, false)<br/>      enforce_admins         = optional(bool, false)<br/>      require_signed_commits = optional(bool, true)<br/><br/>      required_checks = optional(object({<br/>        strict   = optional(bool)<br/>        contexts = optional(list(string))<br/>      }))<br/><br/>      restrict_pushes = optional(object({<br/>        blocks_creations = optional(bool)<br/>        push_allowances  = optional(list(string))<br/>      }))<br/><br/>      required_reviews = optional(object({<br/>        dismiss_stale_reviews           = optional(bool, true)<br/>        dismissal_restrictions          = optional(list(string))<br/>        pull_request_bypassers          = optional(list(string))<br/>        require_code_owner_reviews      = optional(bool, true)<br/>        require_last_push_approval      = optional(bool, null)<br/>        required_approving_review_count = optional(number, 2)<br/>      }))<br/>    }), null)<br/>  }))</pre> | `{}` | no |
 | <a name="input_default_branch"></a> [default\_branch](#input\_default\_branch) | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
 | <a name="input_default_branch_protection"></a> [default\_branch\_protection](#input\_default\_branch\_protection) | Default branch protection settings for managed branches | <pre>object({<br/>    allows_force_pushes    = optional(bool, false)<br/>    enforce_admins         = optional(bool, false)<br/>    require_signed_commits = optional(bool, true)<br/><br/>    required_checks = optional(object({<br/>      strict   = optional(bool)<br/>      contexts = optional(list(string))<br/>    }))<br/><br/>    required_reviews = optional(object({<br/>      dismiss_stale_reviews           = optional(bool, true)<br/>      dismissal_restrictions          = optional(list(string))<br/>      pull_request_bypassers          = optional(list(string))<br/>      require_code_owner_reviews      = optional(bool, true)<br/>      require_last_push_approval      = optional(bool, null)<br/>      required_approving_review_count = optional(number, 2)<br/>    }))<br/><br/>    restrict_pushes = optional(object({<br/>      blocks_creations = optional(bool)<br/>      push_allowances  = optional(list(string))<br/>    }))<br/>  })</pre> | <pre>{<br/>  "enforce_admins": false,<br/>  "require_signed_commits": true,<br/>  "required_reviews": {<br/>    "dismiss_stale_reviews": true,<br/>    "require_code_owner_reviews": true,<br/>    "required_approving_review_count": 2<br/>  }<br/>}</pre> | no |

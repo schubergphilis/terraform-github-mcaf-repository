@@ -81,6 +81,15 @@ moved {
   to   = github_repository_dependabot_security_updates.default[0]
 }
 
+# Configure an autolink reference.
+resource "github_repository_autolink_reference" "default" {
+  for_each = var.autolink_references
+
+  repository          = github_repository.default.name
+  key_prefix          = each.key
+  target_url_template = each.value
+}
+
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
   count      = var.vulnerability_alerts ? 1 : 0

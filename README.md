@@ -111,6 +111,29 @@ module "mcaf-repository" {
 
 For more examples, see the [branches examples](/examples/branches/main.tf).
 
+## Configuring autolink references
+
+References to URLs, issues, pull requests, and commits are automatically shortened and converted into links. You can configure custom autolink references for a repository using the `autolink_references` variable.
+
+You define custom autolinks by specifying a reference prefix and a target URL using `var.autolink_references`:
+
+```hcl
+module "mcaf-repository" {
+  source = "schubergphilis/mcaf-repository/github"
+
+  name = "my-repo"
+
+  autolink_references = {
+    "JIRA" = "https://my-jira-instance.atlassian.net/browse/<num>"
+  }
+}
+```
+
+In the above example, `JIRA-123` is converted to `https://jira.example.com/issue?query=123` when viewing comments or commit messages.
+
+> [!IMPORTANT]
+> Reference prefixes cannot have overlapping names. For example, a repository cannot have two custom autolinks with prefixes such as `TICKET` and `TICK`, since both prefixes would match the string `TICKET123a`.
+
 ## Configuring environments
 
 Enviroments can be configured using the `var.environments` variable. This allows you to create environments with secrets, variables, and deployment policies.
@@ -164,9 +187,9 @@ By default, the module will enable squash merges and disable merge commits and r
 
 To more easily select a single strategy, you can set the `merge_strategy` variable to one of the following values:
 
-* `merge`
-* `rebase`
-* `squash`
+- `merge`
+- `rebase`
+- `squash`
 
 Using `merge_strategy` will override the above variables.
 
@@ -174,10 +197,10 @@ Using `merge_strategy` will override the above variables.
 
 It is possible to create (and manage) files within a GitHub repository using this module. We have a `repository_files` variable that takes a map of files to create; the key represents the name (and path) for the file, and the value is an object with the following attributes:
 
-* `branch`: optional value to specify the branch, defaults to the default branch
-* `content`: content of the file, can be a string or string sourced from a file or template using `file()` or `templatefile()` respectively.
-* `managed`: whether Terraform should manage this file, or if it is a one time commit and any changes done outside of Terraform, defaults to `true`
-* `overwrite_on_create`: whether to overwrite the file if it already exists when creating it, defaults to `false`
+- `branch`: optional value to specify the branch, defaults to the default branch
+- `content`: content of the file, can be a string or string sourced from a file or template using `file()` or `templatefile()` respectively.
+- `managed`: whether Terraform should manage this file, or if it is a one time commit and any changes done outside of Terraform, defaults to `true`
+- `overwrite_on_create`: whether to overwrite the file if it already exists when creating it, defaults to `false`
 
 Example:
 

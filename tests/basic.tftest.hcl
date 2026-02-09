@@ -20,6 +20,12 @@ run "basic" {
     error_message = "Name does not match"
   }
 
+  // Validate no autolink references exist
+  assert {
+    condition     = length(resource.github_repository_autolink_reference.default) == 0
+    error_message = "Autolink references should be empty"
+  }
+
   // Validate default branch settings
   assert {
     condition     = resource.github_branch_default.default.branch == "main"

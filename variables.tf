@@ -89,7 +89,7 @@ variable "auto_init" {
 variable "autolink_references" {
   type        = map(string)
   default     = {}
-  description = "Optional map with autolink reference names and their corresponding URL templates"
+  description = "Optional map with autolink reference key prefix and their corresponding URL templates"
   nullable    = false
 }
 

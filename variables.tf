@@ -328,12 +328,12 @@ variable "pages" {
   description = "The repository's GitHub Pages configuration."
 
   validation {
-    condition     = (var.pages == null || contains(["legacy", "workflow"], var.pages.build_type))
+    condition     = (var.pages == null || try(contains(["legacy", "workflow"], var.pages.build_type), false))
     error_message = "The value of the variable 'build_type' must be either 'legacy' or 'workflow'"
   }
 
   validation {
-    condition     = (var.pages == null || var.pages.build_type != "legacy" || try(var.pages.branch != null && var.pages.branch != "", false))
+    condition     = (var.pages == null || try(var.pages.build_type != "legacy" || (var.pages.branch != null && var.pages.branch != ""), true))
     error_message = "The variable 'branch' is required when 'build_type' is set to 'legacy'"
   }
 }

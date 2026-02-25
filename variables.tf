@@ -131,6 +131,21 @@ variable "branches" {
   description = "An optional map with GitHub branches to create"
 }
 
+variable "custom_properties" {
+  type = map(object({
+    property_name  = string
+    property_type  = string
+    property_value = list(string)
+  }))
+  default     = {}
+  description = "An optional map of custom properties to set on the repository. The custom properties need to be defined on the org level beforehand to be used here."
+
+  validation {
+    condition     = alltrue([for v in values(var.custom_properties) : can(regex("^(single_select|multi_select|string|true_false)$", v.property_type))])
+    error_message = "The value of 'property_type' must be one of 'single_select', 'multi_select', 'string' or 'true_false'"
+  }
+}
+
 variable "default_branch" {
   type        = string
   default     = "main"

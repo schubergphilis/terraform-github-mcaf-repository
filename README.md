@@ -231,13 +231,13 @@ module "mcaf-repository" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 6.4 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 6.11 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 6.4 |
+| <a name="provider_github"></a> [github](#provider\_github) | ~> 6.11 |
 
 ## Modules
 
@@ -260,6 +260,7 @@ module "mcaf-repository" {
 | [github_dependabot_secret.plaintext](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/dependabot_secret) | resource |
 | [github_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository) | resource |
 | [github_repository_autolink_reference.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_autolink_reference) | resource |
+| [github_repository_custom_property.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_custom_property) | resource |
 | [github_repository_dependabot_security_updates.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_dependabot_security_updates) | resource |
 | [github_repository_file.managed](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.unmanaged](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
@@ -287,6 +288,7 @@ module "mcaf-repository" {
 | <a name="input_auto_init"></a> [auto\_init](#input\_auto\_init) | Disable to not produce an initial commit in the repository | `bool` | `true` | no |
 | <a name="input_autolink_references"></a> [autolink\_references](#input\_autolink\_references) | Optional map with autolink reference key prefix and their corresponding URL templates | <pre>map(object({<br/>    is_alphanumeric = optional(bool, false)<br/>    url_template    = string<br/>  }))</pre> | `{}` | no |
 | <a name="input_branches"></a> [branches](#input\_branches) | An optional map with GitHub branches to create | <pre>map(object({<br/>    source_branch         = optional(string)<br/>    source_sha            = optional(string)<br/>    use_branch_protection = optional(bool, true)<br/><br/>    branch_protection = optional(object({<br/>      allows_force_pushes    = optional(bool, false)<br/>      enforce_admins         = optional(bool, false)<br/>      require_signed_commits = optional(bool, true)<br/><br/>      required_checks = optional(object({<br/>        strict   = optional(bool)<br/>        contexts = optional(list(string))<br/>      }))<br/><br/>      restrict_pushes = optional(object({<br/>        blocks_creations = optional(bool)<br/>        push_allowances  = optional(list(string))<br/>      }))<br/><br/>      required_reviews = optional(object({<br/>        dismiss_stale_reviews           = optional(bool, true)<br/>        dismissal_restrictions          = optional(list(string))<br/>        pull_request_bypassers          = optional(list(string))<br/>        require_code_owner_reviews      = optional(bool, true)<br/>        require_last_push_approval      = optional(bool, null)<br/>        required_approving_review_count = optional(number, 2)<br/>      }))<br/>    }), null)<br/>  }))</pre> | `{}` | no |
+| <a name="input_custom_properties"></a> [custom\_properties](#input\_custom\_properties) | An optional map of custom properties to set on the repository. The custom properties need to be defined on the org level beforehand to be used here. | <pre>map(object({<br/>    property_name  = string<br/>    property_type  = string<br/>    property_value = list(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_default_branch"></a> [default\_branch](#input\_default\_branch) | Name of the default branch for the GitHub repository | `string` | `"main"` | no |
 | <a name="input_default_branch_protection"></a> [default\_branch\_protection](#input\_default\_branch\_protection) | Default branch protection settings for managed branches | <pre>object({<br/>    allows_force_pushes    = optional(bool, false)<br/>    enforce_admins         = optional(bool, false)<br/>    require_signed_commits = optional(bool, true)<br/><br/>    required_checks = optional(object({<br/>      strict   = optional(bool)<br/>      contexts = optional(list(string))<br/>    }))<br/><br/>    required_reviews = optional(object({<br/>      dismiss_stale_reviews           = optional(bool, true)<br/>      dismissal_restrictions          = optional(list(string))<br/>      pull_request_bypassers          = optional(list(string))<br/>      require_code_owner_reviews      = optional(bool, true)<br/>      require_last_push_approval      = optional(bool, null)<br/>      required_approving_review_count = optional(number, 2)<br/>    }))<br/><br/>    restrict_pushes = optional(object({<br/>      blocks_creations = optional(bool)<br/>      push_allowances  = optional(list(string))<br/>    }))<br/>  })</pre> | <pre>{<br/>  "enforce_admins": false,<br/>  "require_signed_commits": true,<br/>  "required_reviews": {<br/>    "dismiss_stale_reviews": true,<br/>    "require_code_owner_reviews": true,<br/>    "required_approving_review_count": 2<br/>  }<br/>}</pre> | no |
 | <a name="input_delete_branch_on_merge"></a> [delete\_branch\_on\_merge](#input\_delete\_branch\_on\_merge) | Automatically delete head branch after a pull request is merged | `bool` | `true` | no |

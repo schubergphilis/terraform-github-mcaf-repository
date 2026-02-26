@@ -91,6 +91,16 @@ resource "github_repository_autolink_reference" "default" {
   target_url_template = each.value.url_template
 }
 
+# Configure custom properties for the repository.
+resource "github_repository_custom_property" "default" {
+  for_each = var.custom_properties
+
+  property_name  = each.value.property_name
+  property_type  = each.value.property_type
+  property_value = each.value.property_value
+  repository     = github_repository.default.name
+}
+
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
   count      = var.vulnerability_alerts ? 1 : 0

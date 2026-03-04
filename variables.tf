@@ -364,6 +364,17 @@ variable "repository_files" {
   description = "A map of GitHub repository files that should be created"
 }
 
+variable "source_repo" {
+  type        = string
+  default     = null
+  description = "The source repository to create this repository from in format owner/repo"
+
+  validation {
+    condition     = var.source_repo == null || can(regex("^[^/]+/[^/]+$", var.source_repo))
+    error_message = "The value of the variable 'source_repo' must be in format 'owner/repo'"
+  }
+}
+
 variable "squash_merge_commit_message" {
   type        = string
   default     = "COMMIT_MESSAGES"

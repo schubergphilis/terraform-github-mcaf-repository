@@ -73,6 +73,117 @@ run "basic" {
   }
 }
 
+# Test _ource_repo validation rule
+run "source_repo_accepts_null" {
+  variables {
+    name        = "source_repo_accepts_null-${run.setup.random_string}"
+    source_repo = null
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = []
+
+  assert {
+    condition     = tobool(resource.github_repository.default.fork) == false
+    error_message = "Fork should be false when source_repo is null"
+  }
+}
+
+run "source_repo_accepts_valid_format" {
+  variables {
+    name        = "source_repo_accepts_valid_format-${run.setup.random_string}"
+    source_repo = "myorg/myrepo"
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = []
+
+  assert {
+    condition     = tobool(resource.github_repository.default.fork) == true
+    error_message = "Fork should be true when source_repo is not null"
+  }
+
+  assert {
+    condition     = resource.github_repository.default.source_owner == "myorg"
+    error_message = "Source owner does not match, got: ${resource.github_repository.default.source_owner}, expected: myorg"
+  }
+
+  assert {
+    condition     = resource.github_repository.default.source_repo == "myrepo"
+    error_message = "Source repo does not match, got: ${resource.github_repository.default.source_repo}, expected: myrepo"
+  }
+}
+
+run "source_repo_rejects_missing_slash" {
+  variables {
+    name        = "source_repo_rejects_missing_slash-${run.setup.random_string}"
+    source_repo = "myorg-myrepo"
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = [var.source_repo]
+}
+
+run "source_repo_rejects_multiple_slashes" {
+  variables {
+    name        = "source_repo_rejects_multiple_slashes-${run.setup.random_string}"
+    source_repo = "org/repo/extra"
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = [var.source_repo]
+}
+
+run "source_repo_rejects_empty_owner" {
+  variables {
+    name        = "source_repo_rejects_empty_owner-${run.setup.random_string}"
+    source_repo = "/repo"
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = [var.source_repo]
+}
+
+run "source_repo_rejects_empty_repo" {
+  variables {
+    name        = "source_repo_rejects_empty_repo-${run.setup.random_string}"
+    source_repo = "org/"
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = [var.source_repo]
+}
+
 # var.merge_strategy is not set by default, the default behavior is to enable all merge strategies.
 run "merge_strategy_null" {
   variables {

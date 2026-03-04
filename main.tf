@@ -28,6 +28,7 @@ resource "github_repository" "default" {
   auto_init                   = var.auto_init
   delete_branch_on_merge      = var.delete_branch_on_merge
   description                 = var.description
+  fork                        = var.source_repo != null
   gitignore_template          = var.gitignore_template
   has_downloads               = var.has_downloads
   has_issues                  = var.has_issues
@@ -38,6 +39,8 @@ resource "github_repository" "default" {
   license_template            = var.license_template
   merge_commit_message        = local.allow_merge_commit ? var.merge_commit_message : null
   merge_commit_title          = local.allow_merge_commit ? var.merge_commit_title : null
+  source_owner                = try(split("/", var.source_repo)[0], null)
+  source_repo                 = try(split("/", var.source_repo)[1], null)
   squash_merge_commit_message = local.allow_squash_merge ? var.squash_merge_commit_message : null
   squash_merge_commit_title   = local.allow_squash_merge ? var.squash_merge_commit_title : null
   topics                      = var.topics

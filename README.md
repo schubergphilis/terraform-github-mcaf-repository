@@ -266,6 +266,7 @@ module "mcaf-repository" {
 | [github_repository_file.unmanaged](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_ruleset.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset) | resource |
 | [github_team_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) | resource |
+| [github_workflow_repository_permissions.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/workflow_repository_permissions) | resource |
 | [github_team.default](https://registry.terraform.io/providers/integrations/github/latest/docs/data-sources/team) | data source |
 
 ## Inputs
@@ -318,6 +319,7 @@ module "mcaf-repository" {
 | <a name="input_topics"></a> [topics](#input\_topics) | A list of topics to set on the repository | `list(string)` | `[]` | no |
 | <a name="input_visibility"></a> [visibility](#input\_visibility) | Set the GitHub repository as public, private or internal | `string` | `"private"` | no |
 | <a name="input_vulnerability_alerts"></a> [vulnerability\_alerts](#input\_vulnerability\_alerts) | Set to true to enable security alerts for vulnerable dependencies | `bool` | `true` | no |
+| <a name="input_workflow_permissions"></a> [workflow\_permissions](#input\_workflow\_permissions) | An optional object to configure GitHub Actions workflow permissions for the repository | <pre>object({<br/>    default_workflow_permissions     = optional(string, null)<br/>    can_approve_pull_request_reviews = optional(bool, false)<br/>  })</pre> | `null` | no |
 
 ## Outputs
 

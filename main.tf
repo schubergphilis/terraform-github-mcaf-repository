@@ -37,12 +37,12 @@ resource "github_repository" "default" {
   homepage_url                = var.homepage_url
   is_template                 = var.is_template
   license_template            = var.license_template
-  merge_commit_message        = local.allow_merge_commit ? var.merge_commit_message : null
-  merge_commit_title          = local.allow_merge_commit ? var.merge_commit_title : null
+  merge_commit_message        = var.merge_commit_message
+  merge_commit_title          = var.merge_commit_title
   source_owner                = try(split("/", var.source_repo)[0], null)
   source_repo                 = try(split("/", var.source_repo)[1], null)
-  squash_merge_commit_message = local.allow_squash_merge ? var.squash_merge_commit_message : null
-  squash_merge_commit_title   = local.allow_squash_merge ? var.squash_merge_commit_title : null
+  squash_merge_commit_message = var.squash_merge_commit_message
+  squash_merge_commit_title   = var.squash_merge_commit_title
   topics                      = var.topics
   visibility                  = var.visibility
   vulnerability_alerts        = var.vulnerability_alerts

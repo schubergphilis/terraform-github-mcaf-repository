@@ -256,6 +256,14 @@ resource "github_team_repository" "default" {
 # Actions
 ################################################################################
 
+resource "github_workflow_repository_permissions" "default" {
+  count = var.workflow_permissions != null ? 1 : 0
+
+  can_approve_pull_request_reviews = var.workflow_permissions.can_approve_pull_request_reviews
+  default_workflow_permissions     = var.workflow_permissions.default_workflow_permissions
+  repository                       = github_repository.default.name
+}
+
 resource "github_actions_repository_access_level" "actions_access_level" {
   count = var.actions_access_level != null ? 1 : 0
 

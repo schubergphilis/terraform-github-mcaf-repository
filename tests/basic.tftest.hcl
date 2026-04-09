@@ -20,6 +20,12 @@ run "basic" {
     error_message = "Name does not match"
   }
 
+  // Validate no workflow permissions resource is created by default
+  assert {
+    condition     = length(resource.github_workflow_repository_permissions.default) == 0
+    error_message = "Workflow permissions should not be created by default"
+  }
+
   // Validate no autolink references exist
   assert {
     condition     = length(resource.github_repository_autolink_reference.default) == 0
@@ -182,6 +188,82 @@ run "source_repo_rejects_empty_repo" {
   command = plan
 
   expect_failures = [var.source_repo]
+}
+
+# Test workflow_permissions with explicit values
+run "workflow_permissions_set" {
+  variables {
+    name = "workflow-permissions-set-${run.setup.random_string}"
+    workflow_permissions = {
+      default_workflow_permissions     = "read"
+      can_approve_pull_request_reviews = false
+    }
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  assert {
+    condition     = length(resource.github_workflow_repository_permissions.default) == 1
+    error_message = "Workflow permissions resource should be created"
+  }
+
+  assert {
+    condition     = resource.github_workflow_repository_permissions.default[0].default_workflow_permissions == "read"
+    error_message = "Default workflow permissions should be 'read'"
+  }
+
+  assert {
+    condition     = resource.github_workflow_repository_permissions.default[0].can_approve_pull_request_reviews == false
+    error_message = "Can approve pull request reviews should be false"
+  }
+}
+
+# Test workflow_permissions with defaults applied
+run "workflow_permissions_defaults" {
+  variables {
+    name                 = "workflow-permissions-defaults-${run.setup.random_string}"
+    workflow_permissions = {}
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  assert {
+    condition     = length(resource.github_workflow_repository_permissions.default) == 1
+    error_message = "Workflow permissions resource should be created"
+  }
+
+  assert {
+    condition     = resource.github_workflow_repository_permissions.default[0].can_approve_pull_request_reviews == false
+    error_message = "Can approve pull request reviews should default to false"
+  }
+}
+
+# Test workflow_permissions validation rejects invalid values
+run "workflow_permissions_invalid" {
+  variables {
+    name = "workflow-permissions-invalid-${run.setup.random_string}"
+    workflow_permissions = {
+      default_workflow_permissions = "admin"
+    }
+  }
+
+  module {
+    source = "./"
+  }
+
+  command = plan
+
+  expect_failures = [
+    var.workflow_permissions,
+  ]
 }
 
 # var.merge_strategy is not set by default, the default behavior is to enable all merge strategies.

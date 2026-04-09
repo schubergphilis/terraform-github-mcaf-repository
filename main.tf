@@ -15,8 +15,8 @@ locals {
   repository_file_commit_messages = {
     for k, v in var.repository_files : k => (
       v.commit_message != null ? v.commit_message
-      : v.conventional_commit_prefix != null || v.skip_ci ? join("", [
-        v.conventional_commit_prefix != null ? "${v.conventional_commit_prefix}: " : "",
+      : v.commit_prefix != null || v.skip_ci ? join("", [
+        v.commit_prefix != null ? "${v.commit_prefix}: " : "",
         "Update ${k}",
         v.skip_ci ? " [skip ci]" : "",
       ])

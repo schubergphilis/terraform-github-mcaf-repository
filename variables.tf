@@ -251,12 +251,6 @@ variable "gitignore_template" {
   description = "The name of the template without the extension"
 }
 
-variable "has_downloads" {
-  type        = bool
-  default     = false
-  description = "To enable downloads features on the repository"
-}
-
 variable "has_issues" {
   type        = bool
   default     = false

@@ -30,7 +30,6 @@ resource "github_repository" "default" {
   description                 = var.description
   fork                        = var.source_repo != null
   gitignore_template          = var.gitignore_template
-  has_downloads               = var.has_downloads
   has_issues                  = var.has_issues
   has_projects                = var.has_projects
   has_wiki                    = var.has_wiki

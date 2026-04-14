@@ -251,6 +251,12 @@ variable "gitignore_template" {
   description = "The name of the template without the extension"
 }
 
+variable "has_discussions" {
+  type        = bool
+  default     = false
+  description = "To enable GitHub Discussions features on the repository"
+}
+
 variable "has_issues" {
   type        = bool
   default     = false

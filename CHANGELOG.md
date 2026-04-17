@@ -5,6 +5,17 @@ All notable changes to this project will automatically be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v5.1.0 - 2026-04-17
+
+### What's Changed
+
+#### 🚀 Features
+
+* feat: options to enrich commit messages set on managed or unmanaged files (#107) @jorrite
+* feat: option to enable discussions on the repository (#108) @mlflr
+
+**Full Changelog**: https://github.com/schubergphilis/terraform-github-mcaf-repository/compare/v5.0.0...v5.1.0
+
 ## v5.0.0 - 2026-04-09
 
 ### What's Changed

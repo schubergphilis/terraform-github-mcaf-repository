@@ -9,6 +9,20 @@ locals {
   allow_merge_commit = var.merge_strategy != null ? var.merge_strategy == "merge" : var.allow_merge_commit
   allow_rebase_merge = var.merge_strategy != null ? var.merge_strategy == "rebase" : var.allow_rebase_merge
   allow_squash_merge = var.merge_strategy != null ? var.merge_strategy == "squash" : var.allow_squash_merge
+
+  # Build commit messages for repository files. When none of the commit message options are set,
+  # the message is null and the provider uses its default behavior.
+  repository_file_commit_messages = {
+    for k, v in var.repository_files : k => (
+      v.commit_message != null ? v.commit_message
+      : v.commit_prefix != null || v.skip_ci ? join("", [
+        v.commit_prefix != null ? "${v.commit_prefix}: " : "",
+        "Update ${k}",
+        v.skip_ci ? " [skip ci]" : "",
+      ])
+      : null
+    )
+  }
 }
 
 ################################################################################
@@ -317,6 +331,7 @@ resource "github_repository_file" "managed" {
   for_each = { for k, v in var.repository_files : k => v if v.managed }
 
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
+  commit_message      = local.repository_file_commit_messages[each.key]
   content             = each.value.content
   file                = each.key
   overwrite_on_create = each.value.overwrite_on_create
@@ -337,6 +352,7 @@ resource "github_repository_file" "unmanaged" {
   for_each = { for k, v in var.repository_files : k => v if !v.managed }
 
   branch              = coalesce(each.value.branch, github_branch_default.default.branch)
+  commit_message      = local.repository_file_commit_messages[each.key]
   content             = each.value.content
   file                = each.key
   overwrite_on_create = each.value.overwrite_on_create

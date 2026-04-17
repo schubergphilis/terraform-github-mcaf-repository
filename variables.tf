@@ -356,12 +356,23 @@ variable "pages" {
 variable "repository_files" {
   type = map(object({
     branch              = optional(string)
+    commit_message      = optional(string)
+    commit_prefix       = optional(string)
     content             = string
     managed             = optional(bool, true)
     overwrite_on_create = optional(bool, false)
+    skip_ci             = optional(bool, false)
   }))
   default     = {}
   description = "A map of GitHub repository files that should be created"
+
+  validation {
+    condition = alltrue([
+      for k, v in var.repository_files :
+      v.commit_message == null || (v.commit_prefix == null && !v.skip_ci)
+    ])
+    error_message = "The 'commit_message' attribute is mutually exclusive with 'commit_prefix' and 'skip_ci'."
+  }
 }
 
 variable "source_repo" {

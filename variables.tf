@@ -450,7 +450,7 @@ variable "workflow_permissions" {
   description = "An optional object to configure GitHub Actions workflow permissions for the repository"
 
   validation {
-    condition     = var.workflow_permissions == null || var.workflow_permissions.default_workflow_permissions == null || can(regex("^(read|write)$", var.workflow_permissions.default_workflow_permissions))
+    condition     = var.workflow_permissions == null || try(var.workflow_permissions.default_workflow_permissions, null) == null || can(regex("^(read|write)$", var.workflow_permissions.default_workflow_permissions))
     error_message = "The value of 'default_workflow_permissions' must be one of 'read' or 'write'"
   }
 }

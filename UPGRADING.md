@@ -4,6 +4,34 @@ This document captures breaking changes.
 
 When upgrading, it is important to go from one major version to the next. Skipping major versions may cause errors that are not documented here.
 
+## Upgrading to v6.0.0
+
+### `pages`: migrated to the dedicated `github_repository_pages` resource
+
+The inline `pages` block on `github_repository` is deprecated by the GitHub provider. The module now manages GitHub Pages via the dedicated `github_repository_pages` resource.
+
+To avoid disrupting existing Pages configuration, the module sets `lifecycle.ignore_changes = [pages]` on `github_repository`. The deprecated inline state is left in place; the new resource becomes the source of truth.
+
+To migrate existing Pages config under the new resource without disruption, add an `import` block in your root module before applying:
+
+```hcl
+import {
+  to = module.<your_module_alias>.github_repository_pages.default[0]
+  id = "<repository_name>"
+}
+```
+
+After a successful apply, remove the `import` block. Repositories that do not use `var.pages` require no migration.
+
+The `var.pages` object now also accepts:
+
+- `https_enforced` — enforce HTTPS for the Pages site (requires `cname`).
+- `public` — whether the Pages site is public.
+
+## Upgrading to v5.0.0
+
+The `has_downloads` variables is removed.
+
 ## Upgrading to v4.0.0
 
 ### `repository_files`: Use map key in favour of `path` attribute

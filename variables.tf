@@ -333,10 +333,12 @@ variable "name" {
 
 variable "pages" {
   type = object({
-    build_type = string
-    branch     = optional(string)
-    cname      = optional(string)
-    path       = optional(string, "/")
+    build_type     = string
+    branch         = optional(string)
+    cname          = optional(string)
+    https_enforced = optional(bool)
+    path           = optional(string, "/")
+    public         = optional(bool)
   })
 
   default     = null
@@ -350,6 +352,11 @@ variable "pages" {
   validation {
     condition     = (var.pages == null || try(var.pages.build_type != "legacy" || (var.pages.branch != null && var.pages.branch != ""), true))
     error_message = "The variable 'branch' is required when 'build_type' is set to 'legacy'"
+  }
+
+  validation {
+    condition     = (var.pages == null || try(var.pages.https_enforced != true || (var.pages.cname != null && var.pages.cname != ""), true))
+    error_message = "The variable 'cname' is required when 'https_enforced' is set to true"
   }
 }
 

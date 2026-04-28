@@ -231,13 +231,13 @@ module "mcaf-repository" {
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.9.0 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | ~> 6.11 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 6.12 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_github"></a> [github](#provider\_github) | ~> 6.11 |
+| <a name="provider_github"></a> [github](#provider\_github) | >= 6.12 |
 
 ## Modules
 
@@ -264,6 +264,7 @@ module "mcaf-repository" {
 | [github_repository_dependabot_security_updates.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_dependabot_security_updates) | resource |
 | [github_repository_file.managed](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
 | [github_repository_file.unmanaged](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_file) | resource |
+| [github_repository_pages.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_pages) | resource |
 | [github_repository_ruleset.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_ruleset) | resource |
 | [github_team_repository.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/team_repository) | resource |
 | [github_workflow_repository_permissions.default](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/workflow_repository_permissions) | resource |
@@ -309,7 +310,7 @@ module "mcaf-repository" {
 | <a name="input_merge_commit_message"></a> [merge\_commit\_message](#input\_merge\_commit\_message) | The default commit message for merge commits | `string` | `"PR_BODY"` | no |
 | <a name="input_merge_commit_title"></a> [merge\_commit\_title](#input\_merge\_commit\_title) | The default commit title for merge commits | `string` | `"PR_TITLE"` | no |
 | <a name="input_merge_strategy"></a> [merge\_strategy](#input\_merge\_strategy) | The merge strategy to use for pull requests | `string` | `null` | no |
-| <a name="input_pages"></a> [pages](#input\_pages) | The repository's GitHub Pages configuration. | <pre>object({<br/>    build_type = string<br/>    branch     = optional(string)<br/>    cname      = optional(string)<br/>    path       = optional(string, "/")<br/>  })</pre> | `null` | no |
+| <a name="input_pages"></a> [pages](#input\_pages) | The repository's GitHub Pages configuration. | <pre>object({<br/>    build_type     = string<br/>    branch         = optional(string)<br/>    cname          = optional(string)<br/>    https_enforced = optional(bool)<br/>    path           = optional(string, "/")<br/>    public         = optional(bool)<br/>  })</pre> | `null` | no |
 | <a name="input_repository_files"></a> [repository\_files](#input\_repository\_files) | A map of GitHub repository files that should be created | <pre>map(object({<br/>    branch              = optional(string)<br/>    commit_message      = optional(string)<br/>    commit_prefix       = optional(string)<br/>    content             = string<br/>    managed             = optional(bool, true)<br/>    overwrite_on_create = optional(bool, false)<br/>    skip_ci             = optional(bool, false)<br/>  }))</pre> | `{}` | no |
 | <a name="input_source_repo"></a> [source\_repo](#input\_source\_repo) | The source repository to create this repository from in format owner/repo | `string` | `null` | no |
 | <a name="input_squash_merge_commit_message"></a> [squash\_merge\_commit\_message](#input\_squash\_merge\_commit\_message) | The default commit message for squash merges | `string` | `"COMMIT_MESSAGES"` | no |

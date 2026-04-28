@@ -61,24 +61,6 @@ resource "github_repository" "default" {
   visibility                  = var.visibility
   vulnerability_alerts        = var.vulnerability_alerts
 
-  dynamic "pages" {
-    for_each = var.pages != null ? { create = true } : {}
-
-    content {
-      build_type = var.pages.build_type
-      cname      = var.pages.cname
-
-      dynamic "source" {
-        for_each = var.pages.build_type == "legacy" ? { create = true } : {}
-
-        content {
-          branch = var.pages.branch
-          path   = var.pages.path
-        }
-      }
-    }
-  }
-
   dynamic "template" {
     for_each = var.template_repository != null ? { create = true } : {}
 
@@ -89,13 +71,11 @@ resource "github_repository" "default" {
   }
 
   lifecycle {
-    ignore_changes = [template]
+    # `pages` is ignored because it is managed by the dedicated
+    # `github_repository_pages` resource below; the inline block on
+    # `github_repository` is deprecated by the provider.
+    ignore_changes = [pages, template]
   }
-}
-
-moved {
-  from = github_repository_dependabot_security_updates.default
-  to   = github_repository_dependabot_security_updates.default[0]
 }
 
 # Configure an autolink reference.
@@ -120,13 +100,34 @@ resource "github_repository_custom_property" "default" {
 
 # Configure Dependabot security updates for the repository.
 resource "github_repository_dependabot_security_updates" "default" {
-  count      = var.vulnerability_alerts ? 1 : 0
+  count = var.vulnerability_alerts ? 1 : 0
+
   repository = github_repository.default.name
   enabled    = var.dependabot_enabled
 
   depends_on = [
     github_repository.default
   ]
+}
+
+# Configure GitHub Pages for the repository.
+resource "github_repository_pages" "default" {
+  count = var.pages != null ? 1 : 0
+
+  build_type     = var.pages.build_type
+  cname          = var.pages.cname
+  https_enforced = var.pages.https_enforced
+  public         = var.pages.public
+  repository     = github_repository.default.name
+
+  dynamic "source" {
+    for_each = var.pages.build_type == "legacy" ? { create = true } : {}
+
+    content {
+      branch = var.pages.branch
+      path   = var.pages.path
+    }
+  }
 }
 
 resource "github_dependabot_secret" "plaintext" {

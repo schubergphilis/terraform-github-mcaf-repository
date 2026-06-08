@@ -132,9 +132,9 @@ resource "github_repository_pages" "default" {
 resource "github_dependabot_secret" "plaintext" {
   for_each = var.dependabot_plaintext_secrets
 
-  repository      = github_repository_dependabot_security_updates.default[0].repository
-  secret_name     = each.key
-  plaintext_value = each.value
+  repository  = github_repository_dependabot_security_updates.default[0].repository
+  secret_name = each.key
+  value       = each.value
 }
 
 resource "github_dependabot_secret" "encrypted" {
@@ -291,12 +291,11 @@ resource "github_actions_repository_access_level" "actions_access_level" {
 }
 
 resource "github_actions_secret" "secrets" {
-  # checkov:skip=CKV_GIT_4:Ensure GitHub Actions secrets are encrypted - plaintext_value is a sensitive argument and there is no value in using a base64 encoded value here
   for_each = var.actions_secrets
 
-  plaintext_value = each.value
-  repository      = github_repository.default.name
-  secret_name     = each.key
+  repository  = github_repository.default.name
+  secret_name = each.key
+  value       = each.value
 }
 
 resource "github_actions_variable" "action_variables" {

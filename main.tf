@@ -212,6 +212,17 @@ resource "github_branch_protection" "default" {
     }
   }
 
+  lifecycle {
+    # `repository_id` is set to the repository name on create, but the GitHub
+    # provider stores the repository node ID when a rule is imported. Since
+    # `repository_id` forces replacement, importing an existing rule would
+    # otherwise destroy and recreate branch protection, briefly leaving the
+    # branch unprotected. The repository association never legitimately changes
+    # for a given module instance, so ignoring it is safe and also prevents
+    # churn when the repository is renamed.
+    ignore_changes = [repository_id]
+  }
+
   depends_on = [
     github_branch.default,
   ]
